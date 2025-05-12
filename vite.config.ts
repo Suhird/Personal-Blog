@@ -21,7 +21,7 @@ import { componentTagger } from "lovable-tagger";
 // }));
 
 export default defineConfig({
-  base: "Personal-Blog", // 🔁 Replace with your actual repo name
+  base: "/", // 🔁 Replace with your actual repo name
   plugins: [react()],
   resolve: {
     alias: {
