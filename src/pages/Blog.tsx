@@ -1,4 +1,3 @@
-
 import Layout from "@/components/Layout";
 import BlogCard from "@/components/BlogCard";
 import { blogPosts } from "@/data/blogPosts";
@@ -8,7 +7,7 @@ const Blog = () => {
     <Layout>
       <div className="py-8">
         <div className="mb-10">
-          <h1 className="text-3xl font-bold tracking-tight mb-3 text-terminal-accent terminal-prompt">
+          <h1 className="text-2xl font-bold tracking-tight mb-3 text-terminal-accent terminal-prompt">
             Blog Posts
           </h1>
           <p className="text-terminal-comment">

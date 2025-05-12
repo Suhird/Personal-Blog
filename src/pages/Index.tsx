@@ -11,7 +11,7 @@ const Index = () => {
     <Layout>
       <section className="py-10">
         <div className="mb-12 space-y-4">
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-terminal-accent ">
+          <h1 className="text-3xl sm:text-2xl font-bold tracking-tight text-terminal-accent ">
             Suhird Singh
           </h1>
           <div className="text-terminal-foreground">
@@ -42,14 +42,14 @@ const Index = () => {
                 $ tech-stack.sh
               </h2>
               <div className="flex flex-wrap gap-2">
-                <span className="tag tag-1">React</span>
-                <span className="tag tag-2">TypeScript</span>
-                <span className="tag tag-3">Node.js</span>
-                <span className="tag tag-4">Go</span>
-                <span className="tag tag-1">Docker</span>
+                <span className="tag tag-1">Python</span>
+                <span className="tag tag-2">Rust</span>
+                <span className="tag tag-3">Golang</span>
+                <span className="tag tag-4">Docker</span>
                 <span className="tag tag-2">Kubernetes</span>
                 <span className="tag tag-3">AWS</span>
-                <span className="tag tag-4">PostgreSQL</span>
+                <span className="tag tag-1">PostgreSQL</span>
+                <span className="tag tag-4">Typescript</span>
               </div>
             </div>
           </div>

@@ -23,7 +23,7 @@ const Header = () => {
         <div className="flex items-center">
           <Link to="/" className="flex items-center gap-2">
             <span className="font-bold text-xl text-terminal-purple terminal-prompt terminal-cursor">
-              Echo My Thoughts...
+              Echo My Thoughts 🤔 ...
             </span>
           </Link>
         </div>
@@ -54,7 +54,7 @@ const Header = () => {
           <span>twitter</span>
         </a>
         <a
-          href="https://github.com/yourusername"
+          href="https://github.com/suhird"
           target="_blank"
           rel="noreferrer"
           className="ml-4 hover:text-terminal-cyan"
@@ -62,7 +62,7 @@ const Header = () => {
           <span>github</span>
         </a>
         <a
-          href="https://linkedin.com/in/yourusername"
+          href="https://linkedin.com/in/suhird-singh/"
           target="_blank"
           rel="noreferrer"
           className="ml-4 hover:text-terminal-cyan"

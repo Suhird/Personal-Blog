@@ -19,14 +19,14 @@ const About = () => {
             <div className="md:w-2/3">
               <h2>Hi, I'm Suhird Singh</h2>
               <p className="text-muted-foreground">
-                I'm a software engineer and technical writer passionate about
-                web technologies, open source, and teaching through writing. I
-                currently work at Company Name, where I build scalable cloud
-                applications.
+                I'm a senior software engineer and technical writer passionate
+                about backend technologies, open source, and teaching through
+                writing. I currently work at GE Vernova, where I build scalable
+                and robust applications for SMART GRID.
               </p>
               <p className="text-muted-foreground">
-                This blog is my digital garden where I share what I learn about
-                software development, cloud computing, and other technical
+                This blog is my digital space where I share what I learn about
+                software development, code optimization, and other technical
                 topics. My goal is to explain complex concepts in a simple and
                 approachable way.
               </p>
@@ -35,11 +35,12 @@ const About = () => {
 
           <h2>My Journey</h2>
           <p>
-            I started coding when I was 15 years old, creating simple websites
-            with HTML and CSS. My interest in programming grew throughout high
-            school, leading me to pursue a Computer Science degree. During
-            university, I interned at several tech companies and contributed to
-            open-source projects.
+            I started coding when I was 15 years old, creating Solar System
+            models in C++ .My second most loved subject is Physics hence writing
+            orbital equations in C++ and simulating the solar system really got
+            me hooked to Computer programming. My interest in programming grew
+            throughout high school, leading me to pursue a Computer Science
+            degree. During university, I learned a lot about Statistics.
           </p>
           <p>
             After graduation, I joined a startup where I worked on building web
@@ -111,7 +112,7 @@ const About = () => {
               Twitter
             </a>
             <a
-              href="https://github.com/yourusername"
+              href="https://github.com/suhird"
               target="_blank"
               rel="noreferrer"
               className="blog-link"
@@ -119,7 +120,7 @@ const About = () => {
               GitHub
             </a>
             <a
-              href="https://linkedin.com/in/yourusername"
+              href="https://linkedin.com/in/suhird-singh/"
               target="_blank"
               rel="noreferrer"
               className="blog-link"
