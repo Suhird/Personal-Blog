@@ -8,7 +8,7 @@ export const siteConfig = {
    * Set to true to show the maintenance page instead of the regular home page
    * This is useful for deployments or scheduled maintenance
    */
-  maintenanceMode: false,
+  maintenanceMode: true,
 
   /**
    * Site metadata
