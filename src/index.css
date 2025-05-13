@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -48,30 +47,32 @@
   .blog-container {
     @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8;
   }
-  
+
   .blog-link {
     @apply text-terminal-cyan hover:text-terminal-green transition-colors;
   }
-  
+
   .tag {
     @apply inline-block px-3 py-1 text-sm font-medium rounded-md mr-2 mb-2;
   }
-  
+
   .tag-1 {
     @apply bg-opacity-20 bg-terminal-cyan text-terminal-cyan;
   }
-  
+
   .tag-2 {
     @apply bg-opacity-20 bg-terminal-purple text-terminal-purple;
   }
-  
+
   .tag-3 {
     @apply bg-opacity-20 bg-terminal-yellow text-terminal-yellow;
   }
-  
+
   .tag-4 {
     @apply bg-opacity-20 bg-terminal-green text-terminal-green;
   }
+
+  /* Add more tags here if needed */
 
   .terminal-prompt::before {
     content: "$ ";

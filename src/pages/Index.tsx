@@ -11,8 +11,8 @@ const Index = () => {
     <Layout>
       <section className="py-10">
         <div className="mb-12 space-y-4">
-          <h1 className="text-3xl sm:text-2xl font-bold tracking-tight text-terminal-accent ">
-            Suhird Singh
+          <h1 className="text-3xl sm:text-2xl font-bold tracking-tight text-terminal-accent terminal-cursor">
+            {">"} Suhird Singh
           </h1>
           <div className="text-terminal-foreground">
             <p className="mb-2 terminal-prompt">

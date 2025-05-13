@@ -1,13 +1,13 @@
-
 import { BlogPost } from "@/components/BlogCard";
 
 export const post: BlogPost = {
   id: "1",
-  title: "Building a Modern Web Application with React and TypeScript",
-  description: "Learn how to build a scalable and maintainable web application using React and TypeScript with best practices.",
+  title: "Learn Basic Rust - Coming from OOP languages",
+  description:
+    "Learn to build a basic Rust program about a Card deck and attach methods like shuffle etc to the Deck object",
   date: "May 5, 2025",
-  tags: ["React", "TypeScript", "Web Development"],
-  readTime: "8 min",
-  slug: "building-modern-web-app-react-typescript",
-  markdownFile: "building-modern-web-app-react-typescript"
+  tags: ["Rust", "Learning"],
+  readTime: "5 min",
+  slug: "learning-rust-with-examples-part-1",
+  markdownFile: "deck_program_rust_blog",
 };
