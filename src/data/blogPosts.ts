@@ -1,15 +1,11 @@
-
 import { BlogPost } from "@/components/BlogCard";
-import { post as buildingModernWebApp } from "./posts/building-modern-web-app-react-typescript";
+import { post as learningRustPart1 } from "./posts/learning-rust-with-example-part-1";
 import { post as optimizingDocker } from "./posts/optimizing-docker-containers-production";
 import { post as introductionGo } from "./posts/introduction-go-building-cli-tools";
-import { post as understandingAWSLambda } from "./posts/understanding-aws-lambda-serverless";
-import { post as advancedTypescript } from "./posts/advanced-typescript-patterns-frontend";
 
+// latest blog post on top as the sequence is show on FE starting with first as latest
 export const blogPosts: BlogPost[] = [
-  buildingModernWebApp,
+  learningRustPart1,
   optimizingDocker,
   introductionGo,
-  understandingAWSLambda,
-  advancedTypescript
 ];

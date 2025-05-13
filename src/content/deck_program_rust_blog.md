@@ -41,7 +41,7 @@ struct Card {
 
 We derive `Debug` so we can print the cards, and `Clone` to easily duplicate cards later (like during a shuffle).
 
-## 🃏 Step 2: Create a Deck of Cards
+### 🃏 Step 2: Create a Deck of Cards
 
 Let’s write a function to generate a standard 52-card deck.
 
@@ -68,7 +68,7 @@ fn create_deck() -> Vec<Card> {
 }
 ```
 
-## 🔀 Step 3: Shuffle the Deck
+### 🔀 Step 3: Shuffle the Deck
 
 Rust's `rand` crate helps us shuffle the deck.
 
@@ -91,7 +91,7 @@ fn shuffle_deck(deck: &mut Vec<Card>) {
 }
 ```
 
-## 🃎 Step 4: Draw a Card
+### 🃎 Step 4: Draw a Card
 
 We can simulate drawing a card by popping it off the top of the deck.
 
@@ -103,7 +103,7 @@ fn draw_card(deck: &mut Vec<Card>) -> Option<Card> {
 
 This returns an `Option<Card>`, which is `Some(card)` if a card exists, or `None` if the deck is empty.
 
-## 🧪 Step 5: Putting It All Together
+### 🧪 Step 5: Putting It All Together
 
 Now let's build a simple `main` function to test everything.
 
@@ -126,7 +126,7 @@ fn main() {
 }
 ```
 
-## ✅ Output Example
+### ✅ Output Example
 
 ```bash
 Created a deck of 52 cards.
@@ -139,14 +139,14 @@ Drew a Ten of Clubs
 47 cards remaining in deck.
 ```
 
-## 🎓 What You Learned
+### 🎓 What You Learned
 
 - How to use `enum` and `struct` to model real-world data
 - How to use `Vec<T>` as a resizable container
 - How to use the `rand` crate to shuffle a vector
 - How to handle optional values with `Option<T>`
 
-## 🚀 Next Steps
+### 🚀 Next Steps
 
 Here are some ideas to expand the program:
 
