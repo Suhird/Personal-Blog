@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Layout from "@/components/Layout";
 import { useToast } from "@/hooks/use-toast";
@@ -13,7 +12,9 @@ const Contact = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -21,7 +22,7 @@ const Contact = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     // Simulate form submission
     setTimeout(() => {
       toast({
@@ -50,7 +51,10 @@ const Contact = () => {
           <div>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium mb-2">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium mb-2"
+                >
                   Name
                 </label>
                 <input
@@ -64,9 +68,12 @@ const Contact = () => {
                   placeholder="Your name"
                 />
               </div>
-              
+
               <div>
-                <label htmlFor="email" className="block text-sm font-medium mb-2">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium mb-2"
+                >
                   Email
                 </label>
                 <input
@@ -80,9 +87,12 @@ const Contact = () => {
                   placeholder="your.email@example.com"
                 />
               </div>
-              
+
               <div>
-                <label htmlFor="subject" className="block text-sm font-medium mb-2">
+                <label
+                  htmlFor="subject"
+                  className="block text-sm font-medium mb-2"
+                >
                   Subject
                 </label>
                 <input
@@ -96,9 +106,12 @@ const Contact = () => {
                   placeholder="What is this about?"
                 />
               </div>
-              
+
               <div>
-                <label htmlFor="message" className="block text-sm font-medium mb-2">
+                <label
+                  htmlFor="message"
+                  className="block text-sm font-medium mb-2"
+                >
                   Message
                 </label>
                 <textarea
@@ -112,25 +125,25 @@ const Contact = () => {
                   placeholder="Your message..."
                 />
               </div>
-              
+
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="bg-blog-accent hover:bg-blog-accent/90 text-white font-medium py-2 px-6 rounded-md w-full"
+                className="bg-terminal-background border border-terminal-green text-white font-medium py-2 px-6 rounded-md w-full"
               >
                 {isSubmitting ? "Sending..." : "Send Message"}
               </button>
             </form>
           </div>
-          
+
           <div>
             <div className="bg-secondary/50 p-6 rounded-lg mb-6">
               <h2 className="text-xl font-semibold mb-4">Get In Touch</h2>
               <p className="text-muted-foreground mb-4">
-                You can reach out to me directly through this form or via email and social media.
-                I'll try to respond as quickly as possible.
+                You can reach out to me directly through this form or via email
+                and social media. I'll try to respond as quickly as possible.
               </p>
-              
+
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
                   <svg
@@ -148,12 +161,15 @@ const Contact = () => {
                     <rect width="20" height="16" x="2" y="4" rx="2"></rect>
                     <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
                   </svg>
-                  <a href="mailto:your.email@example.com" className="blog-link">
-                    your.email@example.com
+                  <a
+                    href="mailto:suhirdsingh92@gmail.com"
+                    className="blog-link"
+                  >
+                    suhirdsingh92@gmail.com
                   </a>
                 </div>
-                
-                <div className="flex items-center gap-3">
+
+                {/* <div className="flex items-center gap-3">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="20"
@@ -168,21 +184,30 @@ const Contact = () => {
                   >
                     <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
                   </svg>
-                  <a href="https://twitter.com/yourusername" target="_blank" rel="noreferrer" className="blog-link">
+                  <a
+                    href="https://twitter.com/yourusername"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="blog-link"
+                  >
                     @yourusername
                   </a>
-                </div>
+                </div> */}
               </div>
             </div>
-            
+
             <div className="bg-secondary/50 p-6 rounded-lg">
-              <h2 className="text-xl font-semibold mb-4">Looking to Work Together?</h2>
+              <h2 className="text-xl font-semibold mb-4">
+                Looking to Work Together?
+              </h2>
               <p className="text-muted-foreground mb-4">
-                I'm open to freelance opportunities, consulting, and collaborations on interesting projects.
+                I'm open to freelance opportunities, consulting, and
+                collaborations on interesting projects.
               </p>
               <ul className="text-muted-foreground space-y-2">
                 <li>- Technical writing</li>
                 <li>- Web application development</li>
+                <li>- Making APIs performant</li>
                 <li>- API design and implementation</li>
                 <li>- Cloud architecture consulting</li>
               </ul>

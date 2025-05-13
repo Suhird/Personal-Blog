@@ -43,8 +43,7 @@ const Maintenance = () => {
                   <br />
                   <span className="text-terminal-comment">
                     {" "}
-                    Loaded: loaded (/etc/systemd/system/blog.service; enabled;
-                    vendor preset: enabled)
+                    Loaded: loaded (/etc/systemd/system/blog.service; enabled)
                   </span>
                   <br />
                   <span className="text-terminal-comment">
@@ -53,7 +52,7 @@ const Maintenance = () => {
                     <span className="text-terminal-yellow">
                       maintenance
                     </span>{" "}
-                    (since Mon 2025-05-12 16:30:24 UTC; 1h 23m ago)
+                    (since Mon 2025-05-13)
                   </span>
                 </pre>
               </div>
@@ -80,7 +79,9 @@ const Maintenance = () => {
           <div className="mt-8 pt-4 border-t border-terminal-comment/30">
             <p className="text-sm text-terminal-comment">
               For urgent matters, please contact{" "}
-              <span className="text-terminal-cyan">support@yoursite.com</span>
+              <span className="text-terminal-cyan">
+                suhirdsingh92@gmail.com
+              </span>
             </p>
           </div>
         </div>

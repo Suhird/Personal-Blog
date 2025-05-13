@@ -1,4 +1,3 @@
-
 import Layout from "@/components/Layout";
 import { projects } from "@/data/projects";
 
@@ -10,11 +9,11 @@ const Projects = () => {
         <p className="text-lg text-muted-foreground mb-10">
           A collection of my open source projects, experiments, and other work.
         </p>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {projects.map((project) => (
-            <div 
-              key={project.id} 
+            <div
+              key={project.id}
               className="border border-border rounded-lg overflow-hidden hover:shadow-md transition-shadow"
             >
               <div className="bg-secondary/50 p-4">
@@ -22,24 +21,25 @@ const Projects = () => {
                 <div className="flex gap-3 mb-2">
                   {project.technologies.map((tech, index) => (
                     <span key={tech} className="text-sm text-muted-foreground">
-                      {tech}{index < project.technologies.length - 1 ? "," : ""}
+                      {tech}
+                      {index < project.technologies.length - 1 ? "," : ""}
                     </span>
                   ))}
                 </div>
               </div>
-              
+
               <div className="p-4">
                 <p className="text-muted-foreground mb-4">
                   {project.description}
                 </p>
-                
+
                 <div className="flex justify-between items-center">
                   <div className="flex gap-2">
                     {project.live && (
-                      <a 
-                        href={project.live} 
-                        target="_blank" 
-                        rel="noreferrer" 
+                      <a
+                        href={project.live}
+                        target="_blank"
+                        rel="noreferrer"
                         className="blog-link text-sm flex items-center gap-1"
                       >
                         <span>Live Demo</span>
@@ -62,11 +62,11 @@ const Projects = () => {
                       </a>
                     )}
                   </div>
-                  
-                  <a 
-                    href={project.github} 
-                    target="_blank" 
-                    rel="noreferrer" 
+
+                  <a
+                    href={project.github}
+                    target="_blank"
+                    rel="noreferrer"
                     className="text-muted-foreground hover:text-foreground"
                   >
                     <svg

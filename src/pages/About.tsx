@@ -1,12 +1,20 @@
 import Layout from "@/components/Layout";
 import myImage from "../images/Cartoonified-FaceShot.png";
+import { FaDownload } from "react-icons/fa";
 
 const About = () => {
   return (
     <Layout>
       <div className="blog-container py-16">
         <h1 className="text-4xl font-bold tracking-tight mb-8">About Me</h1>
-
+        <a
+          href="/Personal-Blog/Resume.pdf"
+          download
+          className="flex items-center text-terminal-cyan hover:underline"
+        >
+          <FaDownload className="mr-2" />
+          Download My Resume
+        </a>
         <div className="prose prose-lg max-w-none">
           <div className="flex flex-col md:flex-row gap-8 mb-10">
             <div className="md:w-1/3">
@@ -22,7 +30,9 @@ const About = () => {
                 I'm a senior software engineer and technical writer passionate
                 about backend technologies, open source, and teaching through
                 writing. I currently work at GE Vernova, where I build scalable
-                and robust applications for SMART GRID.
+                and robust applications for SMART GRID. I am also a certified
+                <b className="text-terminal-cyan"> Scrum Master PSM 1 </b>by
+                scrum.org
               </p>
               <p className="text-muted-foreground">
                 This blog is my digital space where I share what I learn about
@@ -56,27 +66,71 @@ const About = () => {
                 Senior Software Engineer
               </h3>
               <p className="text-muted-foreground">
-                Company Name • 2021 - Present
+                GE Vernova • May 2022 - Present
               </p>
               <ul>
-                <li>Lead the development of cloud-native applications</li>
                 <li>
-                  Implemented CI/CD pipelines for automated testing and
-                  deployment
+                  Developed scalable backend APIs for DERMS Grid software using
+                  Python and Flask.
                 </li>
-                <li>Mentored junior developers and conducted code reviews</li>
+                <li>
+                  Integrated Kafka for real-time data streaming between modules.
+                </li>
+                <li>
+                  Optimized CSV and XML parsing by rewriting components in Rust
+                  (via PyO3), reducing processing time by 50%.
+                </li>
+                <li>Mentored junior developers and conducted code reviews.</li>
               </ul>
             </div>
 
             <div>
-              <h3 className="text-xl font-semibold">Software Engineer</h3>
+              <h3 className="text-xl font-semibold">Full Stack Developer</h3>
               <p className="text-muted-foreground">
-                Previous Company • 2018 - 2021
+                FieldEffect • Jan 2021 - Apr 2022
               </p>
               <ul>
-                <li>Developed RESTful APIs and microservices</li>
-                <li>Built responsive web interfaces using React</li>
-                <li>Optimized database queries and application performance</li>
+                <li>
+                  Developed backend APIs and React-based frontend for a network
+                  security platform.
+                </li>
+                <li>
+                  Built new microservices for graph rendering and PDF
+                  generation.
+                </li>
+                <li>Integrated Twilio, CIRA, and ConnectWise APIs.</li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold">Developer Intern</h3>
+              <p className="text-muted-foreground">
+                Royal Bank of Canada - Internship • Sep 2019 - Apr 2020
+              </p>
+              <ul>
+                <li>
+                  Built two internal web applications using Django and Material
+                  Design UI.
+                </li>
+                <li>
+                  Helped RBC reduce software licensing and training costs by up
+                  to $50K.
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold">Senior Systems Engineer</h3>
+              <p className="text-muted-foreground">
+                Infosys • Oct 2013 - Jul 2018
+              </p>
+              <ul>
+                <li>
+                  Led feature development for Adidas’s customizable product
+                  experience including 3D view.
+                </li>
+                <li>
+                  Helped increase Adidas’s revenue in the customized Teamwear
+                  clothing domain by $20M annually.
+                </li>
               </ul>
             </div>
           </div>
@@ -84,16 +138,16 @@ const About = () => {
           <h2>Skills & Technologies</h2>
           <div>
             <h3 className="text-xl font-semibold">Languages</h3>
-            <p>JavaScript, TypeScript, Python, Go, SQL</p>
+            <p>Python, Rust, Golang, Java, Typescript</p>
 
             <h3 className="text-xl font-semibold">Frameworks & Libraries</h3>
-            <p>React, Node.js, Express, Next.js, Django</p>
+            <p>Flask, Django, Angular</p>
 
             <h3 className="text-xl font-semibold">Tools & Platforms</h3>
-            <p>Docker, Kubernetes, AWS, GCP, Git, GitHub Actions</p>
+            <p>Kafka, Docker, Kubernetes, AWS, GCP, Git, GitHub Actions</p>
 
             <h3 className="text-xl font-semibold">Databases</h3>
-            <p>PostgreSQL, MongoDB, Redis</p>
+            <p>PostgreSQL, Redis</p>
           </div>
 
           <h2>Let's Connect</h2>
@@ -103,14 +157,14 @@ const About = () => {
             or social media!
           </p>
           <div className="flex gap-4">
-            <a
+            {/* <a
               href="https://twitter.com/yourusername"
               target="_blank"
               rel="noreferrer"
               className="blog-link"
             >
               Twitter
-            </a>
+            </a> */}
             <a
               href="https://github.com/suhird"
               target="_blank"
