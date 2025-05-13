@@ -20,7 +20,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <BrowserRouter basename="Personal-Blog">
         <Routes>
           {/* If maintenance mode is enabled, show maintenance page at root */}
           <Route
