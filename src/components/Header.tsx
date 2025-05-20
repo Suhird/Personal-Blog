@@ -46,14 +46,6 @@ const Header = () => {
       </div>
       <div className="flex justify-end mt-4 text-terminal-comment text-sm">
         <a
-          href="https://twitter.com/yourusername"
-          target="_blank"
-          rel="noreferrer"
-          className="ml-4 hover:text-terminal-cyan"
-        >
-          <span>twitter</span>
-        </a>
-        <a
           href="https://github.com/suhird"
           target="_blank"
           rel="noreferrer"
