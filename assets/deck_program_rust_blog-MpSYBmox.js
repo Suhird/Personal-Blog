@@ -6,7 +6,7 @@ Rust is known for its speed and safety, but it's also a great language for learn
 
 To represent a card, we’ll need to define two enums: one for suits and one for values.
 
-\`\`\`rust enum.rs
+\`\`\`rust:enums.rs
 #[derive(Debug, Clone)]
 enum Suit {
     Hearts,
