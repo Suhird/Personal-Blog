@@ -72,8 +72,6 @@
     @apply bg-opacity-20 bg-terminal-green text-terminal-green;
   }
 
-  /* Add more tags here if needed */
-
   .terminal-prompt::before {
     content: "$ ";
     @apply text-terminal-green;

@@ -90,7 +90,7 @@ Pelientesque auctor nisi id magna consequat sagittis.
           <TableOfContents content={contentToRender} />
         )}
 
-        <div className="prose prose-lg prose-invert prose-code:text-terminal-yellow prose-pre:bg-terminal-background/50 prose-headings:text-terminal-accent max-w-none">
+        <div className="prose prose-sm prose-invert prose-code:text-terminal-yellow prose-pre:bg-terminal-background/50 prose-headings:text-terminal-accent max-w-none space-y-4">
           {isLoading ? (
             <div className="text-center">
               <p className="terminal-prompt">Loading content...</p>

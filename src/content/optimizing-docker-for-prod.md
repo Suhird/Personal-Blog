@@ -1,8 +1,8 @@
-# Optimizing Docker Containers for Production
+## Optimizing Docker Containers for Production
 
 Docker containers have revolutionized how we deploy applications, but running containers efficiently in production requires careful optimization.
 
-## Use Multi-Stage Builds
+### Use Multi-Stage Builds
 
 Multi-stage builds allow you to use multiple FROM statements in your Dockerfile. This is a powerful way to create smaller production images:
 
@@ -17,7 +17,7 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# Production stage
+## Production stage
 
 FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html

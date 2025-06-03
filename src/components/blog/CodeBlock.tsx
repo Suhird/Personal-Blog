@@ -8,9 +8,10 @@ import { useToast } from "@/hooks/use-toast";
 interface CodeBlockProps {
   language: string;
   children: string;
+  filename?: string;
 }
 
-const CodeBlock = ({ language, children }: CodeBlockProps) => {
+const CodeBlock = ({ language, children, filename }: CodeBlockProps) => {
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
 
@@ -40,14 +41,25 @@ const CodeBlock = ({ language, children }: CodeBlockProps) => {
 
   return (
     <div className="terminal-code-block mb-6 overflow-hidden rounded-md relative group">
-      <div className="terminal-code-header px-4 py-2 flex items-center justify-between">
+      <div className="terminal-code-header px-4 py-2 flex items-center justify-between bg-terminal-background border-b border-terminal-comment">
         <div className="flex items-center">
           <div className="terminal-dots">
             <span className="terminal-dot-red"></span>
             <span className="terminal-dot-yellow"></span>
             <span className="terminal-dot-green"></span>
           </div>
-          <div className="ml-2 text-xs text-terminal-comment">{language}</div>
+          <div className="ml-2 text-xs text-terminal-comment">
+            {filename ? (
+              <span className="font-medium">{filename}</span>
+            ) : (
+              language
+            )}
+            {filename && language && (
+              <span className="ml-2 text-terminal-comment/70">
+                ({language})
+              </span>
+            )}
+          </div>
         </div>
         <Button
           onClick={copyToClipboard}
@@ -70,6 +82,7 @@ const CodeBlock = ({ language, children }: CodeBlockProps) => {
         className="rounded-b-md !m-0 !bg-[#282a36] !p-4"
         showLineNumbers={true}
         wrapLines={true}
+        customStyle={{ lineHeight: "1.2" }}
       >
         {String(children).replace(/\n$/, "")}
       </SyntaxHighlighter>

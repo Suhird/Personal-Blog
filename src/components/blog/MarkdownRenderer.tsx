@@ -54,9 +54,37 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
         },
         // Code block handling
         code({ node, className, children, ...props }: any) {
-          const match = /language-(\w+)/.exec(className || "");
-          return !props.inline && match ? (
-            <CodeBlock language={match[1]}>
+          // Handle className like "language-typescript:filename.ts" or "language-typescript"
+          let language = "";
+          let filename;
+
+          if (className) {
+            // Check if there's a filename in the className (language-typescript:filename.ts)
+            const filenameMatch = className.match(/language-([^:]+):(.+)/);
+            if (filenameMatch) {
+              language = filenameMatch[1];
+              filename = filenameMatch[2];
+            } else {
+              // Just extract language normally (language-typescript)
+              const match = /language-(\w+)/.exec(className);
+              language = match ? match[1] : "";
+            }
+          }
+
+          // Also check meta attribute for filename
+          if (node?.data?.meta && !filename) {
+            const metaMatch = node.data.meta.match(/^([^:]+):(.+)$/);
+            if (metaMatch) {
+              filename = metaMatch[2];
+              // If language wasn't found in className, try meta
+              if (!language) {
+                language = metaMatch[1];
+              }
+            }
+          }
+
+          return !props.inline && language ? (
+            <CodeBlock language={language} filename={filename}>
               {String(children).replace(/\n$/, "")}
             </CodeBlock>
           ) : (
