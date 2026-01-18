@@ -8,6 +8,7 @@ import PostHeader from "@/components/blog/PostHeader";
 import ShareLinks from "@/components/blog/ShareLinks";
 import PostNotFound from "@/components/blog/PostNotFound";
 import TableOfContents from "@/components/blog/TableOfContents";
+import SeriesNavigation from "@/components/blog/SeriesNavigation";
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -100,6 +101,7 @@ Pelientesque auctor nisi id magna consequat sagittis.
           )}
         </div>
 
+        <SeriesNavigation currentPost={post} allPosts={blogPosts} />
         <ShareLinks />
       </article>
     </Layout>

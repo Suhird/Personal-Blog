@@ -7,10 +7,10 @@
 export async function loadMarkdownFile(fileName: string): Promise<string> {
   try {
     // In Vite, we can use the special import.meta.glob to load files
-    const markdownFiles = import.meta.glob('/src/content/*.md', { as: 'raw' });
+    const markdownFiles = import.meta.glob('/src/data/content/*.md', { as: 'raw' });
     
     // Check if the file exists in our collection
-    const filePath = `/src/content/${fileName}.md`;
+    const filePath = `/src/data/content/${fileName}.md`;
     const importFile = markdownFiles[filePath];
     
     if (!importFile) {

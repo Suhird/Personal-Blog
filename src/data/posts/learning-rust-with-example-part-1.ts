@@ -10,4 +10,9 @@ export const post: BlogPost = {
   readTime: "5 min",
   slug: "learning-rust-with-examples-part-1",
   markdownFile: "deck_program_rust_blog",
+  series: {
+    id: "learning-rust",
+    title: "Learning Rust",
+    order: 1,
+  },
 };

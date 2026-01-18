@@ -9,7 +9,7 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
   return (
     <div className="flex min-h-screen flex-col bg-terminal-background text-terminal-foreground font-mono">
-      <div className="terminal-container max-w-5xl mx-auto w-full px-4 py-4">
+      <div className="terminal-container max-w-6xl mx-auto w-full px-4 py-4">
         <div className="terminal-window">
           <div className="terminal-header flex items-center p-2">
             <div className="terminal-dots">

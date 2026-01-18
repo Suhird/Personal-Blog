@@ -1,99 +1,55 @@
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
-import BlogCard from "@/components/BlogCard";
-import { blogPosts } from "@/data/blogPosts";
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
+import StatsGrid from "@/components/dashboard/StatsGrid";
+import TechStackPanel from "@/components/dashboard/TechStackPanel";
+import SystemMonitor from "@/components/dashboard/SystemMonitor";
+import TerminalLogs from "@/components/dashboard/TerminalLogs";
 
 const Index = () => {
-  // Get the latest 3 posts to feature
-  const featuredPosts = blogPosts.slice(0, 3);
-
   return (
     <Layout>
-      <section className="py-10">
-        <div className="mb-12 space-y-4">
-          <h1 className="text-3xl sm:text-2xl font-bold tracking-tight text-terminal-accent terminal-cursor">
-            {">"} Suhird Singh
-          </h1>
-          <div className="text-terminal-foreground">
-            <p className="mb-2 terminal-prompt">
-              Software Engineer & Technical Writer
-            </p>
-            <p className="text-terminal-comment mb-4">
-              # I write about Backend Development, Rust, Python, Gaming and much
-              more
-            </p>
-          </div>
+      <div className="py-6 animate-in fade-in duration-500">
+        <DashboardHeader />
+        <StatsGrid />
+        
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+          {/* Main Content Area - 2/3 width */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Row 1: System Monitor Graphs */}
+            <SystemMonitor />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 py-4 border-b">
-            <div className="space-y-2">
-              <h2 className="text-xl font-bold text-terminal-purple">
-                $ what-i-do.sh
-              </h2>
-              <ul className="space-y-1 text-terminal-foreground">
-                <li className="terminal-prompt">Full-Stack Development</li>
-                <li className="terminal-prompt">Technical Writing</li>
-                <li className="terminal-prompt">Cloud Architecture</li>
-                <li className="terminal-prompt">Open Source Contributions</li>
-              </ul>
+            {/* Row 2: Expanded Terminal Logs (Replaces Process List) */}
+            <div className="h-[300px]">
+              <TerminalLogs />
             </div>
-
-            <div className="space-y-2">
-              <h2 className="text-xl font-bold text-terminal-purple">
-                $ tech-stack.sh
-              </h2>
-              <div className="flex flex-wrap gap-2">
-                <span className="tag tag-1">Python</span>
-                <span className="tag tag-2">Rust</span>
-                <span className="tag tag-3">Golang</span>
-                <span className="tag tag-4">Docker</span>
-                <span className="tag tag-2">Kubernetes</span>
-                <span className="tag tag-3">AWS</span>
-                <span className="tag tag-1">PostgreSQL</span>
-                <span className="tag tag-4">Typescript</span>
+            
+            {/* Row 3: Contact */}
+             <section className="bg-terminal-background border border-terminal-comment/30 rounded-lg p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-bold text-terminal-yellow font-mono mb-2">
+                  $ ./contact.sh
+                </h2>
+                <p className="text-terminal-comment font-mono text-sm">
+                  # Ready to collaborate?
+                </p>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="py-8">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-terminal-green">
-              $ cat latest_articles.md
-            </h2>
-            <Link
-              to="/blog"
-              className="text-terminal-cyan hover:text-terminal-green"
-            >
-              view-all.sh --articles
-            </Link>
-          </div>
-          <div className="space-y-8">
-            {featuredPosts.map((post) => (
-              <BlogCard key={post.id} post={post} />
-            ))}
-          </div>
-        </div>
-
-        <section className="py-8 mt-4 border-t border-terminal-comment/30">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold text-terminal-yellow mb-4">
-              $ ./contact.sh
-            </h2>
-            <p className="text-terminal-comment mb-6">
-              echo "I'm always open to new opportunities and interesting
-              conversations!"
-            </p>
-            <div className="flex justify-center">
+              
               <Link
                 to="/contact"
-                className="bg-terminal-background border border-terminal-green text-terminal-green hover:bg-terminal-green/10 font-mono py-2 px-6 rounded"
+                className="whitespace-nowrap bg-terminal-background border border-terminal-green text-terminal-green hover:bg-terminal-green/10 font-mono py-2 px-6 rounded transition-colors text-center"
               >
                 ./send_message.sh
               </Link>
-            </div>
+            </section>
           </div>
-        </section>
-      </section>
+          
+          {/* Sidebar Area - 1/3 width */}
+          <div className="space-y-6">
+            <TechStackPanel />
+          </div>
+        </div>
+      </div>
     </Layout>
   );
 };

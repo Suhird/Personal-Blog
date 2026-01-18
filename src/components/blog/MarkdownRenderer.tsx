@@ -1,4 +1,5 @@
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm"; // Import the plugin
 import CodeBlock from "./CodeBlock";
 
 interface MarkdownRendererProps {
@@ -8,6 +9,7 @@ interface MarkdownRendererProps {
 const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
   return (
     <ReactMarkdown
+      remarkPlugins={[remarkGfm]} // Add the plugin here
       components={{
         // Add IDs to headings
         h1: ({ node, children, ...props }) => {
@@ -60,13 +62,13 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
 
           if (className) {
             // Check if there's a filename in the className (language-typescript:filename.ts)
-            const filenameMatch = className.match(/language-([^:]+):(.+)/);
+            const filenameMatch = className.match(/language-([^:\s]+):(.+)/);
             if (filenameMatch) {
               language = filenameMatch[1];
               filename = filenameMatch[2];
             } else {
               // Just extract language normally (language-typescript)
-              const match = /language-(\w+)/.exec(className);
+              const match = /language-([^:\s]+)/.exec(className);
               language = match ? match[1] : "";
             }
           }
@@ -81,6 +83,11 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
                 language = metaMatch[1];
               }
             }
+          }
+
+          // Fix: Remap toml to ini because Prism's toml support can be buggy with brackets
+          if (language === "toml") {
+            language = "ini";
           }
 
           return !props.inline && language ? (

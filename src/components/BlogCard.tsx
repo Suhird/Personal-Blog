@@ -11,6 +11,11 @@ export interface BlogPost {
   slug: string;
   content?: string;
   markdownFile?: string; // New property to store markdown file name
+  series?: {
+    id: string;
+    title: string;
+    order: number;
+  };
 }
 
 interface BlogCardProps {
@@ -29,6 +34,13 @@ const BlogCard = ({ post }: BlogCardProps) => {
       <div>
         <div className="space-y-2 mb-2">
           <h2 className="text-2xl font-bold tracking-tight">
+            {post.series && (
+              <div className="flex items-center gap-2 mb-2 text-xs font-medium text-terminal-purple">
+                <span className="bg-terminal-purple/10 px-2 py-0.5 rounded border border-terminal-purple/20">
+                  Series: {post.series.title} — Part {post.series.order}
+                </span>
+              </div>
+            )}
             <Link to={`/blog/${post.slug}`} className="hover:text-blog-accent">
               {post.title}
             </Link>
@@ -44,9 +56,14 @@ const BlogCard = ({ post }: BlogCardProps) => {
         </div>
         <div className="flex flex-wrap">
           {post.tags.map((tag, index) => (
-            <span key={tag} className={`tag ${getTagClass(index)}`}>
+            <Link
+              key={tag}
+              to={`/blog?tag=${tag}`}
+              className={`tag ${getTagClass(index)} hover:opacity-80 transition-opacity`}
+              onClick={(e) => e.stopPropagation()}
+            >
               {tag}
-            </span>
+            </Link>
           ))}
         </div>
       </div>

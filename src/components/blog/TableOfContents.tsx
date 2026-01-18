@@ -19,7 +19,7 @@ interface TocItem {
 
 export const TableOfContents = ({ content }: TableOfContentsProps) => {
   const [headings, setHeadings] = useState<TocItem[]>([]);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [activeId, setActiveId] = useState<string>("");
 
   useEffect(() => {
