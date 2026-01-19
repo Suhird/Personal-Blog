@@ -24,6 +24,8 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter basename="Personal-Blog">
+        {/* Uncomment this if deploying on Netlify */}
+        {/* <BrowserRouter basename="/"> */}
         <Routes>
           {/* If maintenance mode is enabled, show maintenance page at root */}
           <Route
