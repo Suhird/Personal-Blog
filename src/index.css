@@ -4,107 +4,276 @@
 
 @layer base {
   :root {
-    --background: 231 15% 18%;
-    --foreground: 60 30% 96%;
+    /* Default: Catppuccin Mocha */
+    /* Shadcn HSL values (Channels only) */
+    --background: 240 21% 15%; /* #1e1e2e */
+    --foreground: 226 64% 88%; /* #cdd6f4 */
+    --card: 240 21% 15%;
+    --card-foreground: 226 64% 88%;
+    --popover: 240 21% 15%;
+    --popover-foreground: 226 64% 88%;
+    --primary: 267 84% 81%; /* Mauve #cba6f7 */
+    --primary-foreground: 240 21% 15%;
+    --secondary: 228 100% 75%; /* Blue #89b4fa */
+    --secondary-foreground: 240 21% 15%;
+    --muted: 237 16% 23%; /* Surface0 #313244 */
+    --muted-foreground: 228 24% 72%; /* Overlay0 #6c7086 */
+    --accent: 237 16% 23%; /* Surface0 */
+    --accent-foreground: 226 64% 88%;
+    --destructive: 343 81% 75%; /* Red #f38ba8 */
+    --destructive-foreground: 240 21% 15%;
+    --border: 237 16% 23%; /* Surface0 */
+    --input: 237 16% 23%;
+    --ring: 267 84% 81%; /* Mauve */
+    --radius: 0.5rem;
 
-    --card: 231 15% 15%;
+    /* Terminal Colors (HSL Channels) */
+    --terminal-background: var(--background);
+    --terminal-foreground: var(--foreground);
+    --terminal-accent: var(--primary); /* Mauve */
+    --terminal-green: 115 54% 76%; /* #a6e3a1 */
+    --terminal-cyan: 189 71% 73%; /* #89dceb Sky */
+    --terminal-yellow: 41 86% 83%; /* #f9e2af */
+    --terminal-purple: 316 72% 87%; /* #f5c2e7 Pink */
+    --terminal-red: var(--destructive);
+    --terminal-comment: var(--muted-foreground);
+  }
+
+  /* Catppuccin Latte */
+  [data-theme='catppuccin-latte'] {
+    --background: 240 59% 90%; /* #eff1f5 */
+    --foreground: 224 20% 33%; /* #4c4f69 */
+    --card: 240 59% 90%;
+    --card-foreground: 224 20% 33%;
+    --popover: 240 59% 90%;
+    --popover-foreground: 224 20% 33%;
+    --primary: 267 83% 66%; /* Mauve #8839ef */
+    --primary-foreground: 240 59% 90%;
+    --secondary: 217 92% 61%; /* Blue #1e66f5 */
+    --secondary-foreground: 240 59% 90%;
+    --muted: 220 23% 86%; /* Surface0 #ccd0da */
+    --muted-foreground: 218 11% 55%; /* Overlay0 #9ca0b0 */
+    --accent: 220 23% 86%;
+    --accent-foreground: 224 20% 33%;
+    --destructive: 348 76% 56%; /* Red #d20f39 */
+    --destructive-foreground: 240 59% 90%;
+    --border: 222 17% 81%; /* Overlay0-ish or crust? Using #bcc0cc */
+    --input: 222 17% 81%;
+    --ring: 267 83% 66%;
+
+    --terminal-background: var(--background);
+    --terminal-foreground: var(--foreground);
+    --terminal-accent: var(--primary);
+    --terminal-green: 109 58% 40%; /* #40a02b */
+    --terminal-cyan: 199 95% 46%; /* #04a5e5 Sky */
+    --terminal-yellow: 35 77% 49%; /* #df8e1d */
+    --terminal-purple: 316 73% 69%; /* #ea76cb Pink */
+    --terminal-red: var(--destructive);
+    --terminal-comment: var(--muted-foreground);
+  }
+
+  /* Catppuccin Frappé */
+  [data-theme='catppuccin-frappe'] {
+    --background: 232 23% 18%; /* #303446 */
+    --foreground: 227 70% 87%; /* #c6d0f5 */
+    --card: 232 23% 18%;
+    --card-foreground: 227 70% 87%;
+    --popover: 232 23% 18%;
+    --popover-foreground: 227 70% 87%;
+    --primary: 271 70% 76%; /* Mauve #ca9ee6 */
+    --primary-foreground: 232 23% 18%;
+    --secondary: 224 87% 75%; /* Blue #8caaee */
+    --secondary-foreground: 232 23% 18%;
+    --muted: 229 19% 26%; /* Surface0 #414559 */
+    --muted-foreground: 228 20% 64%; /* Overlay0 #737994 */
+    --accent: 229 19% 26%;
+    --accent-foreground: 227 70% 87%;
+    --destructive: 348 78% 72%; /* Red #e78284 */
+    --destructive-foreground: 232 23% 18%;
+    --border: 229 19% 26%;
+    --input: 229 19% 26%;
+    --ring: 271 70% 76%;
+
+    --terminal-background: var(--background);
+    --terminal-foreground: var(--foreground);
+    --terminal-accent: var(--primary);
+    --terminal-green: 100 46% 68%; /* #a6d189 */
+    --terminal-cyan: 189 48% 73%; /* #99d1db Sky */
+    --terminal-yellow: 39 67% 73%; /* #e5c890 */
+    --terminal-purple: 316 73% 84%; /* #f4b8e4 Pink */
+    --terminal-red: var(--destructive);
+    --terminal-comment: var(--muted-foreground);
+  }
+
+  /* Catppuccin Macchiato */
+  [data-theme='catppuccin-macchiato'] {
+    --background: 234 19% 15%; /* #24273a */
+    --foreground: 227 68% 88%; /* #cad3f5 */
+    --card: 234 19% 15%;
+    --card-foreground: 227 68% 88%;
+    --popover: 234 19% 15%;
+    --popover-foreground: 227 68% 88%;
+    --primary: 269 82% 76%; /* Mauve #c6a0f6 */
+    --primary-foreground: 234 19% 15%;
+    --secondary: 226 90% 75%; /* Blue #8aadf4 */
+    --secondary-foreground: 234 19% 15%;
+    --muted: 231 15% 23%; /* Surface0 #363a4f */
+    --muted-foreground: 229 20% 64%; /* Overlay0 #6e738d */
+    --accent: 231 15% 23%;
+    --accent-foreground: 227 68% 88%;
+    --destructive: 346 84% 74%; /* Red #ed8796 */
+    --destructive-foreground: 234 19% 15%;
+    --border: 231 15% 23%;
+    --input: 231 15% 23%;
+    --ring: 269 82% 76%;
+
+    --terminal-background: var(--background);
+    --terminal-foreground: var(--foreground);
+    --terminal-accent: var(--primary);
+    --terminal-green: 105 48% 72%; /* #a6da95 */
+    --terminal-cyan: 189 59% 73%; /* #91d7e3 Sky */
+    --terminal-yellow: 40 70% 78%; /* #eed49f */
+    --terminal-purple: 316 73% 85%; /* #f5bde6 Pink */
+    --terminal-red: var(--destructive);
+    --terminal-comment: var(--muted-foreground);
+  }
+
+  /* Dracula */
+  [data-theme='dracula'] {
+    --background: 231 15% 18%; /* #282a36 */
+    --foreground: 60 30% 96%; /* #f8f8f2 */
+    --card: 231 15% 18%;
     --card-foreground: 60 30% 96%;
-
-    --popover: 231 15% 15%;
+    --popover: 231 15% 18%;
     --popover-foreground: 60 30% 96%;
-
-    --primary: 326 100% 74%;
+    --primary: 326 100% 74%; /* Pink #ff79c6 */
     --primary-foreground: 60 30% 96%;
-
-    --secondary: 265 89% 78%;
+    --secondary: 265 89% 78%; /* Purple #bd93f9 */
     --secondary-foreground: 60 30% 96%;
-
-    --muted: 225 27% 51%;
-    --muted-foreground: 60 9% 80%;
-
-    --accent: 171 97% 77%;
+    --muted: 231 15% 18%; /* Background */
+    --muted-foreground: 225 27% 51%; /* Comment #6272a4 */
+    --accent: 231 15% 18%; /* Background */
     --accent-foreground: 60 30% 96%;
-
-    --destructive: 0 100% 67%;
+    --destructive: 0 100% 67%; /* Red #ff5555 */
     --destructive-foreground: 60 30% 96%;
-
-    --border: 226 32% 40%;
-    --input: 226 32% 40%;
+    --border: 225 27% 51%; /* Comment */
+    --input: 225 27% 51%;
     --ring: 326 100% 74%;
 
-    --radius: 0.25rem;
+    --terminal-background: var(--background);
+    --terminal-foreground: var(--foreground);
+    --terminal-accent: var(--primary);
+    --terminal-green: 135 94% 65%; /* #50fa7b */
+    --terminal-cyan: 191 97% 77%; /* #8be9fd */
+    --terminal-yellow: 62 93% 76%; /* #f1fa8c */
+    --terminal-purple: var(--secondary);
+    --terminal-red: var(--destructive);
+    --terminal-comment: var(--muted-foreground);
   }
 
-  * {
-    @apply border-border;
-  }
+  /* Rosé Pine */
+  [data-theme='rose-pine'] {
+    --background: 249 22% 12%; /* #191724 */
+    --foreground: 245 50% 91%; /* #e0def4 */
+    --card: 249 22% 12%;
+    --card-foreground: 245 50% 91%;
+    --popover: 249 22% 12%;
+    --popover-foreground: 245 50% 91%;
+    --primary: 338 71% 68%; /* Love #eb6f92 */
+    --primary-foreground: 249 22% 12%;
+    --secondary: 267 57% 78%; /* Iris #c4a7e7 */
+    --secondary-foreground: 249 22% 12%;
+    --muted: 248 15% 21%; /* Surface #1f1d2e */
+    --muted-foreground: 247 13% 47%; /* Muted #6e6a86 */
+    --accent: 248 15% 21%; /* Surface */
+    --accent-foreground: 245 50% 91%;
+    --destructive: 338 71% 68%; /* Love */
+    --destructive-foreground: 245 50% 91%;
+    --border: 247 13% 47%; /* Muted */
+    --input: 247 13% 47%;
+    --ring: 338 71% 68%; /* Love */
 
-  body {
-    @apply bg-terminal-background text-terminal-foreground font-mono;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    --terminal-background: var(--background);
+    --terminal-foreground: var(--foreground);
+    --terminal-accent: var(--primary);
+    --terminal-green: 197 49% 38%; /* #31748f Pine */
+    --terminal-cyan: 189 43% 73%; /* #9ccfd8 Foam */
+    --terminal-yellow: 35 88% 71%; /* #f6c177 Gold */
+    --terminal-purple: var(--secondary);
+    --terminal-red: var(--destructive);
+    --terminal-comment: var(--muted-foreground);
   }
+}
 
-  .blog-container {
-    @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
-  }
+* {
+  @apply border-border;
+}
 
-  .blog-link {
-    @apply text-terminal-cyan hover:text-terminal-green transition-colors;
-  }
+body {
+  @apply bg-terminal-background text-terminal-foreground font-mono transition-colors duration-300;
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
 
-  .tag {
-    @apply inline-block px-3 py-1 text-sm font-medium rounded-md mr-2 mb-2;
-  }
+.blog-container {
+  @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
+}
 
-  .tag-1 {
-    @apply bg-opacity-20 bg-terminal-cyan text-terminal-cyan;
-  }
+.blog-link {
+  @apply text-terminal-cyan hover:text-terminal-green transition-colors;
+}
 
-  .tag-2 {
-    @apply bg-opacity-20 bg-terminal-purple text-terminal-purple;
-  }
+.tag {
+  @apply inline-block px-3 py-1 text-sm font-medium rounded-md mr-2 mb-2;
+}
 
-  .tag-3 {
-    @apply bg-opacity-20 bg-terminal-yellow text-terminal-yellow;
-  }
+.tag-1 {
+  @apply bg-opacity-20 bg-terminal-cyan text-terminal-cyan;
+}
 
-  .tag-4 {
-    @apply bg-opacity-20 bg-terminal-green text-terminal-green;
-  }
+.tag-2 {
+  @apply bg-opacity-20 bg-terminal-purple text-terminal-purple;
+}
 
-  .terminal-prompt::before {
-    content: "$ ";
-    @apply text-terminal-green;
-  }
+.tag-3 {
+  @apply bg-opacity-20 bg-terminal-yellow text-terminal-yellow;
+}
 
-  .terminal-header {
-    @apply border border-terminal-comment bg-terminal-background/80 rounded-t-md;
-  }
+.tag-4 {
+  @apply bg-opacity-20 bg-terminal-green text-terminal-green;
+}
 
-  .terminal-body {
-    @apply border-x border-b border-terminal-comment p-4 rounded-b-md;
-  }
+.terminal-prompt::before {
+  content: "$ ";
+  @apply text-terminal-green;
+}
 
-  /* Terminal window dots */
-  .terminal-dots span {
-    @apply inline-block w-3 h-3 rounded-full mr-2;
-  }
+.terminal-header {
+  @apply border border-terminal-comment bg-terminal-background/80 rounded-t-md;
+}
 
-  .terminal-dot-red {
-    @apply bg-terminal-red;
-  }
+.terminal-body {
+  @apply border-x border-b border-terminal-comment p-4 rounded-b-md;
+}
 
-  .terminal-dot-yellow {
-    @apply bg-terminal-yellow;
-  }
+/* Terminal window dots */
+.terminal-dots span {
+  @apply inline-block w-3 h-3 rounded-full mr-2;
+}
 
-  .terminal-dot-green {
-    @apply bg-terminal-green;
-  }
+.terminal-dot-red {
+  @apply bg-terminal-red;
+}
 
-  /* Blinking cursor */
-  .terminal-cursor::after {
-    content: "▋";
-    @apply animate-cursor-blink text-terminal-cyan;
-  }
+.terminal-dot-yellow {
+  @apply bg-terminal-yellow;
+}
+
+.terminal-dot-green {
+  @apply bg-terminal-green;
+}
+
+/* Blinking cursor */
+.terminal-cursor::after {
+  content: "▋";
+  @apply animate-cursor-blink text-terminal-cyan;
 }

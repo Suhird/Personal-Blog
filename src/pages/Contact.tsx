@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Layout from "@/components/Layout";
 import { useToast } from "@/hooks/use-toast";
+import emailjs from "@emailjs/browser";
 
 const Contact = () => {
   const { toast } = useToast();
@@ -23,20 +24,52 @@ const Contact = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    setTimeout(() => {
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+    if (!serviceId || !templateId || !publicKey) {
       toast({
-        title: "Message sent!",
-        description: "Thanks for reaching out. I'll get back to you soon.",
-      });
-      setFormData({
-        name: "",
-        email: "",
-        subject: "",
-        message: "",
+        title: "Configuration Error",
+        description: "EmailJS keys are missing from environment variables.",
+        variant: "destructive",
       });
       setIsSubmitting(false);
-    }, 1000);
+      return;
+    }
+
+    const templateParams = {
+      from_name: formData.name,
+      from_email: formData.email,
+      subject: formData.subject,
+      message: formData.message,
+    };
+
+    emailjs
+      .send(serviceId, templateId, templateParams, publicKey)
+      .then((response) => {
+        toast({
+          title: "Message sent!",
+          description: "Thanks for reaching out. I'll get back to you soon.",
+        });
+        setFormData({
+          name: "",
+          email: "",
+          subject: "",
+          message: "",
+        });
+      })
+      .catch((error) => {
+        console.error("EmailJS Error:", error);
+        toast({
+          title: "Error sending message",
+          description: "Please try again later or email me directly.",
+          variant: "destructive",
+        });
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
   };
 
   return (
@@ -137,9 +170,9 @@ const Contact = () => {
           </div>
 
           <div>
-            <div className="bg-secondary/50 p-6 rounded-lg mb-6">
+            <div className="bg-secondary/50 p-6 rounded-lg mb-6 text-foreground">
               <h2 className="text-xl font-semibold mb-4">Get In Touch</h2>
-              <p className="text-muted-foreground mb-4">
+              <p className="text-foreground/80 mb-4">
                 You can reach out to me directly through this form or via email
                 and social media. I'll try to respond as quickly as possible.
               </p>
@@ -196,15 +229,15 @@ const Contact = () => {
               </div>
             </div>
 
-            <div className="bg-secondary/50 p-6 rounded-lg">
+            <div className="bg-secondary/50 p-6 rounded-lg text-foreground">
               <h2 className="text-xl font-semibold mb-4">
                 Looking to Work Together?
               </h2>
-              <p className="text-muted-foreground mb-4">
+              <p className="text-foreground/80 mb-4">
                 I'm open to freelance opportunities, consulting, and
                 collaborations on interesting projects.
               </p>
-              <ul className="text-muted-foreground space-y-2">
+              <ul className="text-foreground/80 space-y-2">
                 <li>- Technical writing</li>
                 <li>- Web application development</li>
                 <li>- Making APIs performant</li>

@@ -9,4 +9,9 @@ export const post: BlogPost = {
   readTime: "8 min",
   slug: "event-driven-patterns-kafka",
   markdownFile: "event-driven-patterns-kafka",
+  series: {
+    id: "event-driven-patterns",
+    title: "Event-Driven Patterns",
+    order: 1,
+  },
 };

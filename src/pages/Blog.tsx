@@ -8,7 +8,7 @@ import { X } from "lucide-react";
 const Blog = () => {
   const [searchParams] = useSearchParams();
   const tagFilter = searchParams.get("tag");
-  const [isGrouped, setIsGrouped] = useState(false);
+  const [isGrouped, setIsGrouped] = useState(true);
 
   const filteredPosts = tagFilter
     ? blogPosts.filter((post) => post.tags.includes(tagFilter))
@@ -16,29 +16,33 @@ const Blog = () => {
 
   // Grouping Logic
   const groupedPosts = (() => {
-    if (!isGrouped) return { groups: {}, standalone: filteredPosts };
+    if (!isGrouped) return { groups: [], standalone: filteredPosts };
 
-    const groups: { [key: string]: typeof blogPosts } = {};
+    const groupsMap: { [key: string]: typeof blogPosts } = {};
+    const groupOrder: string[] = [];
     const standalone: typeof blogPosts = [];
 
     // First pass: organize into series or standalone
     filteredPosts.forEach(post => {
       if (post.series) {
-        if (!groups[post.series.id]) {
-          groups[post.series.id] = [];
+        if (!groupsMap[post.series.id]) {
+          groupsMap[post.series.id] = [];
+          groupOrder.push(post.series.id);
         }
-        groups[post.series.id].push(post);
+        groupsMap[post.series.id].push(post);
       } else {
         standalone.push(post);
       }
     });
 
-    // Sort posts within series by order
-    Object.values(groups).forEach(group => {
+    // Create ordered array of groups and sort posts within each series
+    const orderedGroups = groupOrder.map(id => {
+      const group = groupsMap[id];
       group.sort((a, b) => (a.series?.order || 0) - (b.series?.order || 0));
+      return group;
     });
 
-    return { groups, standalone };
+    return { groups: orderedGroups, standalone };
   })();
 
   return (
@@ -86,7 +90,7 @@ const Blog = () => {
             isGrouped ? (
               <div className="space-y-12">
                 {/* Render Series Groups First */}
-                {Object.values(groupedPosts.groups).map((group: any) => (
+                {groupedPosts.groups.map((group: any) => (
                   <div key={group[0].series.id} className="border border-terminal-purple/30 rounded-lg p-6 bg-terminal-purple/5">
                     <h3 className="text-lg font-bold text-terminal-purple mb-4 flex items-center gap-2">
                        <span className="text-2xl">📚</span> {group[0].series.title} Series
@@ -105,7 +109,7 @@ const Blog = () => {
                 {/* Render Standalone Posts */}
                 {groupedPosts.standalone.length > 0 && (
                    <div className="space-y-8">
-                      {Object.keys(groupedPosts.groups).length > 0 && (
+                      {groupedPosts.groups.length > 0 && (
                         <div className="flex items-center gap-2 text-terminal-comment pb-2 border-b border-terminal-comment/20 mt-8">
                           <span className="text-xl">📝</span> <span className="font-mono text-sm uppercase tracking-wider">Independent Posts</span>
                         </div>

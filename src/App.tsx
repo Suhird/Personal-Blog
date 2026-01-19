@@ -13,14 +13,17 @@ import NotFound from "./pages/NotFound";
 import Maintenance from "./pages/Maintenance";
 import { siteConfig } from "./config/siteConfig";
 
+import { ThemeProvider } from "@/components/theme-provider";
+
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter basename="Personal-Blog">
+      <ThemeProvider defaultTheme="catppuccin-mocha" attribute="data-theme">
+        <Toaster />
+        <Sonner />
+        <BrowserRouter basename="Personal-Blog">
         <Routes>
           {/* If maintenance mode is enabled, show maintenance page at root */}
           <Route
@@ -69,7 +72,8 @@ const App = () => (
           <Route path="/maintenance" element={<Maintenance />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </BrowserRouter>
+        </BrowserRouter>
+      </ThemeProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

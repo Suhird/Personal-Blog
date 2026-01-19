@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "./ThemeToggle";
 
 interface NavItem {
   title: string;
@@ -42,6 +43,7 @@ const Header = () => {
               {item.title}
             </Link>
           ))}
+          <ThemeToggle />
         </nav>
       </div>
       <div className="flex justify-end mt-4 text-terminal-comment text-sm">

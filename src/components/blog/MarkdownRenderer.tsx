@@ -103,6 +103,12 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
             </code>
           );
         },
+        img: ({ node, ...props }) => (
+          <img
+            {...props}
+            className="max-h-[500px] w-auto max-w-full object-contain mx-auto rounded-lg border border-terminal-comment/30 my-4"
+          />
+        ),
       }}
     >
       {content}
