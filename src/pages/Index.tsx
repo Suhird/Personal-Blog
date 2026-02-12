@@ -3,7 +3,7 @@ import Layout from "@/components/Layout";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import StatsGrid from "@/components/dashboard/StatsGrid";
 import TechStackPanel from "@/components/dashboard/TechStackPanel";
-import SystemMonitor from "@/components/dashboard/SystemMonitor";
+
 import TerminalLogs from "@/components/dashboard/TerminalLogs";
 
 const Index = () => {
@@ -16,11 +16,8 @@ const Index = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
           {/* Main Content Area - 2/3 width */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Row 1: System Monitor Graphs */}
-            <SystemMonitor />
-
-            {/* Row 2: Expanded Terminal Logs (Replaces Process List) */}
-            <div className="h-[300px]">
+            {/* Expanded Terminal Logs */}
+            <div className="h-[600px]">
               <TerminalLogs />
             </div>
             
