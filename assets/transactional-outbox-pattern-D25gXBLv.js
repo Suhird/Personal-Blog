@@ -2,7 +2,7 @@ const e=`# The Transactional Outbox Pattern: Reliability at Scale
 
 Learn how to solve the "Dual Write" problem and guarantee eventual consistency in your microservices.
 
-![Transactional Outbox Architecture Example](/Personal-Blog/transactional_outbox_pattern_architecture.png)
+![Transactional Outbox Architecture Example](/transactional_outbox_pattern_architecture.png)
 
 ## Introduction
 
@@ -20,7 +20,7 @@ This leads to a classic distributed systems challenge: **The Dual Write Problem*
 
 What happens if you try to do two things that *must* happen together, but they live in different systems?
 
-![Dual Write Problem Diagram](/Personal-Blog/transactional_outbox_pattern_dual_write.png)
+![Dual Write Problem Diagram](/transactional_outbox_pattern_dual_write.png)
 
 ### Scenario A: Save First, Publish Later
 1.  **Transaction Commits**: The order is saved in Postgres. \`COMMIT\`.
