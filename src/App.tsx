@@ -23,9 +23,7 @@ const App = () => (
       <ThemeProvider defaultTheme="catppuccin-mocha" attribute="data-theme">
         <Toaster />
         <Sonner />
-        <BrowserRouter basename="Personal-Blog">
-        {/* Uncomment this if deploying on Netlify */}
-        {/* <BrowserRouter basename="/"> */}
+        <BrowserRouter>
         <Routes>
           {/* If maintenance mode is enabled, show maintenance page at root */}
           <Route
