@@ -2,7 +2,7 @@
 
 Explore how shifting from synchronous API calls to event-driven architectures can decouple your microservices and unlock scalability.
 
-![Kafka Architecture](/Personal-Blog/kafka_ecommerce_architecture.png)
+![Kafka Architecture](/kafka_ecommerce_architecture.png)
 
 ## Introduction
 
@@ -53,7 +53,7 @@ The **Notification Service** and **Warehouse Service** subscribe to the `orders`
 
 This pattern addresses the problem of data ownership and querying across boundaries.
 
-![Event-Carried State Transfer Diagram](/Personal-Blog/kafka_state_transfer.png)
+![Event-Carried State Transfer Diagram](/kafka_state_transfer.png)
 
 ### The Problem
 The **Order Service** needs to know the price and description of products to validate an order.
@@ -75,7 +75,7 @@ The **Order Service** consumes these events and maintains a local read-only cach
 
 Instead of storing just the *current* state of an entity, we store the *sequence of events* that led to that state.
 
-![Event Sourcing Timeline](/Personal-Blog/kafka_event_sourcing.png)
+![Event Sourcing Timeline](/kafka_event_sourcing.png)
 
 ### The Concept
 For an Order, we don't just UPDATE a row in a SQL table from 'Pending' to 'Shipped'. We record:

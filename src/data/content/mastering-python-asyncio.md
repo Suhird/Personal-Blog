@@ -3,7 +3,7 @@
 Understand the event loop, coroutines, and tasks to write highly concurrent network-bound applications.
 
 
-![Visualizing Python Concurrency vs GIL](/Personal-Blog/python_gil_concurrency.png)
+![Visualizing Python Concurrency vs GIL](/python_gil_concurrency.png)
 
 ## What is Concurrency?
 

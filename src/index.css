@@ -39,38 +39,7 @@
     --terminal-comment: var(--muted-foreground);
   }
 
-  /* Catppuccin Latte */
-  [data-theme='catppuccin-latte'] {
-    --background: 240 59% 90%; /* #eff1f5 */
-    --foreground: 224 20% 33%; /* #4c4f69 */
-    --card: 240 59% 90%;
-    --card-foreground: 224 20% 33%;
-    --popover: 240 59% 90%;
-    --popover-foreground: 224 20% 33%;
-    --primary: 267 83% 66%; /* Mauve #8839ef */
-    --primary-foreground: 240 59% 90%;
-    --secondary: 217 92% 61%; /* Blue #1e66f5 */
-    --secondary-foreground: 240 59% 90%;
-    --muted: 220 23% 86%; /* Surface0 #ccd0da */
-    --muted-foreground: 218 11% 55%; /* Overlay0 #9ca0b0 */
-    --accent: 220 23% 86%;
-    --accent-foreground: 224 20% 33%;
-    --destructive: 348 76% 56%; /* Red #d20f39 */
-    --destructive-foreground: 240 59% 90%;
-    --border: 222 17% 81%; /* Overlay0-ish or crust? Using #bcc0cc */
-    --input: 222 17% 81%;
-    --ring: 267 83% 66%;
 
-    --terminal-background: var(--background);
-    --terminal-foreground: var(--foreground);
-    --terminal-accent: var(--primary);
-    --terminal-green: 109 58% 40%; /* #40a02b */
-    --terminal-cyan: 199 95% 46%; /* #04a5e5 Sky */
-    --terminal-yellow: 35 77% 49%; /* #df8e1d */
-    --terminal-purple: 316 73% 69%; /* #ea76cb Pink */
-    --terminal-red: var(--destructive);
-    --terminal-comment: var(--muted-foreground);
-  }
 
   /* Catppuccin Frappé */
   [data-theme='catppuccin-frappe'] {

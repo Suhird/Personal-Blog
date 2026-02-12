@@ -60,7 +60,18 @@ const TerminalLogs = () => {
 
   useEffect(() => {
     // Add initial logs
-    setLogs(["System initialized.", "Loading dashboard jokes...", "Mounting sense of humor..."]);
+    setLogs([
+      "System initialized...", 
+      "Loading dashboard jokes...", 
+      "Mounting sense of humor...",
+      "Establishing connection to main server...",
+      "Allocating memory for bad puns...",
+      "Checking tea/coffee levels...",
+      "Compiling sarcasm module...",
+      "Running 'make magic'...",
+      "Reading user mind (failed, permission denied)...",
+      "Syncing with the cloud (it's actually just another computer)..."
+    ]);
 
     const interval = setInterval(() => {
       const randomLog = possibleLogs[Math.floor(Math.random() * possibleLogs.length)];
@@ -69,7 +80,7 @@ const TerminalLogs = () => {
 
       setLogs(prev => {
         const newLogs = [...prev, newLog];
-        if (newLogs.length > 15) return newLogs.slice(1); // Increased retention for expanded view
+        if (newLogs.length > 28) return newLogs.slice(1); // Increased retention for expanded view
         return newLogs;
       });
     }, 1500); // Slightly faster updates

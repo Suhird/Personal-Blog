@@ -24,9 +24,7 @@ export function ThemeToggle() {
         <DropdownMenuItem onClick={() => setTheme("catppuccin-mocha")}>
           Catppuccin Mocha (Default)
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("catppuccin-latte")}>
-          Catppuccin Latte
-        </DropdownMenuItem>
+
         <DropdownMenuItem onClick={() => setTheme("catppuccin-frappe")}>
           Catppuccin Frappé
         </DropdownMenuItem>

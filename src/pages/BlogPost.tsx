@@ -101,7 +101,11 @@ Pelientesque auctor nisi id magna consequat sagittis.
           )}
         </div>
 
-        <SeriesNavigation currentPost={post} allPosts={blogPosts} />
+        <SeriesNavigation 
+          currentPost={post} 
+          allPosts={blogPosts} 
+          className="mt-8 pt-8 border-t border-terminal-comment/30"
+        />
         <ShareLinks />
       </article>
     </Layout>
