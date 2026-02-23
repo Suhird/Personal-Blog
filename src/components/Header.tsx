@@ -28,7 +28,7 @@ const Header = () => {
             </span>
           </Link>
         </div>
-        <nav className="flex flex-wrap gap-4 sm:gap-6">
+        <nav className="flex flex-wrap items-center gap-4 sm:gap-6">
           {navItems.map((item) => (
             <Link
               key={item.href}
@@ -43,7 +43,9 @@ const Header = () => {
               {item.title}
             </Link>
           ))}
-          <ThemeToggle />
+          <div className="flex items-center ml-2 border-l border-terminal-comment/30 pl-4 sm:pl-6">
+            <ThemeToggle />
+          </div>
         </nav>
       </div>
       <div className="flex justify-end mt-4 text-terminal-comment text-sm">

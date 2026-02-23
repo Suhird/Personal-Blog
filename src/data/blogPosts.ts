@@ -1,4 +1,5 @@
 import { BlogPost } from "@/components/BlogCard";
+import { post as reviewLensAiPoweredReviewIntelligence } from "./posts/review-lens-ai-powered-review-intelligence";
 import { post as learningRustPart1 } from "./posts/learning-rust-with-example-part-1";
 import { post as introductionGo } from "./posts/introduction-go-building-cli-tools";
 import { post as acceleratingPythonWithRustPyo3 } from "./posts/accelerating-python-with-rust-pyo3";
@@ -12,17 +13,18 @@ import { post as monteCarloSimulationsPython } from "./posts/monte-carlo-simulat
 import { post as optimizingDockerfilesGuide } from "./posts/optimizing-dockerfiles-guide";
 import { post as apiRateLimitingStrategies } from "./posts/api-rate-limiting-strategies";
 import { post as grpcVsGraphqlComparison } from "./posts/grpc-vs-graphql-comparison";
-import { post as btreesVsLsmTrees } from "./posts/btrees-vs-lsm-trees";
+
 import { post as webassemblyRustPrimer } from "./posts/webassembly-rust-primer";
 import { post as eventDrivenPatternsKafka } from "./posts/event-driven-patterns-kafka";
 import { post as transactionalOutboxPattern } from "./posts/transactional-outbox-pattern";
 
 // latest blog post on top as the sequence is show on FE starting with first as latest
 export const blogPosts: BlogPost[] = [
+  reviewLensAiPoweredReviewIntelligence,
   transactionalOutboxPattern,
   eventDrivenPatternsKafka,
   webassemblyRustPrimer,
-  btreesVsLsmTrees,
+
   grpcVsGraphqlComparison,
   apiRateLimitingStrategies,
   optimizingDockerfilesGuide,

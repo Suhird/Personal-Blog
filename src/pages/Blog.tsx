@@ -8,7 +8,7 @@ import { X } from "lucide-react";
 const Blog = () => {
   const [searchParams] = useSearchParams();
   const tagFilter = searchParams.get("tag");
-  const [isGrouped, setIsGrouped] = useState(true);
+  const [isGrouped, setIsGrouped] = useState(false);
 
   const filteredPosts = tagFilter
     ? blogPosts.filter((post) => post.tags.includes(tagFilter))

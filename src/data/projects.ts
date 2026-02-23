@@ -1,4 +1,3 @@
-
 export interface Project {
   id: string;
   name: string;
@@ -6,37 +5,56 @@ export interface Project {
   technologies: string[];
   github: string;
   live?: string;
+  image?: string;
 }
 
 export const projects: Project[] = [
   {
     id: "1",
-    name: "Personal Blog",
-    description: "A clean and minimalist personal blog built with React, TypeScript, and Tailwind CSS. Features a responsive design and markdown support.",
-    technologies: ["React", "TypeScript", "Tailwind CSS"],
-    github: "https://github.com/yourusername/personal-blog",
-    live: "https://your-blog-url.com"
+    name: "ReviewLens",
+    description: "AI-powered consumer review intelligence running entirely locally. Scrapes multi-source data and synthesizes real verdicts.",
+    technologies: ["Python", "FastAPI", "React", "LLM"],
+    github: "https://github.com/suhird/review-lens",
+    image: "/projects/review_lens.png"
   },
   {
     id: "2",
-    name: "Go CLI Tool",
-    description: "A command-line interface tool built with Go for automating common development tasks like project scaffolding and code generation.",
-    technologies: ["Go", "Cobra", "Viper"],
-    github: "https://github.com/yourusername/go-cli-tool"
+    name: "Financial-Portfolio-Analysis-TUI",
+    description: "Terminal User Interface for analyzing financial portfolios with real-time candlestick charts and tracking.",
+    technologies: ["Python", "Textual", "Finance"],
+    github: "https://github.com/suhird/Financial-Portfolio-Analysis-TUI",
+    image: "/projects/finance_tui.png"
   },
   {
     id: "3",
-    name: "Kubernetes Monitoring Dashboard",
-    description: "A real-time dashboard for monitoring Kubernetes clusters. Visualizes resource usage, pod status, and cluster health.",
-    technologies: ["React", "Node.js", "Kubernetes API"],
-    github: "https://github.com/yourusername/k8s-dashboard",
-    live: "https://k8s-dashboard-demo.com"
+    name: "HuffmanEncoding",
+    description: "A data compression utility implementing Huffman Encoding algorithms to shrink data efficiently.",
+    technologies: ["Python", "Algorithms", "Compression"],
+    github: "https://github.com/suhird/HuffmanEncoding",
+    image: "/projects/huffman.png"
   },
   {
     id: "4",
-    name: "E-commerce API",
-    description: "A RESTful API for e-commerce applications. Handles product catalog, user authentication, and order management.",
-    technologies: ["Express.js", "MongoDB", "JWT"],
-    github: "https://github.com/yourusername/ecommerce-api"
+    name: "Dota2GameAutoAccept",
+    description: "Script to automatically accept Dota 2 match queues to avoid missing matches after long waits.",
+    technologies: ["Python", "OpenCV", "Automation"],
+    github: "https://github.com/suhird/Dota2GameAutoAccept",
+    image: "/projects/dota2.png"
+  },
+  {
+    id: "5",
+    name: "RSNAPneumoniaDetection",
+    description: "A machine learning pipeline for detecting pneumonia from lung X-ray scans, built for the RSNA challenge.",
+    technologies: ["Python", "PyTorch", "Computer Vision", "Medical Imaging"],
+    github: "https://github.com/suhird/RSNAPneumoniaDetection",
+    image: "/projects/rsna.png"
+  },
+  {
+    id: "6",
+    name: "AirbusShipDetection",
+    description: "Satellite imagery analysis model for detecting and segmenting ships from Kaggle's Airbus dataset.",
+    technologies: ["Python", "TensorFlow", "Keras", "Image Segmentation"],
+    github: "https://github.com/suhird/AirbusShipDetection",
+    image: "/projects/airbus.png"
   }
 ];
