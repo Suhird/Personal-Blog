@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "./ThemeToggle";
+import { Github, Linkedin } from "lucide-react";
 
 interface NavItem {
   title: string;
@@ -21,12 +22,35 @@ const Header = () => {
   return (
     <header className="py-6 border-b border-terminal-comment/30">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div className="flex items-center">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <Link to="/" className="flex items-center gap-2">
             <span className="font-bold text-xl text-terminal-purple terminal-prompt terminal-cursor">
               Echo My Thoughts 🤔 ...
             </span>
           </Link>
+          <div className="flex items-center gap-3 px-3 py-1.5 rounded-md border border-terminal-cyan/30 bg-terminal-cyan/5 shadow-[0_0_8px_rgba(6,182,212,0.1)]">
+            <a
+              href="https://github.com/suhird"
+              target="_blank"
+              rel="noreferrer"
+              className="text-terminal-comment hover:text-terminal-cyan transition-colors flex items-center gap-1.5 text-xs font-medium"
+              aria-label="GitHub Profile"
+            >
+              <Github size={14} />
+              <span>GitHub</span>
+            </a>
+            <span className="text-terminal-comment/30">|</span>
+            <a
+              href="https://linkedin.com/in/suhird-singh/"
+              target="_blank"
+              rel="noreferrer"
+              className="text-terminal-comment hover:text-terminal-cyan transition-colors flex items-center gap-1.5 text-xs font-medium"
+              aria-label="LinkedIn Profile"
+            >
+              <Linkedin size={14} />
+              <span>LinkedIn</span>
+            </a>
+          </div>
         </div>
         <nav className="flex flex-wrap items-center gap-4 sm:gap-6">
           {navItems.map((item) => (
@@ -47,24 +71,6 @@ const Header = () => {
             <ThemeToggle />
           </div>
         </nav>
-      </div>
-      <div className="flex justify-end mt-4 text-terminal-comment text-sm">
-        <a
-          href="https://github.com/suhird"
-          target="_blank"
-          rel="noreferrer"
-          className="ml-4 hover:text-terminal-cyan"
-        >
-          <span>github</span>
-        </a>
-        <a
-          href="https://linkedin.com/in/suhird-singh/"
-          target="_blank"
-          rel="noreferrer"
-          className="ml-4 hover:text-terminal-cyan"
-        >
-          <span>linkedin</span>
-        </a>
       </div>
     </header>
   );
