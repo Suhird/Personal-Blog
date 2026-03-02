@@ -318,10 +318,10 @@ Analysis time on an M2 MacBook Air with the tuned settings: **~5–8 minutes** f
 
 ## What's Next
 
+- **Pre-Analysis** — Using OpenClaw to send message via Telegram or WhatsApp to trigger the analysis
 - **Browser extension** — inject the ReviewLens verdict directly into Amazon product pages while you browse
 - **Amazon PA-API integration** — the official Amazon Product Advertising API is free with an Associates account and gives structured review data without scraping
 - **Comparison mode** — analyze two products side by side with a diff view of aspect scores
-- **Scheduled re-analysis** — cron job to re-scrape saved products weekly and surface score changes over time
 - **Cloud deployment** — with a larger Ollama model (Mistral 7B or Mixtral) on a GPU instance, analysis time drops to under 2 minutes and quality improves significantly
 
 The full source is on GitHub. The home page includes several demo products with pre-generated reports if you want to explore the UI without running the full pipeline.
