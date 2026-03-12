@@ -2,8 +2,6 @@
 
 Learn how to solve the "Dual Write" problem and guarantee eventual consistency in your microservices.
 
-![Transactional Outbox Architecture Example](/transactional_outbox_pattern_architecture.png)
-
 ## Introduction
 
 In our previous post, [Event-Driven Patterns with Kafka](event-driven-patterns-kafka), we explored how **ShopStream** uses events to decouple services. We assumed that when an order is placed, an event is magically sent to Kafka.

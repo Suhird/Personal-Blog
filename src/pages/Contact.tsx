@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import Layout from "@/components/Layout";
 import { useToast } from "@/hooks/use-toast";
 import emailjs from "@emailjs/browser";
@@ -74,6 +75,16 @@ const Contact = () => {
 
   return (
     <Layout>
+      <Helmet>
+        <title>Contact - Suhird Singh | Get in Touch</title>
+        <meta name="description" content="Get in touch with Suhird Singh. Send a message or connect via email, LinkedIn, or GitHub." />
+        <meta name="keywords" content="contact, Suhird Singh, email, connect, reach out" />
+        <meta property="og:title" content="Contact - Suhird Singh" />
+        <meta property="og:description" content="Get in touch with Suhird Singh. Send a message or connect and collaborate." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://suhird.me/contact" />
+        <link rel="canonical" href="https://suhird.me/contact" />
+      </Helmet>
       <div className="blog-container py-16">
         <h1 className="text-4xl font-bold tracking-tight mb-3">Contact Me</h1>
         <p className="text-lg text-muted-foreground mb-8">

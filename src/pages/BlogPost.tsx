@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import Layout from "@/components/Layout";
 import { blogPosts } from "@/data/blogPosts";
 import { useEffect, useState } from "react";
@@ -47,6 +48,10 @@ const BlogPost = () => {
   if (!post) {
     return (
       <Layout>
+        <Helmet>
+          <title>Post Not Found - Suhird's Blog</title>
+          <meta name="robots" content="noindex, follow" />
+        </Helmet>
         <div className="blog-container py-16">
           <PostNotFound />
         </div>
@@ -78,8 +83,56 @@ function example() {
 Pelientesque auctor nisi id magna consequat sagittis.
 `;
 
+  // Construct canonical URL
+  const canonicalUrl = `https://suhird.me/blog/${post.slug}`;
+
+  // Create JSON-LD schema for blog post
+  const jsonLdSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": post.title,
+    "description": post.description,
+    "datePublished": post.date,
+    "dateModified": post.date,
+    "author": {
+      "@type": "Person",
+      "name": "Suhird Singh",
+      "url": "https://suhird.me"
+    },
+    "url": canonicalUrl,
+    "keywords": post.tags.join(", "),
+    "articleBody": contentToRender
+  };
+
   return (
     <Layout>
+      <Helmet>
+        <title>{post.title} - Suhird's Blog</title>
+        <meta name="description" content={post.description} />
+        <meta name="keywords" content={post.tags.join(", ")} />
+        <meta name="author" content="Suhird Singh" />
+        <meta name="robots" content="index, follow" />
+        
+        {/* Open Graph Tags */}
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={post.title} />
+        <meta property="og:description" content={post.description} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:site_name" content="Suhird's Blog" />
+        
+        {/* Twitter Card Tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={post.title} />
+        <meta name="twitter:description" content={post.description} />
+        
+        {/* Canonical URL */}
+        <link rel="canonical" href={canonicalUrl} />
+        
+        {/* JSON-LD Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify(jsonLdSchema)}
+        </script>
+      </Helmet>
       <article className="blog-container py-16">
         <Link to="/blog" className="blog-link mb-8 inline-block">
           ← Back to Blog

@@ -2,8 +2,6 @@
 
 Stop trusting star ratings. Here's how to build a system that reads thousands of reviews for you — detecting fake ones, spotting quality drift, and surfacing what real buyers actually care about.
 
-![ReviewLens Architecture](/review_lens_title_architecture.png)
-
 ## The Problem with Modern Product Reviews
 
 Buying a product online in 2026 means wading through thousands of reviews, many of which are fake, incentivized, or just noise. Star ratings are gamed. Review counts are inflated. A product with 4.7 stars and 3,000 reviews might have a 30% fake rate, declining quality over the last six months, and a recurring complaint buried 40 pages deep that nobody reads.

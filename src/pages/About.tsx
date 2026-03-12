@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import Layout from "@/components/Layout";
 import myImage from "../images/Cartoonified-FaceShot.png";
 import { FaDownload } from "react-icons/fa";
@@ -6,6 +7,16 @@ import Timeline from "@/components/Timeline";
 const About = () => {
   return (
     <Layout>
+      <Helmet>
+        <title>About - Suhird Singh | Software Engineer</title>
+        <meta name="description" content="Learn about Suhird Singh, a software engineer passionate about backend systems, microservices, and cloud architecture." />
+        <meta name="keywords" content="Suhird Singh, software engineer, about, experience, skills" />
+        <meta property="og:title" content="About - Suhird Singh" />
+        <meta property="og:description" content="Learn about Suhird Singh, a software engineer with expertise in backend systems and microservices." />
+        <meta property="og:type" content="profile" />
+        <meta property="og:url" content="https://suhird.me/about" />
+        <link rel="canonical" href="https://suhird.me/about" />
+      </Helmet>
       <div className="blog-container py-16">
         <h1 className="text-4xl font-bold tracking-tight mb-8">About Me</h1>
         <a

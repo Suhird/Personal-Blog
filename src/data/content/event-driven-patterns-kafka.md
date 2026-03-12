@@ -2,8 +2,6 @@
 
 Explore how shifting from synchronous API calls to event-driven architectures can decouple your microservices and unlock scalability.
 
-![Kafka Architecture](/kafka_ecommerce_architecture.png)
-
 ## Introduction
 
 In the world of microservices, one of the biggest challenges is maintaining loose coupling. When Service A calls Service B synchronously (e.g., via REST or gRPC), they become temporally coupled. If Service B is down or slow, Service A suffers.

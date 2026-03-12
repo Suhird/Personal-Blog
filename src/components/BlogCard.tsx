@@ -29,11 +29,34 @@ const BlogCard = ({ post }: BlogCardProps) => {
     return classes[index % classes.length];
   };
 
+  // Convert full month name to 3-letter abbreviation
+  const formatDate = (dateString: string) => {
+    const months: { [key: string]: string } = {
+      January: "Jan",
+      February: "Feb",
+      March: "Mar",
+      April: "Apr",
+      May: "May",
+      June: "Jun",
+      July: "Jul",
+      August: "Aug",
+      September: "Sep",
+      October: "Oct",
+      November: "Nov",
+      December: "Dec",
+    };
+
+    return dateString.replace(
+      new RegExp(`\\b(${Object.keys(months).join("|")})\\b`),
+      (match) => months[match]
+    );
+  };
+
   return (
-    <article className="mb-8 border-b border-border pb-8">
+    <article className="mb-4 pb-4">
       <div>
-        <div className="space-y-2 mb-2">
-          <h2 className="text-2xl font-bold tracking-tight">
+        <div className="space-y-2 mb-3">
+          <h2 className="text-lg font-semibold tracking-tight">
             {post.series && (
               <div className="flex items-center gap-2 mb-2 text-xs font-medium text-terminal-purple">
                 <span className="bg-terminal-purple/10 px-2 py-0.5 rounded border border-terminal-purple/20">
@@ -42,24 +65,17 @@ const BlogCard = ({ post }: BlogCardProps) => {
               </div>
             )}
             <Link to={`/blog/${post.slug}`} className="hover:text-blog-accent">
-              {post.title}
+              {post.date && <span className="text-terminal-comment mr-4">{formatDate(post.date)}:</span>}
+              <span className="underline">{post.title}</span>
             </Link>
           </h2>
         </div>
-        <div className="flex gap-3 text-sm text-muted-foreground mb-4">
-          <time dateTime={post.date}>{post.date}</time>
-          <span>•</span>
-          <span>{post.readTime} read</span>
-        </div>
-        <div className="mb-4 text-base text-muted-foreground">
-          {post.description}
-        </div>
-        <div className="flex flex-wrap">
+        <div className="flex flex-wrap gap-2">
           {post.tags.map((tag, index) => (
             <Link
               key={tag}
               to={`/blog?tag=${tag}`}
-              className={`tag ${getTagClass(index)} hover:opacity-80 transition-opacity`}
+              className={`tag ${getTagClass(index)} hover:opacity-80 transition-opacity text-xs`}
               onClick={(e) => e.stopPropagation()}
             >
               {tag}
