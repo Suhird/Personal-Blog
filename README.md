@@ -1,3 +1,3 @@
 ### My Personal Blog
 
-Check it at: [suhird.me] (https://suhird.me)
+Check it out at: [suhird.me](https://suhird.me)
