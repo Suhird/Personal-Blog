@@ -2,9 +2,6 @@ const n=`# Mastering Python AsyncIO
 
 Understand the event loop, coroutines, and tasks to write highly concurrent network-bound applications.
 
-
-![Visualizing Python Concurrency vs GIL](/python_gil_concurrency.png)
-
 ## What is Concurrency?
 
 Before we dive into code, let's clarify two often confused terms:
