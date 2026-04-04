@@ -9,7 +9,7 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "postbuild": "cp dist/index.html dist/404.html",
+    "postbuild": "cp dist/index.html dist/404.html && node scripts/generate-static-routes.js && cp public/sitemap.xml dist/sitemap.xml",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
