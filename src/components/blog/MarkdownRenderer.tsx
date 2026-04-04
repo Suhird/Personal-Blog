@@ -96,7 +96,7 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
             </CodeBlock>
           ) : (
             <code
-              className="bg-terminal-background/70 text-terminal-yellow px-1 py-0.5 rounded"
+              className="font-mono text-[0.95em]"
               {...props}
             >
               {children}
@@ -108,6 +108,60 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
             {...props}
             className="max-h-[500px] w-auto max-w-full object-contain mx-auto rounded-lg border border-terminal-comment/30 my-4"
           />
+        ),
+        a: ({ node, href, children, ...props }) => (
+          <a
+            href={href}
+            className="hover:underline"
+            {...props}
+          >
+            {children}
+          </a>
+        ),
+        p: ({ node, children, ...props }) => (
+          <p className="mb-5" {...props}>
+            {children}
+          </p>
+        ),
+        ul: ({ node, children, ...props }) => (
+          <ul className="list-none mb-5" {...props}>
+            {children}
+          </ul>
+        ),
+        ol: ({ node, children, ...props }) => (
+          <ol className="mb-5 list-decimal list-inside" {...props}>
+            {children}
+          </ol>
+        ),
+        li: ({ node, children, ...props }) => (
+          <li className="mb-2" {...props}>
+            {children}
+          </li>
+        ),
+        blockquote: ({ node, children, ...props }) => (
+          <blockquote {...props}>
+            {children}
+          </blockquote>
+        ),
+        table: ({ node, children, ...props }) => (
+          <div className="overflow-x-auto mb-5">
+            <table {...props}>
+              {children}
+            </table>
+          </div>
+        ),
+        th: ({ node, children, ...props }) => (
+          <th className="text-[var(--accent)]" {...props}>
+            {children}
+          </th>
+        ),
+        td: ({ node, children, ...props }) => (
+          <td {...props}>
+            {children}
+          </td>
+        ),
+        hr: ({ node, ...props }) => (
+          <hr className="my-8 border-[var(--border-color)]" {...props} />
         ),
       }}
     >

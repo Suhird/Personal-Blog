@@ -61,11 +61,11 @@ const Blog = () => {
       <div className="py-8">
         <div className="mb-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight mb-3 text-terminal-accent terminal-prompt">
+            <h1 className="text-2xl font-bold tracking-tight mb-2 text-[var(--heading-color)]">
               Blog Posts
             </h1>
-            <p className="text-terminal-comment">
-              ls -la ~/thoughts | grep "{tagFilter || "interesting"}"
+            <p className="text-terminal-comment text-sm">
+              {filteredPosts.length} {filteredPosts.length === 1 ? "post" : "posts"}
             </p>
           </div>
           
@@ -96,17 +96,17 @@ const Blog = () => {
           </div>
         )}
 
-        <div className="space-y-8">
+        <div className="space-y-4">
           {filteredPosts.length > 0 ? (
             isGrouped ? (
-              <div className="space-y-12">
+              <div className="space-y-8">
                 {/* Render Series Groups First */}
                 {groupedPosts.groups.map((group: any) => (
-                  <div key={group[0].series.id} className="border border-terminal-purple/30 rounded-lg p-6 bg-terminal-purple/5">
-                    <h3 className="text-lg font-bold text-terminal-purple mb-4 flex items-center gap-2">
-                       <span className="text-2xl">📚</span> {group[0].series.title} Series
+                  <div key={group[0].series.id} className="border border-terminal-purple/30 rounded-lg p-4 bg-terminal-purple/5">
+                    <h3 className="text-lg font-bold text-terminal-purple mb-3 flex items-center gap-2">
+                       <span className="text-xl">📚</span> {group[0].series.title} Series
                     </h3>
-                    <div className="space-y-6 pl-4 border-l-2 border-terminal-purple/20">
+                    <div className="space-y-4 pl-4 border-l-2 border-terminal-purple/20">
                       {group.map((post: any) => (
                         <div key={post.id} className="relative">
                           <div className="absolute -left-[21px] top-3 w-3 h-3 rounded-full bg-terminal-purple border-4 border-terminal-background"></div>
@@ -119,10 +119,10 @@ const Blog = () => {
                 
                 {/* Render Standalone Posts */}
                 {groupedPosts.standalone.length > 0 && (
-                   <div className="space-y-8">
+                   <div className="space-y-4">
                       {groupedPosts.groups.length > 0 && (
-                        <div className="flex items-center gap-2 text-terminal-comment pb-2 border-b border-terminal-comment/20 mt-8">
-                          <span className="text-xl">📝</span> <span className="font-mono text-sm uppercase tracking-wider">Independent Posts</span>
+                        <div className="flex items-center gap-2 text-terminal-comment pb-2 border-b border-terminal-comment/20 mt-6">
+                          <span className="text-lg">📝</span> <span className="font-mono text-sm uppercase tracking-wider">Independent Posts</span>
                         </div>
                       )}
                       {groupedPosts.standalone.map((post: any) => (
@@ -132,8 +132,8 @@ const Blog = () => {
                 )}
               </div>
             ) : (
-              filteredPosts.map((post) => (
-                <BlogCard key={post.id} post={post} />
+              filteredPosts.map((post, i) => (
+                <BlogCard key={post.id} post={post} index={i} />
               ))
             )
           ) : (

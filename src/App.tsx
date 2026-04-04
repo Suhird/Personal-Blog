@@ -21,7 +21,7 @@ const App = () => (
   <HelmetProvider>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <ThemeProvider defaultTheme="catppuccin-mocha" attribute="data-theme">
+        <ThemeProvider defaultTheme="ocean-abyss" attribute="data-theme">
           <Toaster />
           <Sonner />
           <BrowserRouter>

@@ -26,20 +26,16 @@ export function ThemeToggle() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => setTheme("catppuccin-mocha")}>
-          Catppuccin Mocha (Default)
-        </DropdownMenuItem>
-
-        <DropdownMenuItem onClick={() => setTheme("catppuccin-frappe")}>
-          Catppuccin Frappé
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("catppuccin-macchiato")}>
-          Catppuccin Macchiato
+          Catppuccin Mocha
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("dracula")}>
             Dracula
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("rose-pine")}>
             Rosé Pine
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("ocean-abyss")}>
+            Ocean Abyss
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

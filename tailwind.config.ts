@@ -76,11 +76,21 @@ export default {
       },
       fontFamily: {
         mono: [
+          "Hack",
           '"Fira Code"',
           '"Source Code Pro"',
           "Menlo",
           "Monaco",
           "Consolas",
+          "Ubuntu Mono",
+          "monospace",
+        ],
+        sans: [
+          "Hack",
+          "DejaVu Sans Mono",
+          "Monaco",
+          "Consolas",
+          "Ubuntu Mono",
           "monospace",
         ],
       },

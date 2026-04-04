@@ -1,4 +1,5 @@
 import { BlogPost } from "@/components/BlogCard";
+import { post as courierHttp } from "./posts/courier-http";
 import { post as reviewLensAiPoweredReviewIntelligence } from "./posts/review-lens-ai-powered-review-intelligence";
 import { post as learningRustPart1 } from "./posts/learning-rust-with-example-part-1";
 import { post as introductionGo } from "./posts/introduction-go-building-cli-tools";
@@ -20,6 +21,7 @@ import { post as transactionalOutboxPattern } from "./posts/transactional-outbox
 
 // latest blog post on top as the sequence is show on FE starting with first as latest
 export const blogPosts: BlogPost[] = [
+  courierHttp,
   reviewLensAiPoweredReviewIntelligence,
   transactionalOutboxPattern,
   eventDrivenPatternsKafka,

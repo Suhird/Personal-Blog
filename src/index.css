@@ -6,171 +6,190 @@
   :root {
     /* Default: Catppuccin Mocha */
     /* Shadcn HSL values (Channels only) */
-    --background: 240 21% 15%; /* #1e1e2e */
-    --foreground: 226 64% 88%; /* #cdd6f4 */
+    --background: 240 21% 15%;
+    --foreground: 226 64% 88%;
     --card: 240 21% 15%;
     --card-foreground: 226 64% 88%;
     --popover: 240 21% 15%;
     --popover-foreground: 226 64% 88%;
-    --primary: 267 84% 81%; /* Mauve #cba6f7 */
+    --primary: 267 84% 81%;
     --primary-foreground: 240 21% 15%;
-    --secondary: 228 100% 75%; /* Blue #89b4fa */
+    --secondary: 228 100% 75%;
     --secondary-foreground: 240 21% 15%;
-    --muted: 237 16% 23%; /* Surface0 #313244 */
-    --muted-foreground: 228 24% 72%; /* Overlay0 #6c7086 */
-    --accent: 237 16% 23%; /* Surface0 */
+    --muted: 237 16% 23%;
+    --muted-foreground: 228 24% 72%;
+    --accent: 237 16% 23%;
     --accent-foreground: 226 64% 88%;
-    --destructive: 343 81% 75%; /* Red #f38ba8 */
+    --destructive: 343 81% 75%;
     --destructive-foreground: 240 21% 15%;
-    --border: 237 16% 23%; /* Surface0 */
+    --border: 237 16% 23%;
     --input: 237 16% 23%;
-    --ring: 267 84% 81%; /* Mauve */
+    --ring: 267 84% 81%;
     --radius: 0.5rem;
 
     /* Terminal Colors (HSL Channels) */
     --terminal-background: var(--background);
     --terminal-foreground: var(--foreground);
-    --terminal-accent: var(--primary); /* Mauve */
-    --terminal-green: 115 54% 76%; /* #a6e3a1 */
-    --terminal-cyan: 189 71% 73%; /* #89dceb Sky */
-    --terminal-yellow: 41 86% 83%; /* #f9e2af */
-    --terminal-purple: 316 72% 87%; /* #f5c2e7 Pink */
-    --terminal-red: var(--destructive);
-    --terminal-comment: var(--muted-foreground);
-  }
-
-
-
-  /* Catppuccin Frappé */
-  [data-theme='catppuccin-frappe'] {
-    --background: 232 23% 18%; /* #303446 */
-    --foreground: 227 70% 87%; /* #c6d0f5 */
-    --card: 232 23% 18%;
-    --card-foreground: 227 70% 87%;
-    --popover: 232 23% 18%;
-    --popover-foreground: 227 70% 87%;
-    --primary: 271 70% 76%; /* Mauve #ca9ee6 */
-    --primary-foreground: 232 23% 18%;
-    --secondary: 224 87% 75%; /* Blue #8caaee */
-    --secondary-foreground: 232 23% 18%;
-    --muted: 229 19% 26%; /* Surface0 #414559 */
-    --muted-foreground: 228 20% 64%; /* Overlay0 #737994 */
-    --accent: 229 19% 26%;
-    --accent-foreground: 227 70% 87%;
-    --destructive: 348 78% 72%; /* Red #e78284 */
-    --destructive-foreground: 232 23% 18%;
-    --border: 229 19% 26%;
-    --input: 229 19% 26%;
-    --ring: 271 70% 76%;
-
-    --terminal-background: var(--background);
-    --terminal-foreground: var(--foreground);
     --terminal-accent: var(--primary);
-    --terminal-green: 100 46% 68%; /* #a6d189 */
-    --terminal-cyan: 189 48% 73%; /* #99d1db Sky */
-    --terminal-yellow: 39 67% 73%; /* #e5c890 */
-    --terminal-purple: 316 73% 84%; /* #f4b8e4 Pink */
+    --terminal-green: 115 54% 76%;
+    --terminal-cyan: 189 71% 73%;
+    --terminal-yellow: 41 86% 83%;
+    --terminal-purple: 316 72% 87%;
     --terminal-red: var(--destructive);
     --terminal-comment: var(--muted-foreground);
-  }
 
-  /* Catppuccin Macchiato */
-  [data-theme='catppuccin-macchiato'] {
-    --background: 234 19% 15%; /* #24273a */
-    --foreground: 227 68% 88%; /* #cad3f5 */
-    --card: 234 19% 15%;
-    --card-foreground: 227 68% 88%;
-    --popover: 234 19% 15%;
-    --popover-foreground: 227 68% 88%;
-    --primary: 269 82% 76%; /* Mauve #c6a0f6 */
-    --primary-foreground: 234 19% 15%;
-    --secondary: 226 90% 75%; /* Blue #8aadf4 */
-    --secondary-foreground: 234 19% 15%;
-    --muted: 231 15% 23%; /* Surface0 #363a4f */
-    --muted-foreground: 229 20% 64%; /* Overlay0 #6e738d */
-    --accent: 231 15% 23%;
-    --accent-foreground: 227 68% 88%;
-    --destructive: 346 84% 74%; /* Red #ed8796 */
-    --destructive-foreground: 234 19% 15%;
-    --border: 231 15% 23%;
-    --input: 231 15% 23%;
-    --ring: 269 82% 76%;
+    /* Heading Colors - Catppuccin Mocha Mauve */
+    --heading-color: #cba6f7;
 
-    --terminal-background: var(--background);
-    --terminal-foreground: var(--foreground);
-    --terminal-accent: var(--primary);
-    --terminal-green: 105 48% 72%; /* #a6da95 */
-    --terminal-cyan: 189 59% 73%; /* #91d7e3 Sky */
-    --terminal-yellow: 40 70% 78%; /* #eed49f */
-    --terminal-purple: 316 73% 85%; /* #f5bde6 Pink */
-    --terminal-red: var(--destructive);
-    --terminal-comment: var(--muted-foreground);
+    /* Tag Colors - Mocha */
+    --tag-1-bg: rgba(245, 194, 231, 0.2);
+    --tag-1-color: #f5c2e7;
+    --tag-2-bg: rgba(203, 166, 247, 0.2);
+    --tag-2-color: #cba6f7;
+    --tag-3-bg: rgba(166, 227, 161, 0.2);
+    --tag-3-color: #a6e3a1;
+    --tag-4-bg: rgba(137, 220, 235, 0.2);
+    --tag-4-color: #89dceb;
   }
 
   /* Dracula */
   [data-theme='dracula'] {
-    --background: 231 15% 18%; /* #282a36 */
-    --foreground: 60 30% 96%; /* #f8f8f2 */
+    --background: 231 15% 18%;
+    --foreground: 60 30% 96%;
     --card: 231 15% 18%;
     --card-foreground: 60 30% 96%;
     --popover: 231 15% 18%;
     --popover-foreground: 60 30% 96%;
-    --primary: 326 100% 74%; /* Pink #ff79c6 */
+    --primary: 326 100% 74%;
     --primary-foreground: 60 30% 96%;
-    --secondary: 265 89% 78%; /* Purple #bd93f9 */
+    --secondary: 265 89% 78%;
     --secondary-foreground: 60 30% 96%;
-    --muted: 231 15% 18%; /* Background */
-    --muted-foreground: 225 27% 51%; /* Comment #6272a4 */
-    --accent: 231 15% 18%; /* Background */
+    --muted: 231 15% 18%;
+    --muted-foreground: 225 27% 51%;
+    --accent: 231 15% 18%;
     --accent-foreground: 60 30% 96%;
-    --destructive: 0 100% 67%; /* Red #ff5555 */
+    --destructive: 0 100% 67%;
     --destructive-foreground: 60 30% 96%;
-    --border: 225 27% 51%; /* Comment */
+    --border: 225 27% 51%;
     --input: 225 27% 51%;
     --ring: 326 100% 74%;
 
     --terminal-background: var(--background);
     --terminal-foreground: var(--foreground);
     --terminal-accent: var(--primary);
-    --terminal-green: 135 94% 65%; /* #50fa7b */
-    --terminal-cyan: 191 97% 77%; /* #8be9fd */
-    --terminal-yellow: 62 93% 76%; /* #f1fa8c */
+    --terminal-green: 135 94% 65%;
+    --terminal-cyan: 191 97% 77%;
+    --terminal-yellow: 62 93% 76%;
     --terminal-purple: var(--secondary);
     --terminal-red: var(--destructive);
     --terminal-comment: var(--muted-foreground);
+
+    /* Heading Colors - Dracula Pink */
+    --heading-color: #ff79c6;
+
+    /* Tag Colors - Dracula */
+    --tag-1-bg: rgba(255, 121, 198, 0.2);
+    --tag-1-color: #ff79c6;
+    --tag-2-bg: rgba(189, 147, 249, 0.2);
+    --tag-2-color: #bd93f9;
+    --tag-3-bg: rgba(80, 250, 123, 0.2);
+    --tag-3-color: #50fa7b;
+    --tag-4-bg: rgba(139, 233, 253, 0.2);
+    --tag-4-color: #8be9fd;
   }
 
   /* Rosé Pine */
   [data-theme='rose-pine'] {
-    --background: 249 22% 12%; /* #191724 */
-    --foreground: 245 50% 91%; /* #e0def4 */
+    --background: 249 22% 12%;
+    --foreground: 245 50% 91%;
     --card: 249 22% 12%;
     --card-foreground: 245 50% 91%;
     --popover: 249 22% 12%;
     --popover-foreground: 245 50% 91%;
-    --primary: 338 71% 68%; /* Love #eb6f92 */
+    --primary: 338 71% 68%;
     --primary-foreground: 249 22% 12%;
-    --secondary: 267 57% 78%; /* Iris #c4a7e7 */
+    --secondary: 267 57% 78%;
     --secondary-foreground: 249 22% 12%;
-    --muted: 248 15% 21%; /* Surface #1f1d2e */
-    --muted-foreground: 247 13% 47%; /* Muted #6e6a86 */
-    --accent: 248 15% 21%; /* Surface */
+    --muted: 248 15% 21%;
+    --muted-foreground: 247 13% 47%;
+    --accent: 248 15% 21%;
     --accent-foreground: 245 50% 91%;
-    --destructive: 338 71% 68%; /* Love */
+    --destructive: 338 71% 68%;
     --destructive-foreground: 245 50% 91%;
-    --border: 247 13% 47%; /* Muted */
+    --border: 247 13% 47%;
     --input: 247 13% 47%;
-    --ring: 338 71% 68%; /* Love */
+    --ring: 338 71% 68%;
 
     --terminal-background: var(--background);
     --terminal-foreground: var(--foreground);
     --terminal-accent: var(--primary);
-    --terminal-green: 197 49% 38%; /* #31748f Pine */
-    --terminal-cyan: 189 43% 73%; /* #9ccfd8 Foam */
-    --terminal-yellow: 35 88% 71%; /* #f6c177 Gold */
+    --terminal-green: 197 49% 38%;
+    --terminal-cyan: 189 43% 73%;
+    --terminal-yellow: 35 88% 71%;
     --terminal-purple: var(--secondary);
     --terminal-red: var(--destructive);
     --terminal-comment: var(--muted-foreground);
+
+    /* Heading Colors - Rosé Pine Love (Rose) */
+    --heading-color: #eb6f92;
+
+    /* Tag Colors - Rosé Pine */
+    --tag-1-bg: rgba(235, 111, 146, 0.2);
+    --tag-1-color: #eb6f92;
+    --tag-2-bg: rgba(196, 167, 231, 0.2);
+    --tag-2-color: #c4a7e7;
+    --tag-3-bg: rgba(246, 193, 119, 0.2);
+    --tag-3-color: #f6c177;
+    --tag-4-bg: rgba(156, 207, 216, 0.2);
+    --tag-4-color: #9ccfd8;
+  }
+
+  /* Ocean Abyss - Material You inspired dark theme with teal primary */
+  [data-theme='ocean-abyss'] {
+    --background: 0 0% 6%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 176 77% 58%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 240 2% 47%;
+    --secondary-foreground: 0 0% 0%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 240 2% 65%;
+    --accent: 0 0% 15%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 2 73% 59%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 3% 34%;
+    --input: 240 3% 34%;
+    --ring: 176 77% 58%;
+    --radius: 0.5rem;
+
+    /* Terminal Colors - Ocean Abyss */
+    --terminal-background: 0 0% 6%;
+    --terminal-foreground: 0 0% 100%;
+    --terminal-accent: 176 77% 58%;
+    --terminal-green: 142 84% 68%;
+    --terminal-cyan: 190 86% 67%;
+    --terminal-yellow: 43 96% 71%;
+    --terminal-purple: 258 85% 80%;
+    --terminal-red: 3 91% 74%;
+    --terminal-comment: 240 2% 65%;
+
+    /* Heading Colors - Ocean Abyss Primary Teal */
+    --heading-color: #25dcc8;
+
+    /* Tag Colors - Ocean Abyss */
+    --tag-1-bg: rgba(37, 220, 200, 0.2);
+    --tag-1-color: #25dcc8;
+    --tag-2-bg: rgba(167, 139, 250, 0.2);
+    --tag-2-color: #a78bfa;
+    --tag-3-bg: rgba(74, 222, 128, 0.2);
+    --tag-3-color: #4ade80;
+    --tag-4-bg: rgba(251, 191, 36, 0.2);
+    --tag-4-color: #fbbf24;
   }
 }
 
@@ -178,71 +197,376 @@
   @apply border-border;
 }
 
+/* Sheerluck.dev Typography */
 body {
-  @apply bg-terminal-background text-terminal-foreground font-mono transition-colors duration-300;
-  font-feature-settings: "rlig" 1, "calt" 1;
+  font-family: Hack, "DejaVu Sans Mono", Monaco, Consolas, "Ubuntu Mono", monospace;
+  font-size: 1rem;
+  line-height: 1.54;
+  background-color: var(--background);
+  color: var(--foreground);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -webkit-overflow-scrolling: touch;
+  -webkit-text-size-adjust: 100%;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  line-height: 1.3;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+  color: var(--heading-color);
+}
+
+h1 { font-size: 1.4rem; }
+h2 { font-size: 1.3rem; }
+h3 { font-size: 1.2rem; }
+h4, h5, h6 { font-size: 1.15rem; }
+
+a {
+  color: var(--heading-color);
+}
+
+p {
+  margin-bottom: 20px;
+}
+
+code {
+  font-family: Hack, "DejaVu Sans Mono", Monaco, Consolas, "Ubuntu Mono", monospace;
+  font-feature-settings: normal;
+  background: var(--accent-alpha-20);
+  padding: 1px 6px;
+  margin: 0 2px;
+  font-size: 0.95rem;
+}
+
+pre {
+  font-family: Hack, "DejaVu Sans Mono", Monaco, Consolas, "Ubuntu Mono", monospace;
+  padding: 20px;
+  font-size: 0.95rem;
+  overflow: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+}
+
+pre code {
+  padding: 0;
+  margin: 0;
+  background: none;
+}
+
+blockquote {
+  border-top: 1px solid var(--heading-color);
+  border-bottom: 1px solid var(--heading-color);
+  margin: 40px 0;
+  padding: 25px;
+  position: relative;
+  color: var(--muted-foreground);
+}
+
+blockquote:before {
+  content: "»";
+  font-family: Georgia, serif;
+  font-size: 3.875rem;
+  position: absolute;
+  left: -40px;
+  top: -20px;
+  color: var(--heading-color);
+}
+
+blockquote p:first-of-type {
+  margin-top: 0;
+}
+
+blockquote p:last-of-type {
+  margin-bottom: 0;
+}
+
+blockquote p {
+  position: relative;
+}
+
+blockquote p:before {
+  content: ">";
+  display: block;
+  position: absolute;
+  left: -25px;
+  color: var(--heading-color);
+}
+
+table {
+  table-layout: fixed;
+  border-collapse: collapse;
+  width: 100%;
+  margin: 40px 0;
+}
+
+table, th, td {
+  border: 1px dashed var(--heading-color);
+  padding: 10px;
+}
+
+th {
+  color: var(--heading-color);
+}
+
+ul, ol {
+  margin-left: 30px;
+  padding: 0;
+}
+
+ul li, ol li {
+  position: relative;
+  margin-bottom: 0.5em;
+}
+
+.post-content ul {
+  list-style: none;
+}
+
+.post-content ul li:before {
+  content: "►";
+  position: absolute;
+  left: -20px;
+  color: var(--heading-color);
+}
+
+ol ol {
+  list-style-type: lower-alpha;
+}
+
+hr {
+  width: 100%;
+  border: none;
+  background: var(--border-color);
+  height: 1px;
+}
+
+/* Blog container */
 .blog-container {
-  @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
+  max-width: 864px;
+  margin: 0 auto;
+  padding: 40px;
 }
 
+@media (max-width: 683px) {
+  .blog-container {
+    padding: 20px;
+  }
+  
+  body {
+    font-size: 1rem;
+  }
+  
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  
+  blockquote {
+    padding-right: 0;
+  }
+  
+  ul, ol {
+    margin-left: 20px;
+  }
+}
+
+/* Blog Link */
 .blog-link {
-  @apply text-terminal-cyan hover:text-terminal-green transition-colors;
+  color: var(--terminal-cyan);
 }
 
+.blog-link:hover {
+  color: var(--terminal-green);
+}
+
+/* Tag styles */
 .tag {
-  @apply inline-block px-3 py-1 text-sm font-medium rounded-md mr-2 mb-2;
+  font-size: 0.65rem;
+  color: var(--heading-color);
+  text-decoration: underline;
 }
 
-.tag-1 {
-  @apply bg-opacity-20 bg-terminal-cyan text-terminal-cyan;
-}
-
-.tag-2 {
-  @apply bg-opacity-20 bg-terminal-purple text-terminal-purple;
-}
-
-.tag-3 {
-  @apply bg-opacity-20 bg-terminal-yellow text-terminal-yellow;
-}
-
-.tag-4 {
-  @apply bg-opacity-20 bg-terminal-green text-terminal-green;
-}
-
+/* Terminal prompt */
 .terminal-prompt::before {
   content: "$ ";
-  @apply text-terminal-green;
+  color: var(--terminal-green);
 }
 
-.terminal-header {
-  @apply border border-terminal-comment bg-terminal-background/80 rounded-t-md;
-}
-
-.terminal-body {
-  @apply border-x border-b border-terminal-comment p-4 rounded-b-md;
-}
-
-/* Terminal window dots */
+/* Terminal dots */
 .terminal-dots span {
-  @apply inline-block w-3 h-3 rounded-full mr-2;
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 8px;
 }
 
 .terminal-dot-red {
-  @apply bg-terminal-red;
+  background: var(--terminal-red);
 }
 
 .terminal-dot-yellow {
-  @apply bg-terminal-yellow;
+  background: var(--terminal-yellow);
 }
 
 .terminal-dot-green {
-  @apply bg-terminal-green;
+  background: var(--terminal-green);
 }
 
 /* Blinking cursor */
 .terminal-cursor::after {
   content: "▋";
-  @apply animate-cursor-blink text-terminal-cyan;
+  animation: blink 1s step-start infinite;
+  color: var(--terminal-cyan);
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Post title styling */
+.post-title {
+  position: relative;
+  color: var(--heading-color);
+  margin: 0 0 4px;
+  padding-bottom: 0;
+  font-weight: normal;
+  font-size: 0.95rem;
+  line-height: 1.15;
+}
+
+/* Article separator */
+article {
+  border-bottom: 1px dotted var(--heading-color);
+  padding-bottom: 8px;
+}
+
+/* Post meta */
+.post-meta-inline,
+.post-meta {
+  font-size: 1rem;
+  margin-bottom: 10px;
+  color: var(--accent-alpha-70);
+}
+
+.post-meta-inline {
+  display: inline;
+}
+
+.post-tags-inline,
+.post-tags {
+  margin-bottom: 20px;
+  font-size: 1rem;
+  opacity: 0.5;
+}
+
+.post-tags {
+  display: block;
+}
+
+.post-tags-inline {
+  display: inline;
+}
+
+/* Series navigation */
+.series-navigation {
+  margin-top: 20px;
+  padding: 20px 0;
+  border-top: 1px solid var(--border-color);
+}
+
+/* Post content */
+.post-content {
+  margin-top: 30px;
+}
+
+.post-content img {
+  max-width: 100%;
+  display: block;
+}
+
+.post-content figure {
+  max-width: 100%;
+  margin: 25px 0;
+}
+
+.post-content figure figcaption {
+  font-size: 14px;
+  padding: 5px 10px;
+  margin-top: 5px;
+  background: var(--heading-color);
+  color: var(--background);
+}
+
+/* Post header */
+.post-header {
+  margin-bottom: 30px;
+}
+
+/* Share links */
+.share-links {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+}
+
+/* Table of contents */
+.toc {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+.toc-link {
+  color: var(--terminal-cyan);
+  text-decoration: none;
+}
+
+.toc-link:hover {
+  color: var(--terminal-green);
+  text-decoration: underline;
+}
+
+/* Code block styling */
+.terminal-code-block {
+  margin-bottom: 20px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.terminal-code-header {
+  padding: 8px 16px;
+  background: #313244;
+  border-bottom: 1px solid #45475a;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.terminal-code-header .filename {
+  font-weight: 500;
+  color: #cdd6f4;
+}
+
+.terminal-code-header .language {
+  color: #89b4fa;
+}
+
+.terminal-code-header .language-label {
+  margin-left: 8px;
+  color: #6c7086;
+}
+
+/* Responsive adjustments */
+@media (max-width: 899px) {
+  .post {
+    max-width: 660px;
+  }
 }
