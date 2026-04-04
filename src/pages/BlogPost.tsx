@@ -84,7 +84,7 @@ Pelientesque auctor nisi id magna consequat sagittis.
 `;
 
   // Construct canonical URL
-  const canonicalUrl = `https://suhird.me/blog/${post.slug}`;
+  const canonicalUrl = `https://suhird.me/blog/${post.slug}/`;
 
   // Create JSON-LD schema for blog post
   const jsonLdSchema = {
@@ -97,7 +97,7 @@ Pelientesque auctor nisi id magna consequat sagittis.
     "author": {
       "@type": "Person",
       "name": "Suhird Singh",
-      "url": "https://suhird.me"
+      "url": "https://suhird.me/"
     },
     "url": canonicalUrl,
     "keywords": post.tags.join(", "),

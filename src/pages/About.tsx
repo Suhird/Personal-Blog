@@ -14,8 +14,8 @@ const About = () => {
         <meta property="og:title" content="About - Suhird Singh" />
         <meta property="og:description" content="Learn about Suhird Singh, a software engineer with expertise in backend systems and microservices." />
         <meta property="og:type" content="profile" />
-        <meta property="og:url" content="https://suhird.me/about" />
-        <link rel="canonical" href="https://suhird.me/about" />
+        <meta property="og:url" content="https://suhird.me/about/" />
+        <link rel="canonical" href="https://suhird.me/about/" />
       </Helmet>
       <div className="blog-container py-16">
         <h1 className="text-4xl font-bold tracking-tight mb-8">About Me</h1>

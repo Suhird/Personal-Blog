@@ -13,8 +13,8 @@ const Projects = () => {
         <meta property="og:title" content="Projects - Suhird Singh" />
         <meta property="og:description" content="A collection of open source projects and work by Suhird Singh." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://suhird.me/projects" />
-        <link rel="canonical" href="https://suhird.me/projects" />
+        <meta property="og:url" content="https://suhird.me/projects/" />
+        <link rel="canonical" href="https://suhird.me/projects/" />
       </Helmet>
       <div className="blog-container py-16 animate-in fade-in duration-500">
         <h1 className="text-4xl font-bold tracking-tight mb-3 text-terminal-accent terminal-prompt">

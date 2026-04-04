@@ -82,8 +82,8 @@ const Contact = () => {
         <meta property="og:title" content="Contact - Suhird Singh" />
         <meta property="og:description" content="Get in touch with Suhird Singh. Send a message or connect and collaborate." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://suhird.me/contact" />
-        <link rel="canonical" href="https://suhird.me/contact" />
+        <meta property="og:url" content="https://suhird.me/contact/" />
+        <link rel="canonical" href="https://suhird.me/contact/" />
       </Helmet>
       <div className="blog-container py-16">
         <h1 className="text-4xl font-bold tracking-tight mb-3">Contact Me</h1>

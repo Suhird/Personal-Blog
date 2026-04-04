@@ -55,8 +55,8 @@ const Blog = () => {
         <meta property="og:title" content="Blog Posts - Suhird Singh" />
         <meta property="og:description" content="Explore articles on gRPC, GraphQL, Python, Go, Rust, microservices, and cloud architecture." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://suhird.me/blog" />
-        <link rel="canonical" href="https://suhird.me/blog" />
+        <meta property="og:url" content="https://suhird.me/blog/" />
+        <link rel="canonical" href="https://suhird.me/blog/" />
       </Helmet>
       <div className="py-8">
         <div className="mb-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">

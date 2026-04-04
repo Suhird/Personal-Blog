@@ -40,16 +40,18 @@ if (!fs.existsSync(INDEX_HTML)) {
 }
 
 urls.forEach(route => {
-  const routeDir = path.join(DIST_DIR, route);
+  // Strip trailing slash so path.join doesn't produce double slashes
+  const cleanRoute = route.replace(/\/+$/, '');
+  const routeDir = path.join(DIST_DIR, cleanRoute);
   
-  // Create the directory (e.g., dist/about/)
+  // Create the directory (e.g., dist/about)
   if (!fs.existsSync(routeDir)) {
     fs.mkdirSync(routeDir, { recursive: true });
   }
 
   // Copy dist/index.html to dist/route/index.html
   fs.copyFileSync(INDEX_HTML, path.join(routeDir, 'index.html'));
-  console.log(`Generated: ${route}/index.html`);
+  console.log(`Generated: ${cleanRoute}/index.html`);
 });
 
 console.log('\nAll static routes generated successfully.');
