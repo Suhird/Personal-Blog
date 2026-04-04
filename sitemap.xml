@@ -10,7 +10,7 @@
 
   <!-- Blog Page -->
   <url>
-    <loc>https://suhird.me/blog</loc>
+    <loc>https://suhird.me/blog/</loc>
     <lastmod>2026-03-12</lastmod>
     <priority>0.9</priority>
     <changefreq>daily</changefreq>
@@ -18,124 +18,124 @@
 
   <!-- Blog Posts -->
   <url>
-    <loc>https://suhird.me/blog/review-lens-ai-powered-review-intelligence</loc>
+    <loc>https://suhird.me/blog/review-lens-ai-powered-review-intelligence/</loc>
     <lastmod>2026-03-02</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://suhird.me/blog/transactional-outbox-pattern</loc>
+    <loc>https://suhird.me/blog/transactional-outbox-pattern/</loc>
     <lastmod>2026-03-01</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://suhird.me/blog/event-driven-patterns-kafka</loc>
+    <loc>https://suhird.me/blog/event-driven-patterns-kafka/</loc>
     <lastmod>2026-02-28</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://suhird.me/blog/webassembly-rust-primer</loc>
+    <loc>https://suhird.me/blog/webassembly-rust-primer/</loc>
     <lastmod>2026-02-25</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://suhird.me/blog/grpc-vs-graphql-comparison</loc>
+    <loc>https://suhird.me/blog/grpc-vs-graphql-comparison/</loc>
     <lastmod>2026-02-20</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://suhird.me/blog/api-rate-limiting-strategies</loc>
+    <loc>https://suhird.me/blog/api-rate-limiting-strategies/</loc>
     <lastmod>2026-02-18</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://suhird.me/blog/optimizing-dockerfiles-guide</loc>
+    <loc>https://suhird.me/blog/optimizing-dockerfiles-guide/</loc>
     <lastmod>2026-02-15</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://suhird.me/blog/monte-carlo-simulations-python</loc>
+    <loc>https://suhird.me/blog/monte-carlo-simulations-python/</loc>
     <lastmod>2026-02-12</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://suhird.me/blog/python-multiprocessing-guide</loc>
+    <loc>https://suhird.me/blog/python-multiprocessing-guide/</loc>
     <lastmod>2026-02-10</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://suhird.me/blog/mastering-python-asyncio</loc>
+    <loc>https://suhird.me/blog/mastering-python-asyncio/</loc>
     <lastmod>2026-02-08</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://suhird.me/blog/go-tui-password-manager-setup</loc>
+    <loc>https://suhird.me/blog/go-tui-password-manager-setup/</loc>
     <lastmod>2026-02-05</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://suhird.me/blog/go-tui-password-manager-encryption</loc>
+    <loc>https://suhird.me/blog/go-tui-password-manager-encryption/</loc>
     <lastmod>2026-02-03</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://suhird.me/blog/go-tui-password-manager-features</loc>
+    <loc>https://suhird.me/blog/go-tui-password-manager-features/</loc>
     <lastmod>2026-02-01</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://suhird.me/blog/building-python-extensions-maturin</loc>
+    <loc>https://suhird.me/blog/building-python-extensions-maturin/</loc>
     <lastmod>2026-01-28</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://suhird.me/blog/accelerating-python-with-rust-pyo3</loc>
+    <loc>https://suhird.me/blog/accelerating-python-with-rust-pyo3/</loc>
     <lastmod>2026-01-25</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://suhird.me/blog/learning-rust-with-example-part-1</loc>
+    <loc>https://suhird.me/blog/learning-rust-with-example-part-1/</loc>
     <lastmod>2026-01-22</lastmod>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://suhird.me/blog/introduction-go-building-cli-tools</loc>
+    <loc>https://suhird.me/blog/introduction-go-building-cli-tools/</loc>
     <lastmod>2026-01-20</lastmod>
     <priority>0.8</priority>
   </url>
 
   <!-- Other Pages -->
   <url>
-    <loc>https://suhird.me/projects</loc>
+    <loc>https://suhird.me/projects/</loc>
     <lastmod>2026-03-12</lastmod>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
 
   <url>
-    <loc>https://suhird.me/about</loc>
+    <loc>https://suhird.me/about/</loc>
     <lastmod>2026-03-12</lastmod>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>
   </url>
 
   <url>
-    <loc>https://suhird.me/contact</loc>
+    <loc>https://suhird.me/contact/</loc>
     <lastmod>2026-03-12</lastmod>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>
