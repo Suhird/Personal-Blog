@@ -26,7 +26,7 @@
 
   <!-- Blog Posts -->
   <url>
-    <loc>https://suhird.me/blog/courier-http/</loc>
+    <loc>https://suhird.me/blog/courier-http-postman-alternative/</loc>
     <lastmod>2026-04-04</lastmod>
     <priority>0.8</priority>
   </url>
@@ -81,11 +81,10 @@
 
   <url>
     <loc>https://suhird.me/blog/mastering-python-asyncio/</loc>
-    <lastmod>2026-02-08</lastmod>
+    <lastmod>2026-04-04</lastmod>
     <priority>0.8</priority>
   </url>
 
-  <!-- Series Posts -->
   <url>
     <loc>https://suhird.me/blog/accelerating-python-rust-pyo3-part-1/</loc>
     <lastmod>2026-04-04</lastmod>
