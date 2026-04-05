@@ -34,14 +34,6 @@ export const projects: Project[] = [
     image: "/projects/finance_tui.png"
   },
   {
-    id: "4",
-    name: "HuffmanEncoding",
-    description: "A data compression utility implementing Huffman Encoding algorithms to shrink data efficiently.",
-    technologies: ["Python", "Algorithms", "Compression"],
-    github: "https://github.com/suhird/HuffmanEncoding",
-    image: "/projects/huffman.png"
-  },
-  {
     id: "5",
     name: "Dota2GameAutoAccept",
     description: "Script to automatically accept Dota 2 match queues to avoid missing matches after long waits.",
