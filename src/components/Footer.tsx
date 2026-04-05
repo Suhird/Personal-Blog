@@ -20,6 +20,9 @@ const Footer = () => {
             <Link to="/blog" className="hover:text-terminal-cyan">
               cd ~/blog
             </Link>
+            <Link to="/series" className="hover:text-terminal-cyan">
+              cd ~/series
+            </Link>
             <Link to="/projects" className="hover:text-terminal-cyan">
               cd ~/projects
             </Link>

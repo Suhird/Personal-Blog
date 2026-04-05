@@ -173,7 +173,7 @@ const CodeBlock = ({ language, children, filename }: CodeBlockProps) => {
   return (
     <div className="mb-6 relative group">
       {(filename || language) && (
-        <div className="px-4 py-2 flex items-center justify-between bg-[#181825] border border-[#45475a] border-b-0 rounded-t-md">
+        <div className="px-4 py-2 flex items-center justify-between bg-[var(--terminal-background)] border border-[var(--terminal-comment)] border-b-0 rounded-t-md opacity-80">
           <div className="flex items-center">
             <div className="terminal-dots">
               <span className="terminal-dot-red"></span>
@@ -183,13 +183,13 @@ const CodeBlock = ({ language, children, filename }: CodeBlockProps) => {
             <div className="ml-3 text-xs">
               {filename ? (
                 <>
-                  <span className="text-[#CDD6F4] font-medium">{filename}</span>
+                  <span className="text-[var(--terminal-foreground)] font-medium">{filename}</span>
                   {language && (
-                    <span className="ml-2 text-[#6C7086]">({language})</span>
+                    <span className="ml-2 text-[var(--terminal-comment)]">({language})</span>
                   )}
                 </>
               ) : (
-                <span className="text-[#89B4FA]">{language}</span>
+                <span className="text-[var(--terminal-accent)]">{language}</span>
               )}
             </div>
           </div>
@@ -197,11 +197,11 @@ const CodeBlock = ({ language, children, filename }: CodeBlockProps) => {
             onClick={copyToClipboard}
             size="sm"
             variant="ghost"
-            className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 focus:opacity-100 h-7 w-7 p-0 text-[#BAC2DE] hover:text-[#CDD6F4] hover:bg-[#45475a]"
+            className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 focus:opacity-100 h-7 w-7 p-0 text-[var(--terminal-foreground)] hover:text-[var(--terminal-accent)] hover:bg-[var(--terminal-comment)]"
             aria-label="Copy code to clipboard"
           >
             {copied ? (
-              <Check className="h-4 w-4 text-[#A6E3A1]" />
+              <Check className="h-4 w-4 text-[var(--terminal-green)]" />
             ) : (
               <Copy className="h-4 w-4" />
             )}
@@ -225,7 +225,7 @@ const CodeBlock = ({ language, children, filename }: CodeBlockProps) => {
             overflowX: "auto",
             overflowWrap: "normal",
             textWrap: "nowrap",
-            background: "#1E1E2E",
+            background: "var(--terminal-background)",
             margin: 0,
             padding: "20px",
           }}
@@ -239,7 +239,7 @@ const CodeBlock = ({ language, children, filename }: CodeBlockProps) => {
             },
           }}
           lineNumberStyle={{
-            color: "#45475a",
+            color: "var(--terminal-comment)",
             paddingRight: "1.5em",
             userSelect: "none",
             minWidth: "2.5em",
@@ -249,7 +249,7 @@ const CodeBlock = ({ language, children, filename }: CodeBlockProps) => {
         </SyntaxHighlighter>
       </div>
       {filename || language ? (
-        <div className="h-[2px] bg-[#45475a]"></div>
+        <div className="h-[2px] bg-[var(--terminal-comment)] opacity-30"></div>
       ) : null}
     </div>
   );

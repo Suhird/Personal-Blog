@@ -1,24 +1,29 @@
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import Layout from "@/components/Layout";
-import BlogCard from "@/components/BlogCard";
 import { blogPosts } from "@/data/blogPosts";
-import { X, Calendar } from "lucide-react";
+import { Calendar, X } from "lucide-react";
 
-const Blog = () => {
+interface SeriesGroup {
+  id: string;
+  title: string;
+  posts: typeof blogPosts;
+}
+
+const Series = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const tagFilter = searchParams.get("tag");
   const yearFilter = searchParams.get("year");
   const monthFilter = searchParams.get("month");
-  const [isGrouped, setIsGrouped] = useState(false);
+  const tagFilter = searchParams.get("tag");
+  const [isExpanded, setIsExpanded] = useState<{ [key: string]: boolean }>({});
 
-  // Extract unique years and months from standalone posts
+  // Extract unique years and months from series posts
   const { years, months } = useMemo(() => {
     const yearSet = new Set<string>();
     const monthSet = new Set<string>();
 
-    blogPosts.filter(p => !p.series).forEach(post => {
+    blogPosts.filter(p => p.series).forEach(post => {
       const date = new Date(post.date);
       yearSet.add(date.getFullYear().toString());
       monthSet.add(date.toLocaleString("default", { month: "long" }));
@@ -31,59 +36,49 @@ const Blog = () => {
     };
   }, []);
 
-  // Filter posts by year and month, exclude series posts
-  const filteredPosts = useMemo(() => {
-    let posts = blogPosts.filter((post) => !post.series);
+  // Get series groups filtered by year/month/tag
+  const seriesGroups = useMemo(() => {
+    let allPosts = blogPosts.filter((post) => post.series);
 
     if (tagFilter) {
-      posts = posts.filter((post) => post.tags.includes(tagFilter));
+      allPosts = allPosts.filter((post) => post.tags.includes(tagFilter));
     }
 
     if (yearFilter) {
-      posts = posts.filter((post) => {
+      allPosts = allPosts.filter((post) => {
         const date = new Date(post.date);
         return date.getFullYear().toString() === yearFilter;
       });
     }
 
     if (monthFilter) {
-      posts = posts.filter((post) => {
+      allPosts = allPosts.filter((post) => {
         const date = new Date(post.date);
         return date.toLocaleString("default", { month: "long" }) === monthFilter;
       });
     }
 
-    return posts;
-  }, [tagFilter, yearFilter, monthFilter]);
+    const groupsMap: { [key: string]: SeriesGroup } = {};
 
-  // Grouping Logic
-  const groupedPosts = (() => {
-    if (!isGrouped) return { groups: [], standalone: filteredPosts };
-
-    const groupsMap: { [key: string]: typeof blogPosts } = {};
-    const groupOrder: string[] = [];
-    const standalone: typeof blogPosts = [];
-
-    filteredPosts.forEach(post => {
+    allPosts.forEach(post => {
       if (post.series) {
         if (!groupsMap[post.series.id]) {
-          groupsMap[post.series.id] = [];
-          groupOrder.push(post.series.id);
+          groupsMap[post.series.id] = {
+            id: post.series.id,
+            title: post.series.title,
+            posts: [],
+          };
         }
-        groupsMap[post.series.id].push(post);
-      } else {
-        standalone.push(post);
+        groupsMap[post.series.id].posts.push(post);
       }
     });
 
-    const orderedGroups = groupOrder.map(id => {
-      const group = groupsMap[id];
-      group.sort((a, b) => (a.series?.order || 0) - (b.series?.order || 0));
-      return group;
+    Object.values(groupsMap).forEach(group => {
+      group.posts.sort((a, b) => (a.series?.order || 0) - (b.series?.order || 0));
     });
 
-    return { groups: orderedGroups, standalone };
-  })();
+    return Object.values(groupsMap);
+  }, [yearFilter, monthFilter, tagFilter]);
 
   const updateFilter = (key: string, value: string | null) => {
     const newParams = new URLSearchParams(searchParams);
@@ -99,32 +94,35 @@ const Blog = () => {
     setSearchParams(new URLSearchParams());
   };
 
-  const hasActiveFilters = tagFilter || yearFilter || monthFilter;
+  const hasActiveFilters = yearFilter || monthFilter || tagFilter;
+
+  const toggleSeries = (seriesId: string) => {
+    setIsExpanded(prev => ({ ...prev, [seriesId]: !prev[seriesId] }));
+  };
 
   return (
     <Layout>
       <Helmet>
-        <title>Blog Posts - Suhird Singh | Technical Blog</title>
-        <meta name="description" content="Explore articles on gRPC, GraphQL, Python, Go, Rust, microservices, and cloud architecture. Technical deep dives and best practices." />
-        <meta name="keywords" content="blog, articles, gRPC, GraphQL, Python, Go, Rust, microservices, API design, cloud architecture" />
-        <meta property="og:title" content="Blog Posts - Suhird Singh" />
-        <meta property="og:description" content="Explore articles on gRPC, GraphQL, Python, Go, Rust, microservices, and cloud architecture." />
+        <title>Series - Suhird Singh | Technical Blog</title>
+        <meta name="description" content="Browse blog post series on gRPC, GraphQL, Python, Rust, microservices, and cloud architecture." />
+        <meta property="og:title" content="Series - Suhird Singh" />
+        <meta property="og:description" content="Browse blog post series on gRPC, GraphQL, Python, Rust, microservices, and cloud architecture." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://suhird.me/blog/" />
-        <link rel="canonical" href="https://suhird.me/blog/" />
+        <meta property="og:url" content="https://suhird.me/series/" />
+        <link rel="canonical" href="https://suhird.me/series/" />
       </Helmet>
       <div className="py-8">
         <div className="mb-6">
           <h1 className="text-2xl font-bold tracking-tight mb-2 text-[var(--heading-color)]">
-            Blog Posts
+            Series
           </h1>
           <p className="text-terminal-comment text-sm">
-            {filteredPosts.length} {filteredPosts.length === 1 ? "post" : "posts"}
+            {seriesGroups.length} {seriesGroups.length === 1 ? "series" : "series"}
           </p>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6">
-          {/* Sidebar - Year/Month Filter */}
+          {/* Sidebar - Archive Filter */}
           <aside className="lg:w-48 shrink-0">
             <div className="bg-terminal-background border border-terminal-comment/30 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-4 pb-2 border-b border-terminal-comment/20">
@@ -158,8 +156,7 @@ const Blog = () => {
                   <h3 className="text-xs font-mono text-terminal-comment uppercase tracking-wider mb-2">Months</h3>
                   <div className="space-y-1">
                     {months.map(month => {
-                      // Only show months that have standalone posts in the selected year
-                      const hasPostsInMonth = blogPosts.filter(p => !p.series).some(post => {
+                      const hasPostsInMonth = blogPosts.filter(p => p.series).some(post => {
                         const date = new Date(post.date);
                         return date.getFullYear().toString() === yearFilter && 
                                date.toLocaleString("default", { month: "long" }) === month;
@@ -196,18 +193,6 @@ const Blog = () => {
                 </button>
               )}
             </div>
-
-            {/* Group by Series */}
-            <button 
-              onClick={() => setIsGrouped(!isGrouped)}
-              className={`mt-4 w-full px-3 py-2 text-xs font-mono border border-terminal-comment/30 rounded transition-colors ${
-                isGrouped 
-                  ? "bg-terminal-purple/20 border-terminal-purple text-terminal-purple" 
-                  : "bg-terminal-comment/10 text-terminal-comment hover:bg-terminal-comment/20"
-              }`}
-            >
-              {isGrouped ? "[x] Group by Series" : "[ ] Group by Series"}
-            </button>
           </aside>
 
           {/* Main Content */}
@@ -240,60 +225,86 @@ const Blog = () => {
                 {tagFilter && (
                   <span className="px-3 py-1 text-xs font-mono bg-terminal-purple/10 border border-terminal-purple/30 text-terminal-purple rounded">
                     Tag: {tagFilter}
-                    <Link
-                      to="/blog"
+                    <button 
+                      onClick={() => updateFilter("tag", null)}
                       className="ml-2 hover:text-terminal-red"
                     >
                       <X size={12} />
-                    </Link>
+                    </button>
                   </span>
                 )}
               </div>
             )}
 
             <div className="space-y-4">
-              {filteredPosts.length > 0 ? (
-                isGrouped ? (
-                  <div className="space-y-8">
-                    {/* Render Series Groups First */}
-                    {groupedPosts.groups.map((group: any) => (
-                      <div key={group[0].series.id} className="border border-terminal-purple/30 rounded-lg p-4 bg-terminal-purple/5">
-                        <h3 className="text-lg font-bold text-terminal-purple mb-3 flex items-center gap-2">
-                           <span className="text-xl">📚</span> {group[0].series.title} Series
-                        </h3>
-                        <div className="space-y-4 pl-4 border-l-2 border-terminal-purple/20">
-                          {group.map((post: any) => (
-                            <div key={post.id} className="relative">
-                              <div className="absolute -left-[21px] top-3 w-3 h-3 rounded-full bg-terminal-purple border-4 border-terminal-background"></div>
-                              <BlogCard post={post} />
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
+              {seriesGroups.length > 0 ? (
+                seriesGroups.map((series) => (
+                  <div 
+                    key={series.id} 
+                    className="border border-terminal-purple/30 rounded-lg p-4 bg-terminal-purple/5"
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <h2 className="text-lg font-bold text-terminal-purple flex items-center gap-2">
+                        <span className="text-xl">📚</span> {series.title} Series
+                        <span className="text-sm font-normal text-terminal-comment ml-2">
+                          ({series.posts.length} posts)
+                        </span>
+                      </h2>
+                      <button
+                        onClick={() => toggleSeries(series.id)}
+                        className="text-terminal-comment hover:text-terminal-cyan text-sm"
+                      >
+                        {isExpanded[series.id] ? "[-] Collapse" : "[+] Expand"}
+                      </button>
+                    </div>
                     
-                    {/* Render Standalone Posts */}
-                    {groupedPosts.standalone.length > 0 && (
-                       <div className="space-y-4">
-                          {groupedPosts.groups.length > 0 && (
-                            <div className="flex items-center gap-2 text-terminal-comment pb-2 border-b border-terminal-comment/20 mt-6">
-                              <span className="text-lg">📝</span> <span className="font-mono text-sm uppercase tracking-wider">Independent Posts</span>
+                    {(isExpanded[series.id] || !isExpanded.hasOwnProperty(series.id)) && (
+                      <div className="space-y-4 pl-4 border-l-2 border-terminal-purple/20">
+                        {series.posts.map((post, idx) => (
+                          <div key={post.id} className="relative">
+                            <div className="absolute -left-[21px] top-3 w-3 h-3 rounded-full bg-terminal-purple border-4 border-terminal-background"></div>
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="text-xs text-terminal-comment font-mono">
+                                {idx + 1}.
+                              </span>
+                              <h3 className="post-title">
+                                <Link to={`/blog/${post.slug}`} className="hover:underline">
+                                  {post.title}
+                                </Link>
+                              </h3>
                             </div>
-                          )}
-                          {groupedPosts.standalone.map((post: any) => (
-                            <BlogCard key={post.id} post={post} />
-                          ))}
-                       </div>
+                            <div className="flex items-center gap-4 ml-5">
+                              <span className="text-sm text-terminal-comment">
+                                {post.date}
+                              </span>
+                              <span className="text-terminal-comment/50">•</span>
+                              <span className="text-sm text-terminal-comment">
+                                {post.readTime} read
+                              </span>
+                            </div>
+                            <p className="text-terminal-comment/70 text-sm mt-1 ml-5 mb-2">
+                              {post.description}
+                            </p>
+                            <div className="flex flex-wrap gap-2 ml-5">
+                              {post.tags.map((tag) => (
+                                <button
+                                  key={tag}
+                                  onClick={() => updateFilter("tag", tag)}
+                                  className="tag hover:opacity-80"
+                                >
+                                  #{tag}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     )}
                   </div>
-                ) : (
-                  filteredPosts.map((post, i) => (
-                    <BlogCard key={post.id} post={post} index={i} />
-                  ))
-                )
+                ))
               ) : (
                 <div className="text-center py-10 text-terminal-comment">
-                  <p>No posts found</p>
+                  <p>No series found</p>
                   <button 
                     onClick={clearAllFilters}
                     className="text-terminal-cyan hover:underline mt-2 inline-block"
@@ -310,4 +321,4 @@ const Blog = () => {
   );
 };
 
-export default Blog;
+export default Series;

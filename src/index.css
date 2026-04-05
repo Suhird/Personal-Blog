@@ -41,6 +41,9 @@
     /* Heading Colors - Catppuccin Mocha Mauve */
     --heading-color: #cba6f7;
 
+    /* Inline Code Background - Mocha */
+    --code-bg: rgba(203, 166, 247, 0.25);
+
     /* Tag Colors - Mocha */
     --tag-1-bg: rgba(245, 194, 231, 0.2);
     --tag-1-color: #f5c2e7;
@@ -86,6 +89,9 @@
 
     /* Heading Colors - Dracula Pink */
     --heading-color: #ff79c6;
+
+    /* Inline Code Background - Dracula */
+    --code-bg: rgba(255, 121, 198, 0.25);
 
     /* Tag Colors - Dracula */
     --tag-1-bg: rgba(255, 121, 198, 0.2);
@@ -133,6 +139,9 @@
     /* Heading Colors - Rosé Pine Love (Rose) */
     --heading-color: #eb6f92;
 
+    /* Inline Code Background - Rosé Pine */
+    --code-bg: rgba(235, 111, 146, 0.25);
+
     /* Tag Colors - Rosé Pine */
     --tag-1-bg: rgba(235, 111, 146, 0.2);
     --tag-1-color: #eb6f92;
@@ -179,7 +188,10 @@
     --terminal-comment: 240 2% 65%;
 
     /* Heading Colors - Ocean Abyss Primary Teal */
-    --heading-color: #25dcc8;
+    --heading-color: hsl(176 77% 58%);
+
+    /* Inline Code Background - Ocean Abyss */
+    --code-bg: rgba(37, 220, 200, 0.2);
 
     /* Tag Colors - Ocean Abyss */
     --tag-1-bg: rgba(37, 220, 200, 0.2);
@@ -236,10 +248,12 @@ p {
 code {
   font-family: Hack, "DejaVu Sans Mono", Monaco, Consolas, "Ubuntu Mono", monospace;
   font-feature-settings: normal;
-  background: var(--accent-alpha-20);
+  background: var(--code-bg);
+  color: var(--heading-color);
   padding: 1px 6px;
   margin: 0 2px;
-  font-size: 0.95rem;
+  font-size: 0.9em;
+  border-radius: 3px;
 }
 
 pre {
@@ -247,54 +261,34 @@ pre {
   padding: 20px;
   font-size: 0.95rem;
   overflow: auto;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  background: transparent;
+  background: var(--terminal-background);
+  border-radius: 6px;
+  border: 1px solid var(--terminal-comment);
 }
 
 pre code {
   padding: 0;
   margin: 0;
   background: none;
+  border: none;
+  color: inherit;
 }
 
 blockquote {
-  border-top: 1px solid var(--heading-color);
-  border-bottom: 1px solid var(--heading-color);
-  margin: 40px 0;
-  padding: 25px;
-  position: relative;
+  border-left: 3px solid var(--heading-color);
+  background: rgba(var(--muted), 0.3);
+  margin: 24px 0;
+  padding: 16px 20px;
   color: var(--muted-foreground);
-}
-
-blockquote:before {
-  content: "»";
-  font-family: Georgia, serif;
-  font-size: 3.875rem;
-  position: absolute;
-  left: -40px;
-  top: -20px;
-  color: var(--heading-color);
-}
-
-blockquote p:first-of-type {
-  margin-top: 0;
-}
-
-blockquote p:last-of-type {
-  margin-bottom: 0;
+  font-style: italic;
 }
 
 blockquote p {
-  position: relative;
+  margin: 0;
 }
 
-blockquote p:before {
-  content: ">";
-  display: block;
-  position: absolute;
-  left: -25px;
-  color: var(--heading-color);
+blockquote p + p {
+  margin-top: 12px;
 }
 
 table {
@@ -389,6 +383,7 @@ hr {
   font-size: 0.65rem;
   color: var(--heading-color);
   text-decoration: underline;
+  margin-right: 8px;
 }
 
 /* Terminal prompt */
@@ -407,15 +402,15 @@ hr {
 }
 
 .terminal-dot-red {
-  background: var(--terminal-red);
+  background: hsl(var(--terminal-red));
 }
 
 .terminal-dot-yellow {
-  background: var(--terminal-yellow);
+  background: hsl(var(--terminal-yellow));
 }
 
 .terminal-dot-green {
-  background: var(--terminal-green);
+  background: hsl(var(--terminal-green));
 }
 
 /* Blinking cursor */
@@ -436,9 +431,12 @@ hr {
   color: var(--heading-color);
   margin: 0 0 4px;
   padding-bottom: 0;
-  font-weight: normal;
-  font-size: 0.95rem;
+  font-size: 1.2rem;
   line-height: 1.15;
+}
+
+.post-title:not(.font-bold) {
+  font-weight: normal;
 }
 
 /* Article separator */
@@ -489,6 +487,17 @@ article {
 .post-content img {
   max-width: 100%;
   display: block;
+}
+
+.post-content pre {
+  background: var(--terminal-background);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.post-content code {
+  font-family: Hack, "DejaVu Sans Mono", Monaco, Consolas, "Ubuntu Mono", monospace;
+  font-size: 0.95em;
 }
 
 .post-content figure {

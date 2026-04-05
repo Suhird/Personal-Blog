@@ -38,11 +38,11 @@ const Projects = () => {
               className="border border-border rounded-lg overflow-hidden hover:shadow-md transition-shadow bg-terminal-background flex flex-col"
             >
               {project.image && (
-                <div className="w-full h-48 overflow-hidden border-b border-border bg-black/40 flex items-center justify-center">
+                <div className="w-full h-48 overflow-hidden border-b border-border bg-black/40 flex items-center justify-center p-2">
                   <img 
                     src={project.image} 
                     alt={project.name} 
-                    className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity"
+                    className="max-w-full max-h-full object-contain opacity-80 hover:opacity-100 transition-opacity rounded"
                   />
                 </div>
               )}

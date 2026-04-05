@@ -14,6 +14,7 @@ const Layout = ({ children }: LayoutProps) => {
   const getDisplayPath = (pathname: string) => {
     if (pathname === "/") return "Home";
     if (pathname.startsWith("/blog")) return "Blog";
+    if (pathname.startsWith("/series")) return "Series";
     if (pathname === "/projects") return "Projects";
     if (pathname === "/about") return "About";
     if (pathname === "/contact") return "Contact";

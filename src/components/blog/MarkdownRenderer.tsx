@@ -139,7 +139,7 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
           </li>
         ),
         blockquote: ({ node, children, ...props }) => (
-          <blockquote {...props}>
+          <blockquote className="blog-blockquote" {...props}>
             {children}
           </blockquote>
         ),
