@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import Layout from "@/components/Layout";
@@ -11,7 +11,6 @@ const Blog = () => {
   const tagFilter = searchParams.get("tag");
   const yearFilter = searchParams.get("year");
   const monthFilter = searchParams.get("month");
-  const [isGrouped, setIsGrouped] = useState(false);
 
   // Extract unique years and months from standalone posts
   const { years, months } = useMemo(() => {
@@ -55,35 +54,6 @@ const Blog = () => {
 
     return posts;
   }, [tagFilter, yearFilter, monthFilter]);
-
-  // Grouping Logic
-  const groupedPosts = (() => {
-    if (!isGrouped) return { groups: [], standalone: filteredPosts };
-
-    const groupsMap: { [key: string]: typeof blogPosts } = {};
-    const groupOrder: string[] = [];
-    const standalone: typeof blogPosts = [];
-
-    filteredPosts.forEach(post => {
-      if (post.series) {
-        if (!groupsMap[post.series.id]) {
-          groupsMap[post.series.id] = [];
-          groupOrder.push(post.series.id);
-        }
-        groupsMap[post.series.id].push(post);
-      } else {
-        standalone.push(post);
-      }
-    });
-
-    const orderedGroups = groupOrder.map(id => {
-      const group = groupsMap[id];
-      group.sort((a, b) => (a.series?.order || 0) - (b.series?.order || 0));
-      return group;
-    });
-
-    return { groups: orderedGroups, standalone };
-  })();
 
   const updateFilter = (key: string, value: string | null) => {
     const newParams = new URLSearchParams(searchParams);
@@ -196,18 +166,6 @@ const Blog = () => {
                 </button>
               )}
             </div>
-
-            {/* Group by Series */}
-            <button 
-              onClick={() => setIsGrouped(!isGrouped)}
-              className={`mt-4 w-full px-3 py-2 text-xs font-mono border border-terminal-comment/30 rounded transition-colors ${
-                isGrouped 
-                  ? "bg-terminal-purple/20 border-terminal-purple text-terminal-purple" 
-                  : "bg-terminal-comment/10 text-terminal-comment hover:bg-terminal-comment/20"
-              }`}
-            >
-              {isGrouped ? "[x] Group by Series" : "[ ] Group by Series"}
-            </button>
           </aside>
 
           {/* Main Content */}
@@ -253,44 +211,9 @@ const Blog = () => {
 
             <div className="space-y-4">
               {filteredPosts.length > 0 ? (
-                isGrouped ? (
-                  <div className="space-y-8">
-                    {/* Render Series Groups First */}
-                    {groupedPosts.groups.map((group: any) => (
-                      <div key={group[0].series.id} className="border border-terminal-purple/30 rounded-lg p-4 bg-terminal-purple/5">
-                        <h3 className="text-lg font-bold text-terminal-purple mb-3 flex items-center gap-2">
-                           <span className="text-xl">📚</span> {group[0].series.title} Series
-                        </h3>
-                        <div className="space-y-4 pl-4 border-l-2 border-terminal-purple/20">
-                          {group.map((post: any) => (
-                            <div key={post.id} className="relative">
-                              <div className="absolute -left-[21px] top-3 w-3 h-3 rounded-full bg-terminal-purple border-4 border-terminal-background"></div>
-                              <BlogCard post={post} />
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                    
-                    {/* Render Standalone Posts */}
-                    {groupedPosts.standalone.length > 0 && (
-                       <div className="space-y-4">
-                          {groupedPosts.groups.length > 0 && (
-                            <div className="flex items-center gap-2 text-terminal-comment pb-2 border-b border-terminal-comment/20 mt-6">
-                              <span className="text-lg">📝</span> <span className="font-mono text-sm uppercase tracking-wider">Independent Posts</span>
-                            </div>
-                          )}
-                          {groupedPosts.standalone.map((post: any) => (
-                            <BlogCard key={post.id} post={post} />
-                          ))}
-                       </div>
-                    )}
-                  </div>
-                ) : (
-                  filteredPosts.map((post, i) => (
-                    <BlogCard key={post.id} post={post} index={i} />
-                  ))
-                )
+                filteredPosts.map((post, i) => (
+                  <BlogCard key={post.id} post={post} index={i} />
+                ))
               ) : (
                 <div className="text-center py-10 text-terminal-comment">
                   <p>No posts found</p>

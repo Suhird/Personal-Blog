@@ -62,12 +62,6 @@
   </url>
 
   <url>
-    <loc>https://suhird.me/blog/api-rate-limiting-strategies/</loc>
-    <lastmod>2026-02-18</lastmod>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
     <loc>https://suhird.me/blog/optimizing-dockerfiles-guide/</loc>
     <lastmod>2026-02-15</lastmod>
     <priority>0.8</priority>

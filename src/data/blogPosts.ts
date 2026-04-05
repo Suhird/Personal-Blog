@@ -9,7 +9,6 @@ import { post as webassemblyRustPrimer } from "./posts/webassembly-rust-primer";
 import { post as eventDrivenPatternsKafka } from "./posts/event-driven-patterns-kafka";
 import { post as transactionalOutboxPattern } from "./posts/transactional-outbox-pattern";
 import { post as grpcVsGraphqlComparison } from "./posts/grpc-vs-graphql-comparison";
-import { post as apiRateLimitingStrategies } from "./posts/api-rate-limiting-strategies";
 import { post as optimizingDockerfilesGuide } from "./posts/optimizing-dockerfiles-guide";
 import { post as pythonMultiprocessingGuide } from "./posts/python-multiprocessing-guide";
 import { post as masteringPythonAsyncio } from "./posts/mastering-python-asyncio";
@@ -23,7 +22,6 @@ export const blogPosts: BlogPost[] = [
   webassemblyRustPrimer,
 
   grpcVsGraphqlComparison,
-  apiRateLimitingStrategies,
   optimizingDockerfilesGuide,
   pythonMultiprocessingGuide,
   masteringPythonAsyncio,
