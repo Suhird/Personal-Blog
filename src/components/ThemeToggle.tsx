@@ -34,8 +34,9 @@ export function ThemeToggle() {
         <DropdownMenuItem onClick={() => setTheme("rose-pine")}>
             Rosé Pine
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("ocean-abyss")}>
-            Ocean Abyss
+        
+        <DropdownMenuItem onClick={() => setTheme("matcha")}>
+            Matcha
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

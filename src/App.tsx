@@ -24,15 +24,15 @@ const App = () => {
 
   useEffect(() => {
     setMounted(true);
-    localStorage.setItem("theme", "ocean-abyss");
-    document.documentElement.setAttribute("data-theme", "ocean-abyss");
+    localStorage.setItem("theme", "catppuccin-mocha");
+    document.documentElement.setAttribute("data-theme", "catppuccin-mocha");
   }, []);
 
   return (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-          <ThemeProvider defaultTheme="ocean-abyss" attribute="data-theme" enableSystem={false}>
+          <ThemeProvider defaultTheme="catppuccin-mocha" attribute="data-theme" enableSystem={false}>
             <Toaster />
             <Sonner />
             <BrowserRouter>

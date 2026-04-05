@@ -10,18 +10,31 @@ import ShareLinks from "@/components/blog/ShareLinks";
 import PostNotFound from "@/components/blog/PostNotFound";
 import TableOfContents from "@/components/blog/TableOfContents";
 import SeriesNavigation from "@/components/blog/SeriesNavigation";
+import { ArrowUp } from "lucide-react";
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
   const post = blogPosts.find((post) => post.slug === slug);
   const [markdownContent, setMarkdownContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showTopButton, setShowTopButton] = useState(false);
 
   useEffect(() => {
-    // Scroll to top on page load
     window.scrollTo(0, 0);
 
-    // Load markdown content if post exists and has a markdown file reference
+    const handleScroll = () => {
+      setShowTopButton(window.scrollY > 400);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  useEffect(() => {
     const loadContent = async () => {
       if (post?.markdownFile) {
         setIsLoading(true);
@@ -159,7 +172,17 @@ Pelientesque auctor nisi id magna consequat sagittis.
           allPosts={blogPosts} 
           className="mt-8 pt-8 border-t border-terminal-comment/30"
         />
-        <ShareLinks />
+        <ShareLinks title={post.title} url={canonicalUrl} />
+
+        {showTopButton && (
+          <button
+            onClick={scrollToTop}
+            className="fixed bottom-8 right-8 p-3 rounded-full bg-terminal-cyan/20 border border-terminal-cyan/50 text-terminal-cyan hover:bg-terminal-cyan/30 transition-all shadow-[0_0_12px_rgba(6,182,212,0.3)]"
+            aria-label="Go to top"
+          >
+            <ArrowUp size={20} />
+          </button>
+        )}
       </article>
     </Layout>
   );
