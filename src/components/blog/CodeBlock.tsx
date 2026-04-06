@@ -171,9 +171,9 @@ const CodeBlock = ({ language, children, filename }: CodeBlockProps) => {
   const content = String(children).replace(/\n$/, "");
 
   return (
-    <div className="mb-6 relative group">
+    <div className="mb-6 relative group border border-[var(--terminal-comment)]">
       {(filename || language) && (
-        <div className="px-4 py-2 flex items-center justify-between bg-[var(--terminal-background)] border border-[var(--terminal-comment)] border-b-0 rounded-t-md opacity-80">
+        <div className="px-4 py-2 flex items-center justify-between bg-[var(--terminal-background)] rounded-t-md opacity-80">
           <div className="flex items-center">
             <div className="terminal-dots">
               <span className="terminal-dot-red"></span>

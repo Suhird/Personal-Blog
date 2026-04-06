@@ -25,7 +25,7 @@ const Layout = ({ children }: LayoutProps) => {
 
   return (
     <div className="flex min-h-screen flex-col bg-terminal-background text-terminal-foreground font-mono">
-      <div className="terminal-container max-w-7xl mx-auto w-full px-4 py-4">
+      <div className="terminal-container max-w-7xl mx-auto w-full px-4 py-4 border border-terminal-comment rounded-lg">
         <div className="terminal-window">
           <div className="terminal-header flex items-center p-2">
             <div className="terminal-dots">
