@@ -73,11 +73,19 @@ const Series = () => {
       }
     });
 
-    Object.values(groupsMap).forEach(group => {
+    const groupsArray = Object.values(groupsMap);
+    
+    groupsArray.forEach(group => {
       group.posts.sort((a, b) => (a.series?.order || 0) - (b.series?.order || 0));
     });
 
-    return Object.values(groupsMap);
+    groupsArray.sort((a, b) => {
+      const dateA = new Date(a.posts[0]?.date || 0);
+      const dateB = new Date(b.posts[0]?.date || 0);
+      return dateB.getTime() - dateA.getTime();
+    });
+
+    return groupsArray;
   }, [yearFilter, monthFilter, tagFilter]);
 
   const updateFilter = (key: string, value: string | null) => {
@@ -258,7 +266,7 @@ const Series = () => {
                       </button>
                     </div>
                     
-                    {(isExpanded[series.id] || !isExpanded.hasOwnProperty(series.id)) && (
+                    {isExpanded[series.id] === true && (
                       <div className="space-y-4 pl-4 border-l-2 border-terminal-purple/20">
                         {series.posts.map((post, idx) => (
                           <div key={post.id} className="relative">

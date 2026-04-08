@@ -39,20 +39,20 @@ Let me walk you through what I built. We'll create a Mandelbrot set renderer tha
 
 First, grab the tooling:
 
-```bash
+```bash:bash
 cargo install wasm-pack
 ```
 
 Create a new library project:
 
-```bash
+```bash:bash
 cargo new --lib mandelbrot-wasm --lib
 cd mandelbrot-wasm
 ```
 
 Update your `Cargo.toml`:
 
-```toml
+```toml:Cargo.toml
 [package]
 name = "mandelbrot-wasm"
 version = "0.1.0"
@@ -75,7 +75,7 @@ The `cdylib` crate type is crucial — it tells Cargo to build a C-compatible dy
 
 Here's where it gets fun. Open up `src/lib.rs`:
 
-```rust
+```rust:src/lib.rs
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
@@ -193,13 +193,13 @@ A few things to note here:
 
 Time to compile:
 
-```bash
+```bash:bash
 wasm-pack build --target web
 ```
 
 This creates a `pkg/` directory with your Wasm module and JavaScript bindings. For a release build with all optimizations:
 
-```bash
+```bash:bash
 RUSTFLAGS='-C target-cpu=native' wasm-pack build --target web --release
 ```
 
@@ -209,7 +209,7 @@ The `target-cpu=native` flag tells Rust to use CPU-specific instructions. If you
 
 Here's where things get elegant. The generated JavaScript bindings handle all the Wasm loading boilerplate:
 
-```html
+```html:index.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -378,7 +378,7 @@ My workflow:
 2. Once the Rust side is solid, compile to Wasm.
 3. If something breaks in Wasm, add tracing. `console.error` your way through it.
 
-```rust
+```rust:src/lib.rs
 #[wasm_bindgen]
 pub fn compute_mandelbrot(...) -> Vec<u8> {
     web_sys::console::time_with_label("mandelbrot render");

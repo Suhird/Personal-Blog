@@ -12,6 +12,7 @@ import { post as grpcVsGraphqlComparison } from "./posts/grpc-vs-graphql-compari
 import { post as optimizingDockerfilesGuide } from "./posts/optimizing-dockerfiles-guide";
 import { post as pythonMultiprocessingGuide } from "./posts/python-multiprocessing-guide";
 import { post as masteringPythonAsyncio } from "./posts/mastering-python-asyncio";
+import { post as rustByDoingPart1 } from "./posts/rust-by-doing-build-your-own-x-part-1";
 
 // latest blog post on top as the sequence is show on FE starting with first as latest
 export const blogPosts: BlogPost[] = [
@@ -29,4 +30,5 @@ export const blogPosts: BlogPost[] = [
   acceleratingPythonRustPyo3Part2,
   financialPortfolioTuiPart1,
   financialPortfolioTuiPart2,
+  rustByDoingPart1,
 ];

@@ -6,7 +6,7 @@ While AsyncIO excels at I/O-bound concurrency, CPU-bound tasks need a different 
 
 Python's Global Interpreter Lock means only one thread can execute bytecode at a time. For CPU-bound work like image processing, threading doesn't help:
 
-```python
+```python:threading_example.py
 # This won't give you parallelism for CPU work
 import threading
 import cv2
@@ -26,7 +26,7 @@ Even with multiple threads, only one executes Python at any moment. The GIL seri
 
 Multiprocessing spawns separate OS processes, each with its own Python interpreter and GIL. Now all your CPU cores work simultaneously:
 
-```python
+```python:process_pool_example.py
 from concurrent.futures import ProcessPoolExecutor
 import cv2
 
@@ -34,16 +34,16 @@ def detect_stars(filename):
     """CPU-intensive star detection using OpenCV"""
     img = cv2.imread(filename)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    
+
     params = cv2.SimpleBlobDetector_Params()
     params.filterByColor = True
     params.blobColor = 255
     params.filterByArea = True
     params.minArea = 10
-    
+
     detector = cv2.SimpleBlobDetector_create(params)
     keypoints = detector.detect(gray)
-    
+
     return len(keypoints)
 
 # ProcessPoolExecutor uses all available CPU cores
@@ -68,7 +68,7 @@ Here's the challenge: you have an async event loop handling downloads, but now n
 
 The solution: `loop.run_in_executor()`.
 
-```python
+```python:async_multiprocess.py
 import asyncio
 from concurrent.futures import ProcessPoolExecutor
 from tqdm import tqdm
@@ -81,18 +81,18 @@ def detect_stars_and_process(filename):
 
 async def main():
     loop = asyncio.get_running_loop()
-    
+
     with ProcessPoolExecutor() as pool:
         pbar = tqdm(total=len(files), desc="Analyzing", unit="img")
         results = []
-        
+
         for fname in files:
             # Schedule blocking function in process pool
             fut = loop.run_in_executor(pool, detect_stars_and_process, fname)
             # Add callback to update progress bar when done
             fut.add_done_callback(lambda _: pbar.update(1))
             results.append(fut)
-        
+
         # Wait for all processing to complete
         summaries = await asyncio.gather(*results)
 ```
@@ -121,7 +121,7 @@ This is non-blocking. When a processing task finishes, the callback updates your
 
 This pattern combines AsyncIO for network I/O with multiprocessing for CPU work:
 
-```python
+```python:async_download_process.py
 import asyncio
 import aiohttp
 import aiofiles
@@ -143,23 +143,23 @@ def process_image(filename):
     """CPU-bound: detect stars with OpenCV"""
     img = cv2.imread(filename)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    
+
     params = cv2.SimpleBlobDetector_Params()
     params.filterByColor = True
     params.blobColor = 255
     params.filterByArea = True
     params.minArea = 10
-    
+
     detector = cv2.SimpleBlobDetector_create(params)
     keypoints = detector.detect(gray)
-    
+
     output_path = filename.replace("space_", "detected_")
     img_with_keys = cv2.drawKeypoints(
         img, keypoints, None, (0, 0, 255),
         cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS
     )
     cv2.imwrite(output_path, img_with_keys)
-    
+
     return f"Found {len(keypoints)} stars"
 
 async def main():
@@ -167,9 +167,9 @@ async def main():
     async with aiohttp.ClientSession() as session:
         async with session.get(config.BASE_URL, params={"api_key": config.NASA_API_KEY, "count": 10}) as response:
             data = await response.json()
-        
+
         valid_items = [item for item in data if item.get("media_type") == "image"]
-        
+
         pbar = tqdm(total=len(valid_items), desc="Downloading", unit="img")
         tasks = [
             download_image(session, item.get("hdurl") or item.get("url"), f"space_{i}.jpg", pbar)
@@ -177,22 +177,22 @@ async def main():
         ]
         downloaded_files = await asyncio.gather(*tasks)
         pbar.close()
-    
+
     downloaded = [f for f in downloaded_files if f]
-    
+
     # Phase 2: Multiprocessing (CPU-bound)
     loop = asyncio.get_running_loop()
     with ProcessPoolExecutor() as pool:
         pbar = tqdm(total=len(downloaded), desc="Analyzing", unit="img")
         results = []
-        
+
         for fname in downloaded:
             fut = loop.run_in_executor(pool, process_image, fname)
             fut.add_done_callback(lambda _: pbar.update(1))
             results.append(fut)
-        
+
         summaries = await asyncio.gather(*results)
-    
+
     for summary in summaries:
         print(f"  {summary}")
 

@@ -141,6 +141,46 @@ const catppuccinMocha = {
   },
 };
 
+const languageMap: Record<string, string> = {
+  js: "JavaScript",
+  ts: "TypeScript",
+  tsx: "TypeScript React",
+  jsx: "JavaScript React",
+  py: "Python",
+  rb: "Ruby",
+  rs: "Rust",
+  go: "Go",
+  java: "Java",
+  cpp: "C++",
+  c: "C",
+  cs: "C#",
+  swift: "Swift",
+  kt: "Kotlin",
+  scala: "Scala",
+  php: "PHP",
+  html: "HTML",
+  css: "CSS",
+  scss: "SCSS",
+  sql: "SQL",
+  sh: "Shell",
+  bash: "Bash",
+  zsh: "Zsh",
+  yaml: "YAML",
+  yml: "YAML",
+  json: "JSON",
+  toml: "TOML",
+  xml: "XML",
+  md: "Markdown",
+  mdx: "MDX",
+  dockerfile: "Dockerfile",
+  docker: "Docker",
+  rust: "Rust",
+};
+
+const toDisplayLanguage = (lang: string): string => {
+  return languageMap[lang.toLowerCase()] || lang.charAt(0).toUpperCase() + lang.slice(1);
+};
+
 const CodeBlock = ({ language, children, filename }: CodeBlockProps) => {
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
@@ -174,38 +214,38 @@ const CodeBlock = ({ language, children, filename }: CodeBlockProps) => {
     <div className="mb-6 relative group border border-[var(--terminal-comment)]">
       {(filename || language) && (
         <div className="px-4 py-2 flex items-center justify-between bg-[var(--terminal-background)] rounded-t-md opacity-80">
-          <div className="flex items-center">
+          <div className="flex items-center gap-3">
             <div className="terminal-dots">
               <span className="terminal-dot-red"></span>
               <span className="terminal-dot-yellow"></span>
               <span className="terminal-dot-green"></span>
             </div>
-            <div className="ml-3 text-xs">
-              {filename ? (
-                <>
-                  <span className="text-[var(--terminal-foreground)] font-medium">{filename}</span>
-                  {language && (
-                    <span className="ml-2 text-[var(--terminal-comment)]">({language})</span>
-                  )}
-                </>
-              ) : (
-                <span className="text-[var(--terminal-accent)]">{language}</span>
-              )}
-            </div>
-          </div>
-          <Button
-            onClick={copyToClipboard}
-            size="sm"
-            variant="ghost"
-            className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 focus:opacity-100 h-7 w-7 p-0 text-[var(--terminal-foreground)] hover:text-[var(--terminal-accent)] hover:bg-[var(--terminal-comment)]"
-            aria-label="Copy code to clipboard"
-          >
-            {copied ? (
-              <Check className="h-4 w-4 text-[var(--terminal-green)]" />
-            ) : (
-              <Copy className="h-4 w-4" />
+            {filename && (
+              <span className="text-xs text-[var(--terminal-foreground)] font-medium">
+                {filename}
+              </span>
             )}
-          </Button>
+          </div>
+          <div className="flex items-center gap-2">
+            {language && (
+              <span className="text-xs text-[var(--terminal-comment)]">
+                {toDisplayLanguage(language)}
+              </span>
+            )}
+            <Button
+              onClick={copyToClipboard}
+              size="sm"
+              variant="ghost"
+              className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 focus:opacity-100 h-7 w-7 p-0 text-[var(--terminal-foreground)] hover:text-[var(--terminal-accent)] hover:bg-[var(--terminal-comment)]"
+              aria-label="Copy code to clipboard"
+            >
+              {copied ? (
+                <Check className="h-4 w-4 text-[var(--terminal-green)]" />
+              ) : (
+                <Copy className="h-4 w-4" />
+              )}
+            </Button>
+          </div>
         </div>
       )}
       <div className={filename || language ? "rounded-none" : "rounded-md"}>

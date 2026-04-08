@@ -30,7 +30,7 @@ I needed to:
 
 ## The Rust Implementation
 
-```rust
+```rust:src/lib.rs
 use pyo3::prelude::*;
 use std::collections::HashMap;
 use std::str::FromStr;
@@ -167,7 +167,7 @@ fn process_logs(content: &str) -> ProcessingStats {
 
 The above works great for content that's already in memory. But for really large files, we need chunked processing:
 
-```rust
+```rust:src/lib.rs
 #[pyfunction]
 fn process_logs_chunked(
     path: &str,
@@ -257,7 +257,7 @@ fn process_logs_chunked(
 
 ## Using It from Python
 
-```python
+```python:process_logs.py
 import fastlib
 import time
 from pathlib import Path
@@ -308,7 +308,7 @@ The pure Python equivalent? **78 seconds**. That's a **93x speedup**.
 
 For really long operations, you can show progress:
 
-```python
+```python:progress_callback.py
 def progress_callback(processed: int, errors: int):
     print(f"Processed {processed:,} lines, {errors:,} errors", end="\r")
 
@@ -323,7 +323,7 @@ stats = fastlib.process_logs_chunked(
 
 Microbenchmarks lie. Here's how to benchmark realistically:
 
-```python
+```python:benchmark.py
 import time
 import statistics
 
@@ -333,7 +333,7 @@ def benchmark(func, *args, iterations=5):
         start = time.perf_counter()
         result = func(*args)
         times.append(time.perf_counter() - start)
-    
+
     return {
         "mean": statistics.mean(times),
         "median": statistics.median(times),

@@ -20,7 +20,7 @@ Rust compiles to native machine code. No interpreter, no overhead. You get C-lev
 
 We'll use `maturin` for building, which handles all the PyO3 boilerplate. Trust me, you don't want to configure this manually.
 
-```bash
+```bash:bash
 # Create project with maturin
 curl -L https://github.com/PyO3/maturin/releases/download/v1.5.0/maturin-installer.sh | sh
 
@@ -54,7 +54,7 @@ Let's start simple. We'll implement a function that counts prime numbers — CPU
 
 Open `src/lib.rs`:
 
-```rust
+```rust:src/lib.rs
 use pyo3::prelude::*;
 
 /// Count prime numbers up to n using the Sieve of Eratosthenes
@@ -63,11 +63,11 @@ fn count_primes(n: u64) -> u64 {
     if n < 2 {
         return 0;
     }
-    
+
     let mut is_prime = vec![true; (n as usize) + 1];
     is_prime[0] = false;
     is_prime[1] = false;
-    
+
     let mut count = 0;
     for i in 2..=(n as usize) {
         if is_prime[i] {
@@ -80,7 +80,7 @@ fn count_primes(n: u64) -> u64 {
             }
         }
     }
-    
+
     count
 }
 
@@ -99,7 +99,7 @@ A few things to notice:
 
 ## Building and Testing
 
-```bash
+```bash:bash
 # Develop in debug mode (fast to compile, slower runtime)
 maturin develop
 
@@ -109,7 +109,7 @@ maturin build --release
 
 Now in Python:
 
-```python
+```python:python_example.py
 import fastlib
 import time
 
@@ -128,7 +128,7 @@ On my machine: **0.08 seconds** to count primes up to 10 million.
 
 The equivalent Python:
 
-```python
+```python:pure_python.py
 def count_primes_py(n):
     if n < 2:
         return 0
@@ -152,7 +152,7 @@ Takes **8.5 seconds**. That's a **100x speedup**.
 
 You can export multiple functions:
 
-```rust
+```rust:src/lib.rs
 use pyo3::prelude::*;
 
 #[pyfunction]
@@ -193,7 +193,7 @@ fn fastlib(m: &Bound<'_, PyModule>) -> PyResult<()> {
 
 When things go wrong, you want Python exceptions, not panics. PyO3 makes this clean:
 
-```rust
+```rust:src/lib.rs
 use pyo3::exceptions::PyValueError;
 
 #[pyfunction]
@@ -207,7 +207,7 @@ fn safe_divide(a: f64, b: f64) -> PyResult<f64> {
 
 In Python:
 
-```python
+```python:python_example.py
 try:
     fastlib.safe_divide(1.0, 0.0)
 except ValueError as e:
@@ -218,7 +218,7 @@ except ValueError as e:
 
 When you're ready to ship:
 
-```bash
+```bash:bash
 # Build wheel for PyPI
 maturin build --release --out dist
 

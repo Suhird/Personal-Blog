@@ -49,7 +49,7 @@ Inside my architecture, the notification service needs to talk to the message se
 
 Here's my message service proto file:
 
-```protobuf
+```protobuf:proto/message.proto
 syntax = "proto3";
 
 package chatservice;
@@ -93,11 +93,11 @@ message MessageResponse {
 
 The notification service calls this with a simple Go client:
 
-```go
+```go:notification/service.go
 func (n *NotificationService) OnNewMessage(ctx context.Context, msg *chatpb.Message) error {
     // Get channel participants who need notifications
     participants, err := n.userClient.GetChannelParticipants(ctx, msg.ChannelId)
-    
+
     // Send push to each participant
     for _, user := range participants {
         if user.Id != msg.SenderId && user.PushToken != "" {
@@ -138,14 +138,14 @@ With gRPC, I'd need *multiple* RPC calls, or a bloated "get everything" endpoint
 
 With GraphQL? One query, exactly what I need:
 
-```graphql
+```graphql:queries.graphql
 query GetChannelView($channelId: ID!, $messageLimit: Int) {
   channel(id: $channelId) {
     id
     name
     description
     unreadCount
-    
+
     lastMessage {
       id
       content
@@ -156,7 +156,7 @@ query GetChannelView($channelId: ID!, $messageLimit: Int) {
         avatarUrl
       }
     }
-    
+
     participants {
       id
       name
@@ -164,7 +164,7 @@ query GetChannelView($channelId: ID!, $messageLimit: Int) {
       isOnline
     }
   }
-  
+
   messages(channelId: $channelId, limit: $messageLimit) {
     id
     content
@@ -172,7 +172,7 @@ query GetChannelView($channelId: ID!, $messageLimit: Int) {
     type
     attachmentUrl
     readByCurrentUser
-    
+
     sender {
       id
       name
@@ -184,7 +184,7 @@ query GetChannelView($channelId: ID!, $messageLimit: Int) {
 
 And if I'm on a smart TV app that just needs recent messages?
 
-```graphql
+```graphql:queries.graphql
 query GetRecentMessages($channelId: ID!) {
   messages(channelId: $channelId, limit: 10) {
     id
@@ -198,7 +198,7 @@ The TV app gets *exactly* what it needs. The mobile app gets the full picture. S
 
 My GraphQL schema (using Strawberry):
 
-```python
+```python:schema.py
 import strawberry
 from typing import List, Optional
 from datetime import datetime
@@ -235,7 +235,7 @@ class Query:
     @strawberry.field
     async def channel(self, id: strawberry.ID) -> Optional[Channel]:
         return await self.channel_service.get(id)
-    
+
     @strawberry.field
     async def messages(
         self,

@@ -6,7 +6,7 @@ AsyncIO is Python's answer to high-concurrency I/O operations. While traditional
 
 Consider downloading images from an API. With synchronous `requests`:
 
-```python
+```python:blocking_example.py
 import requests
 import time
 
@@ -24,7 +24,7 @@ Threading seems like a solution, but Python's **Global Interpreter Lock (GIL)** 
 
 AsyncIO uses a single-threaded event loop with **cooperative multitasking**. Think of a postman who doesn't wait at each door—they knock, leave a flyer, and move on. When someone answers, they come back.
 
-```python
+```python:async_example.py
 import asyncio
 import aiohttp
 
@@ -54,7 +54,7 @@ async def main():
 
 An `async def` function is a **coroutine**—a function that can be paused and resumed. When you call an async function, it returns a coroutine object but doesn't execute:
 
-```python
+```python:coroutine_example.py
 async def fetch_data():
     return "data"
 
@@ -89,7 +89,7 @@ Key behaviors:
 
 Here's a pattern from a production system that downloads and processes images from NASA's APOD API:
 
-```python
+```python:nasadownload.py
 import asyncio
 import aiohttp
 import aiofiles
@@ -114,19 +114,19 @@ async def main():
         # Fetch metadata from API
         async with session.get(BASE_URL, params={"api_key": API_KEY, "count": 10}) as response:
             data = await response.json()
-        
+
         valid_items = [item for item in data if item.get("media_type") == "image"]
-        
+
         # Download all images concurrently
         pbar = tqdm(total=len(valid_items), desc="Downloading", unit="img")
         tasks = []
         for i, item in enumerate(valid_items):
             url = item.get("hdurl") or item.get("url")
             tasks.append(download_image(session, url, f"space_{i}.jpg", pbar))
-        
+
         results = await asyncio.gather(*tasks)
         pbar.close()
-        
+
         return [f for f in results if f]  # Filter failures
 ```
 

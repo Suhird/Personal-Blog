@@ -6,7 +6,11 @@ const StatsGrid = () => {
   // Calculate unique tags
   const allTags = blogPosts.flatMap(post => post.tags);
   const uniqueTags = new Set(allTags).size;
-  const latestPostDate = new Date(blogPosts[0].date).toLocaleDateString();
+  // Find the actual latest post by comparing dates across all posts including series
+  const latestPostDate = blogPosts.reduce((latest, post) => {
+    const postDate = new Date(post.date);
+    return postDate > latest ? postDate : latest;
+  }, new Date(0)).toLocaleDateString();
 
   const stats = [
     {
