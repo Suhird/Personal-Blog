@@ -12,8 +12,7 @@ So I added AI-powered analysis. Here's how to connect a Python TUI to Claude and
 
 The cleanest approach is to abstract the AI provider behind a simple interface. Whether you're using Anthropic, Google, or (in the future) a local LLM, the interface stays the same:
 
-\`\`\`python
-# src/terminal_portfolio/ai_client.py
+\`\`\`python:src/terminal_portfolio/ai_client.py
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Optional
@@ -201,7 +200,7 @@ The key to good AI analysis is a well-structured prompt. My prompt includes:
 
 Here's the prompt I use:
 
-\`\`\`python
+\`\`\`python:prompt_builder.py
 prompt = f"""You are a financial advisor analyzing an investment portfolio.
 
 PORTFOLIO SUMMARY:
@@ -224,8 +223,7 @@ Format your response clearly with sections."""
 
 Now I need to wire this into the Textual app. The AI call is async, so Textual's \`run_worker\` is perfect:
 
-\`\`\`python
-# main.py (updated)
+\`\`\`python:main.py
 from textual.app import App, ComposeResult
 from textual.worker import Worker
 from textual.widgets import Static, LoadingIndicator
@@ -270,7 +268,7 @@ One thing I really wanted was the ability to search within the AI review. Someti
 
 Textual has a built-in search mechanism. Here's how I added it:
 
-\`\`\`python
+\`\`\`python:search_feature.py
 class TerminalPortfolio(App):
     BINDINGS = [
         Binding("a", "trigger_ai_review", "AI Review"),
@@ -309,8 +307,7 @@ class TerminalPortfolio(App):
 
 Don't hardcode API keys. Use \`.env\`:
 
-\`\`\`bash
-# .env.example
+\`\`\`bash:.env.example
 ANTHROPIC_API_KEY=sk-ant-...
 # Or
 GOOGLE_API_KEY=AIza...
@@ -318,7 +315,7 @@ GOOGLE_API_KEY=AIza...
 
 Load it at startup:
 
-\`\`\`python
+\`\`\`python:setup.py
 from dotenv import load_dotenv
 
 load_dotenv()  # Load .env file
@@ -332,7 +329,7 @@ Here's what the AI review looks like in action:
 
 \`\`\`
 💬 AI PORTFOLIO ANALYSIS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 SUMMARY:
 Your portfolio is well-diversified across 8 holdings with a

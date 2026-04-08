@@ -21,8 +21,7 @@ myapp/
 └── Dockerfile
 \`\`\`
 
-\`\`\`python
-# app/main.py
+\`\`\`python:app/main.py
 from fastapi import FastAPI
 
 app = FastAPI()
@@ -36,8 +35,7 @@ def health_check():
     return {"status": "healthy"}
 \`\`\`
 
-\`\`\`text
-# requirements.txt
+\`\`\`text:requirements.txt
 fastapi==0.109.0
 uvicorn[standard]==0.27.0
 pydantic==2.5.0
@@ -48,7 +46,7 @@ httpx==0.26.0
 
 Most people start like this:
 
-\`\`\`dockerfile
+\`\`\`dockerfile:Dockerfile
 FROM python:3.12
 WORKDIR /app
 COPY . /app
@@ -68,7 +66,7 @@ Python has two smaller variants most people don't know about:
 
 For production, I use \`python:3.12-slim-bookworm\` (Debian stable) when I need compatibility, and \`python:3.12-alpine\` when I'm confident there are no C-extension issues.
 
-\`\`\`dockerfile
+\`\`\`dockerfile:Dockerfile
 # Still naive, but smaller base
 FROM python:3.12-slim
 WORKDIR /app
@@ -84,7 +82,7 @@ Down to ~400MB. We're getting there.
 
 This is the biggest win. Use one container to build, another to run.
 
-\`\`\`dockerfile
+\`\`\`dockerfile:Dockerfile
 # Stage 1: Build
 FROM python:3.12-slim AS builder
 WORKDIR /app
@@ -125,7 +123,7 @@ Down to ~250MB. And we don't have compilers in production.
 
 Docker caches each layer. If a layer changes, all subsequent layers are rebuilt. Structure your Dockerfile so things that change infrequently come first:
 
-\`\`\`dockerfile
+\`\`\`dockerfile:Dockerfile
 # Good: Dependencies change rarely, source changes often
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
@@ -145,7 +143,7 @@ The order above is intentional:
 
 Each \`RUN\` creates a layer. Combine commands to reduce image size:
 
-\`\`\`dockerfile
+\`\`\`dockerfile:Dockerfile
 # Bad: Creates multiple layers
 RUN apt-get update
 RUN apt-get install -y gcc
@@ -159,7 +157,7 @@ RUN apt-get update && \\
 
 For Python, always use \`--no-cache-dir\` with pip:
 
-\`\`\`dockerfile
+\`\`\`dockerfile:Dockerfile
 RUN pip install --no-cache-dir -r requirements.txt
 \`\`\`
 
@@ -169,7 +167,7 @@ This prevents pip from caching downloaded packages inside the image, saving anot
 
 Just like \`.gitignore\`, this prevents files from being sent to the Docker daemon:
 
-\`\`\`dockerignore
+\`\`\`dockerignore:.dockerignore
 # Git
 .git
 .gitignore
@@ -218,7 +216,7 @@ Without \`.dockerignore\`, you're sending your entire project to Docker — incl
 
 Every dependency is a potential security vulnerability and increases image size:
 
-\`\`\`dockerfile
+\`\`\`dockerfile:Dockerfile
 # Bad: Installs dev dependencies in production
 RUN pip install -r requirements.txt
 
@@ -228,8 +226,7 @@ RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 Your \`requirements.txt\` should distinguish between production and development:
 
-\`\`\`text
-# requirements.txt (production only)
+\`\`\`text:requirements.txt (production only)
 fastapi==0.109.0
 uvicorn[standard]==0.27.0
 pydantic==2.5.0
@@ -241,7 +238,7 @@ black==23.12.0
 \`\`\`
 
 Then in Dockerfile:
-\`\`\`dockerfile
+\`\`\`dockerfile:Dockerfile
 COPY requirements.txt .
 RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 \`\`\`
@@ -250,7 +247,7 @@ RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 By default, containers run as root. This is a security risk.
 
-\`\`\`dockerfile
+\`\`\`dockerfile:Dockerfile
 FROM python:3.12-slim
 
 RUN useradd --create-home --uid 1000 appuser
@@ -270,7 +267,7 @@ Now if someone compromises your app, they don't have root access to the containe
 
 Google's distroless images contain only the application runtime — no shell, no package manager, no utilities:
 
-\`\`\`dockerfile
+\`\`\`dockerfile:Dockerfile
 # Multi-stage with distroless
 FROM python:3.12-slim AS builder
 WORKDIR /app
@@ -293,7 +290,7 @@ Result: ~80MB image with no shell. Harder to exploit, smaller attack surface.
 
 Add a health check so orchestration tools (Kubernetes, Docker Compose) know when your app is ready:
 
-\`\`\`dockerfile
+\`\`\`dockerfile:Dockerfile
 FROM python:3.12-slim
 
 # ... setup ...
@@ -306,7 +303,7 @@ CMD ["uvicorn", "app.main:app"]
 
 Your app needs a health endpoint for this to work:
 
-\`\`\`python
+\`\`\`python:app/main.py
 @app.get("/health")
 def health_check():
     return {"status": "healthy"}
@@ -316,7 +313,7 @@ def health_check():
 
 Use \`ARG\` for things that change between environments:
 
-\`\`\`dockerfile
+\`\`\`dockerfile:Dockerfile
 FROM python:3.12-slim
 
 ARG APP_ENV=production
@@ -339,7 +336,7 @@ CMD ["uvicorn", "app.main:app"]
 \`\`\`
 
 Build with:
-\`\`\`bash
+\`\`\`bash:bash
 docker build --build-arg APP_ENV=development -t myapp:dev .
 \`\`\`
 
@@ -347,7 +344,7 @@ docker build --build-arg APP_ENV=development -t myapp:dev .
 
 Here's the full optimized version for our FastAPI app:
 
-\`\`\`dockerfile
+\`\`\`dockerfile:Dockerfile
 # syntax=docker/dockerfile:1
 
 # Stage 1: Builder

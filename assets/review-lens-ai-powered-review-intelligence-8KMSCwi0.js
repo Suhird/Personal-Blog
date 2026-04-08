@@ -44,7 +44,7 @@ The pipeline is orchestrated by **LangGraph**, a framework for building stateful
            │                    ├─ Gemini (Walmart /
            │                    │  Best Buy / Costco)
            │                    └─ YouTube (Data API)
-           └────────────┬────────────┘
+           └────────────┴────────────┘
                         ▼
                  analysis_node
                  ├─ ABSA (LLM batches, sequential)
@@ -96,7 +96,7 @@ Amazon is the hardest. The classic trick of navigating to \`/product-reviews/{as
 
 The scraper also sets \`--disable-blink-features=AutomationControlled\` and overrides \`navigator.webdriver = undefined\` to reduce bot fingerprinting.
 
-\`\`\`python
+\`\`\`python:scrapers/amazon.py
 await context.add_init_script(
     "Object.defineProperty(navigator, 'webdriver', { get: () => undefined });"
 )
@@ -106,7 +106,7 @@ await context.add_init_script(
 
 Initially this project used a direct Best Buy scraper and the Google Custom Search JSON API. Both were removed — Best Buy's API rate-limits quickly and is fragile; Google Custom Search returned persistent 403 errors despite correct GCP configuration.
 
-The replacement is more elegant: **Gemini 2.5 Flash with Google Search grounding**. One API call to Gemini, with Google Search attached as a tool, retrieves and synthesizes reviews from walmart.com, bestbuy.com, and costco.com in a single shot.
+The replacement is more elegant: **Gemini 2.5 Flash with Google Search grounding.** One API call to Gemini, with Google Search attached as a tool, retrieves and synthesizes reviews from walmart.com, bestbuy.com, and costco.com in a single shot.
 
 There are two non-obvious constraints that shaped the implementation:
 
@@ -114,7 +114,7 @@ There are two non-obvious constraints that shaped the implementation:
 
 **2. Two-step approach.** When Google Search grounding is active, asking for JSON-only output suppresses the model's response entirely. The solution is a two-step call: step 1 uses grounding with a natural language prompt to get review prose, step 2 is a separate call *without* grounding to structure that prose into JSON.
 
-\`\`\`python
+\`\`\`python:scrapers/gemini_search.py
 # Step 1: grounded search → prose
 search_tool = types.Tool(google_search=types.GoogleSearch())
 response = client.models.generate_content(
@@ -190,7 +190,7 @@ The result might be: "Excellent Noise Cancellation", "Battery Life Issues", "Com
 
 The overall score is computed programmatically — no LLM in the loop, just arithmetic:
 
-\`\`\`python
+\`\`\`python:analysis/verdict.py
 base_score = (avg_rating - 1.0) / 4.0 * 10.0   # normalise 1–5 stars → 0–10
 fake_penalty = min(fake_percentage / 100.0 * 0.1 * 10.0, 1.0)
 drift_bonus = +0.3 if improving else -0.3 if declining else 0.0
@@ -220,7 +220,7 @@ By default, llama3.2 loads with a 4,096-token context window, allocating **448 M
 
 Halves the KV cache from 448 MB → 224 MB. Less memory pressure, less thermal load, faster prefill. All LLM calls now instantiate \`ChatOllama\` with explicit parameters:
 
-\`\`\`python
+\`\`\`python:llm_config.py
 # ABSA batches
 llm = ChatOllama(model=settings.ollama_model, num_ctx=2048, num_predict=800)
 
@@ -261,17 +261,17 @@ After all fixes, with a fresh Ollama session on M2 MacBook Air:
 If you run this on a machine with more RAM/VRAM, increase these values for better analysis quality:
 
 **M2 Pro / M3 / M4 (16–32 GB RAM):**
-\`\`\`python
+\`\`\`python:llm_config.py
 llm = ChatOllama(model=..., num_ctx=4096, num_predict=1024)
 \`\`\`
 Also restore batch size to 25 reviews and text truncation to 300 chars.
 
 **Cloud GPU (A100, H100, 24+ GB VRAM):**
-\`\`\`python
+\`\`\`python:llm_config.py
 llm = ChatOllama(model=..., num_ctx=8192, num_predict=2048)
 \`\`\`
 Switch to a larger model for significantly better report quality:
-\`\`\`bash
+\`\`\`bash:bash
 OLLAMA_MODEL=mistral        # 7B — good balance
 OLLAMA_MODEL=mixtral        # 47B MoE — best quality, needs 32+ GB RAM
 OLLAMA_MODEL=llama3.1:70b   # excellent, needs 48+ GB VRAM
@@ -285,7 +285,7 @@ OLLAMA_MODEL=llama3.1:70b   # excellent, needs 48+ GB VRAM
 
 Requirements: Docker Desktop and ~4–6 GB of free disk for the llama3.2 model. A Gemini API key is required for Walmart/Best Buy/Costco reviews (free tier won't work — billing must be enabled, but cost is capped at ~$0.35/day with the built-in daily limit).
 
-\`\`\`bash
+\`\`\`bash:bash
 git clone https://github.com/your-username/review-lens.git
 cd review-lens
 cp .env.example .env

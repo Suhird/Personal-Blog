@@ -40,14 +40,14 @@ financial-portfolio-tui/
 
 First, create the project with uv (because we're not animals):
 
-\`\`\`bash
+\`\`\`bash:bash
 mkdir financial-portfolio-tui && cd financial-portfolio-tui
 uv init
 \`\`\`
 
 Add the dependencies:
 
-\`\`\`toml
+\`\`\`toml:pyproject.toml
 [project]
 name = "terminal-portfolio"
 version = "0.1.0"
@@ -63,7 +63,7 @@ dependencies = [
 dev-dependencies = []
 \`\`\`
 
-\`\`\`bash
+\`\`\`bash:bash
 uv sync
 \`\`\`
 
@@ -71,8 +71,7 @@ uv sync
 
 Textual apps are classes. Here's my main app structure:
 
-\`\`\`python
-# main.py
+\`\`\`python:main.py
 import os
 from textual.app import App, ComposeResult
 from textual.driver import Driver
@@ -188,8 +187,7 @@ class TerminalPortfolio(App):
 
 Now for the data layer. I need to represent holdings across multiple accounts:
 
-\`\`\`python
-# src/terminal_portfolio/portfolio.py
+\`\`\`python:src/terminal_portfolio/portfolio.py
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Optional
@@ -243,7 +241,7 @@ class Portfolio:
 
 Wealthsimple exports look like this (simplified):
 
-\`\`\`csv
+\`\`\`csv:data/example.csv
 Symbol,Name,Quantity,Price,Previous Close,Current Value,Gain ($),Gain (%),Account
 VFIAX,VANGUARD 500 INDEX ADV,10.5,425.50,420.00,4467.75,57.75,1.31%,RRSP
 AAPL,APPLE INC,5,178.25,175.50,891.25,13.75,0.78%,TFSA
@@ -251,8 +249,7 @@ AAPL,APPLE INC,5,178.25,175.50,891.25,13.75,0.78%,TFSA
 
 Here's my CSV loader:
 
-\`\`\`python
-# src/terminal_portfolio/csv_loader.py
+\`\`\`python:src/terminal_portfolio/csv_loader.py
 from pathlib import Path
 from typing import Iterator
 from src.terminal_portfolio.portfolio import Portfolio, Holding
@@ -307,8 +304,7 @@ class CSVLoader:
 
 Textual's strength is its widget composition. Here's a custom table widget for displaying holdings:
 
-\`\`\`python
-# src/terminal_portfolio/widgets.py
+\`\`\`python:src/terminal_portfolio/widgets.py
 from textual.widgets import Static, DataTable
 from textual.containers import Vertical
 from textual.message import Message
@@ -369,8 +365,7 @@ class HoldingsTable(DataTable):
 
 Here's the complete main.py bringing it all together:
 
-\`\`\`python
-# main.py
+\`\`\`python:main.py
 from pathlib import Path
 from textual.app import App, ComposeResult
 from textual.binding import Binding
