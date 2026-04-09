@@ -4,7 +4,7 @@ export const post: BlogPost = {
   id: "streaming-k8s-events-terminal",
   title: "Streaming K8s Events to the Terminal",
   description: "Combine tview and client-go to create a real-time stream of Kubernetes events in your terminal.",
-  date: "November 10, 2025",
+  date: "2025-11-10",
   tags: ["Go","Kubernetes","TUI"],
   readTime: "8 min",
   slug: "streaming-k8s-events-terminal",

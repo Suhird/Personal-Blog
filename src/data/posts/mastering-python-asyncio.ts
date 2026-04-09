@@ -5,7 +5,7 @@ export const post: BlogPost = {
   title: "Mastering Python AsyncIO",
   description:
     "Understand the event loop, coroutines, and tasks to write highly concurrent network-bound applications.",
-  date: "November 15, 2025",
+  date: "2025-11-15",
   tags: ["Python", "AsyncIO", "Concurrency", "Performance"],
   readTime: "9 min",
   slug: "mastering-python-asyncio",

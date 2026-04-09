@@ -4,7 +4,7 @@ export const post: BlogPost = {
   id: "building-tui-go-tview",
   title: "Building Terminal UIs in Go with Tview",
   description: "Get started with the tview library to create rich, interactive terminal user interfaces in Golang.",
-  date: "November 1, 2025",
+  date: "2025-11-01",
   tags: ["Go","TUI","Terminal"],
   readTime: "9 min",
   slug: "building-tui-go-tview",

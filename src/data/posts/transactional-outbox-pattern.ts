@@ -4,7 +4,7 @@ export const post: BlogPost = {
   id: "transactional-outbox-pattern",
   title: "The Transactional Outbox Pattern",
   description: "Solving the Dual Write problem in microservices using the Outbox Pattern.",
-  date: "January 14, 2026",
+  date: "2026-01-14",
   tags: ["Kafka", "Architecture", "Patterns", "Microservices"],
   readTime: "10 min",
   slug: "transactional-outbox-pattern",

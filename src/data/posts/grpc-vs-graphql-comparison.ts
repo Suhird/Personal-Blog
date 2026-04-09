@@ -5,7 +5,7 @@ export const post: BlogPost = {
   title: "gRPC vs GraphQL: Choosing the Right Protocol",
   description:
     "When to use gRPC vs GraphQL for your services. A practical comparison using a real-time chat application.",
-  date: "December 20, 2025",
+  date: "2025-12-20",
   tags: ["Architecture", "gRPC", "GraphQL", "System Design"],
   readTime: "10 min",
   slug: "grpc-vs-graphql-comparison",

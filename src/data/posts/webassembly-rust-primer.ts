@@ -4,7 +4,7 @@ export const post: BlogPost = {
   id: "webassembly-rust-primer",
   title: "WebAssembly with Rust: A Primer",
   description: "Compiling Rust to WebAssembly to run high-performance code in the browser. Building a Mandelbrot explorer.",
-  date: "December 28, 2025",
+  date: "2025-12-28",
   tags: ["Rust", "WASM", "Web"],
   readTime: "12 min",
   slug: "webassembly-rust-primer",
