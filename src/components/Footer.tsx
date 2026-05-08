@@ -17,19 +17,19 @@ const Footer = () => {
             <Link to="/" className="hover:text-terminal-cyan">
               cd ~
             </Link>
-            <Link to="/blog" className="hover:text-terminal-cyan">
-              cd ~/blog
+            <Link to="/tech-blog/" className="hover:text-terminal-cyan">
+              cd ~/tech-blog
             </Link>
-            <Link to="/series" className="hover:text-terminal-cyan">
+            <Link to="/series/" className="hover:text-terminal-cyan">
               cd ~/series
             </Link>
-            <Link to="/projects" className="hover:text-terminal-cyan">
+            <Link to="/projects/" className="hover:text-terminal-cyan">
               cd ~/projects
             </Link>
-            <Link to="/about" className="hover:text-terminal-cyan">
+            <Link to="/about/" className="hover:text-terminal-cyan">
               cd ~/about
             </Link>
-            <Link to="/contact" className="hover:text-terminal-cyan">
+            <Link to="/contact/" className="hover:text-terminal-cyan">
               cd ~/contact
             </Link>
           </nav>

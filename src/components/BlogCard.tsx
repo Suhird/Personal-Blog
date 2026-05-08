@@ -11,6 +11,8 @@ export interface BlogPost {
   slug: string;
   content?: string;
   markdownFile?: string;
+  htmlFile?: string;
+  category?: "tech" | "life";
   series?: {
     id: string;
     title: string;
@@ -21,9 +23,10 @@ export interface BlogPost {
 interface BlogCardProps {
   post: BlogPost;
   index?: number;
+  basePath?: string;
 }
 
-const BlogCard = ({ post, index }: BlogCardProps) => {
+const BlogCard = ({ post, index, basePath = "/tech-blog/" }: BlogCardProps) => {
   const getTagClass = (index: number) => {
     const classes = ["tag-1", "tag-2", "tag-3", "tag-4"];
     return classes[index % classes.length];
@@ -62,7 +65,7 @@ const BlogCard = ({ post, index }: BlogCardProps) => {
       )}
       <h2 className="post-title text-lg">
         {index !== undefined && <span className="text-terminal-comment mr-1">{index + 1}.</span>}
-        <Link to={`/blog/${post.slug}`} className="hover:underline">
+        <Link to={`/blog/${post.slug}/`} className="hover:underline">
           {post.title}
         </Link>
       </h2>
@@ -73,7 +76,7 @@ const BlogCard = ({ post, index }: BlogCardProps) => {
         {post.tags.map((tag, index) => (
           <Link
             key={tag}
-            to={`/blog?tag=${tag}`}
+            to={`${basePath}?tag=${tag}`}
             className={`tag ${getTagClass(index)} hover:opacity-80 transition-opacity`}
             onClick={(e) => e.stopPropagation()}
           >

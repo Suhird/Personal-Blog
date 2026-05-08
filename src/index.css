@@ -342,9 +342,17 @@ hr {
   padding: 40px;
 }
 
+.blog-container-wide {
+  max-width: 1200px;
+}
+
 @media (max-width: 683px) {
   .blog-container {
     padding: 20px;
+  }
+
+  .blog-container-wide {
+    max-width: 100%;
   }
   
   body {

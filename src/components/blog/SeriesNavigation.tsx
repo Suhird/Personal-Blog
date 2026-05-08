@@ -26,7 +26,7 @@ const SeriesNavigation = ({ currentPost, allPosts, className = "" }: SeriesNavig
     <div className={`flex justify-between items-center ${className}`}>
       {prevPost ? (
         <Link 
-          to={`/blog/${prevPost.slug}`}
+          to={`/blog/${prevPost.slug}/`}
           className="flex items-center gap-2 px-4 py-2 text-sm font-mono text-terminal-comment border border-terminal-comment/30 rounded hover:bg-terminal-comment/10 hover:text-terminal-foreground hover:border-terminal-cyan transition-all"
         >
           <ChevronLeft size={16} />
@@ -38,7 +38,7 @@ const SeriesNavigation = ({ currentPost, allPosts, className = "" }: SeriesNavig
 
       {nextPost && (
         <Link 
-          to={`/blog/${nextPost.slug}`}
+          to={`/blog/${nextPost.slug}/`}
           className="flex items-center gap-2 px-4 py-2 text-sm font-mono text-terminal-comment border border-terminal-comment/30 rounded hover:bg-terminal-comment/10 hover:text-terminal-foreground hover:border-terminal-cyan transition-all"
         >
           <span>Next</span>

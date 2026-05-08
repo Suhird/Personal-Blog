@@ -276,7 +276,7 @@ const Series = () => {
                                 {idx + 1}.
                               </span>
                               <h3 className="post-title">
-                                <Link to={`/blog/${post.slug}`} className="hover:underline">
+                                <Link to={`/blog/${post.slug}/`} className="hover:underline">
                                   {post.title}
                                 </Link>
                               </h3>

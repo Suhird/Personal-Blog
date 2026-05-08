@@ -7,8 +7,8 @@ const PostNotFound = () => {
       <p className="mb-6">
         Sorry, the blog post you're looking for doesn't exist.
       </p>
-      <Link to="/blog" className="blog-link">
-        Back to Blog
+      <Link to="/tech-blog/" className="blog-link">
+        Back to TechBlog
       </Link>
     </div>
   );

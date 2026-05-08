@@ -44,7 +44,7 @@ const Index = () => {
               </div>
               
               <Link
-                to="/contact"
+                to="/contact/"
                 className="whitespace-nowrap bg-terminal-background border border-terminal-green text-terminal-green hover:bg-terminal-green/10 font-mono py-2 px-6 rounded transition-colors text-center"
               >
                 ./send_message.sh

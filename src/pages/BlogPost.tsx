@@ -146,14 +146,17 @@ Pelientesque auctor nisi id magna consequat sagittis.
           {JSON.stringify(jsonLdSchema)}
         </script>
       </Helmet>
-      <article className="blog-container py-16">
-        <Link to="/blog" className="blog-link mb-8 inline-block">
-          ← Back to Blog
+      <article className={`blog-container py-16 ${post?.htmlFile ? "blog-container-wide" : ""}`}>
+        <Link
+          to={post.category === "life" ? "/beyond-code/" : "/tech-blog/"}
+          className="blog-link mb-8 inline-block"
+        >
+          {post.category === "life" ? "← Back to BeyondCode" : "← Back to TechBlog"}
         </Link>
 
         <PostHeader post={post} getTagClass={getTagClass} />
 
-        {!isLoading && contentToRender && (
+        {!isLoading && contentToRender && !post?.htmlFile && (
           <TableOfContents content={contentToRender} />
         )}
 
@@ -162,6 +165,13 @@ Pelientesque auctor nisi id magna consequat sagittis.
             <div className="text-center">
               <p className="terminal-prompt">Loading content...</p>
             </div>
+          ) : post?.htmlFile ? (
+            <iframe
+              src={post.htmlFile}
+              title={post.title}
+              className="w-full rounded-lg border border-terminal-comment/30 h-[85vh] md:h-[90vh] lg:h-[95vh]"
+              loading="lazy"
+            />
           ) : (
             <MarkdownRenderer content={contentToRender} />
           )}

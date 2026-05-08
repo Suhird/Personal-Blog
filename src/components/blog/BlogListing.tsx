@@ -6,36 +6,46 @@ import BlogCard from "@/components/BlogCard";
 import { blogPosts } from "@/data/blogPosts";
 import { X, Calendar } from "lucide-react";
 
-const Blog = () => {
+interface BlogListingProps {
+  category: "tech" | "life";
+  pageTitle: string;
+  pageDescription: string;
+  canonicalPath: string;
+}
+
+const BlogListing = ({ category, pageTitle, pageDescription, canonicalPath }: BlogListingProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const tagFilter = searchParams.get("tag");
   const yearFilter = searchParams.get("year");
   const monthFilter = searchParams.get("month");
-  const categoryFilter = searchParams.get("category") || "tech";
 
-  // Extract unique years and months from standalone posts
+  // Extract unique years and months from standalone posts in this category
   const { years, months } = useMemo(() => {
     const yearSet = new Set<string>();
     const monthSet = new Set<string>();
 
-    blogPosts.filter(p => !p.series).forEach(post => {
-      const date = new Date(post.date);
-      yearSet.add(date.getFullYear().toString());
-      monthSet.add(date.toLocaleString("default", { month: "long" }));
-    });
+    blogPosts
+      .filter((p) => !p.series && (p.category || "tech") === category)
+      .forEach((post) => {
+        const date = new Date(post.date);
+        yearSet.add(date.getFullYear().toString());
+        monthSet.add(date.toLocaleString("default", { month: "long" }));
+      });
 
     return {
       years: Array.from(yearSet).sort((a, b) => Number(b) - Number(a)),
-      months: ["January", "February", "March", "April", "May", "June", 
-               "July", "August", "September", "October", "November", "December"]
+      months: [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December",
+      ],
     };
-  }, []);
+  }, [category]);
 
-  // Filter posts by year and month, exclude series posts
+  // Filter posts by category, year, month, tag
   const filteredPosts = useMemo(() => {
-    let posts = blogPosts.filter((post) => !post.series);
-
-    posts = posts.filter((post) => (post.category || "tech") === categoryFilter);
+    let posts = blogPosts.filter(
+      (post) => !post.series && (post.category || "tech") === category
+    );
 
     if (tagFilter) {
       posts = posts.filter((post) => post.tags.includes(tagFilter));
@@ -56,7 +66,7 @@ const Blog = () => {
     }
 
     return posts;
-  }, [tagFilter, yearFilter, monthFilter, categoryFilter]);
+  }, [tagFilter, yearFilter, monthFilter, category]);
 
   const updateFilter = (key: string, value: string | null) => {
     const newParams = new URLSearchParams(searchParams);
@@ -72,54 +82,33 @@ const Blog = () => {
     setSearchParams(new URLSearchParams());
   };
 
-  const hasActiveFilters = tagFilter || yearFilter || monthFilter || categoryFilter !== "tech";
+  const hasActiveFilters = tagFilter || yearFilter || monthFilter;
 
-  const categories = [
-    { key: "tech", label: "TechBlog" },
-    { key: "life", label: "BeyondCode" },
-  ];
+  const canonicalUrl = `https://suhird.me${canonicalPath}`;
 
   return (
     <Layout>
       <Helmet>
-        <title>Blog Posts - Suhird Singh | Technical Blog</title>
-        <meta name="description" content="Explore articles on gRPC, GraphQL, Python, Go, Rust, microservices, and cloud architecture. Technical deep dives and best practices." />
-        <meta name="keywords" content="blog, articles, gRPC, GraphQL, Python, Go, Rust, microservices, API design, cloud architecture" />
-        <meta property="og:title" content="Blog Posts - Suhird Singh" />
-        <meta property="og:description" content="Explore articles on gRPC, GraphQL, Python, Go, Rust, microservices, and cloud architecture." />
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={pageDescription} />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://suhird.me/blog/" />
-        <link rel="canonical" href="https://suhird.me/blog/" />
+        <meta property="og:url" content={canonicalUrl} />
+        <link rel="canonical" href={canonicalUrl} />
       </Helmet>
       <div className="py-8">
         <div className="mb-6">
           <h1 className="text-2xl font-bold tracking-tight mb-2 text-[var(--heading-color)]">
-            Blog Posts
+            {pageTitle}
           </h1>
           <p className="text-terminal-comment text-sm">
             {filteredPosts.length} {filteredPosts.length === 1 ? "post" : "posts"}
           </p>
         </div>
 
-        {/* Category Tabs */}
-        <div className="mb-6 flex flex-wrap gap-2">
-          {categories.map((cat) => (
-            <button
-              key={cat.key}
-              onClick={() => updateFilter("category", cat.key)}
-              className={`px-4 py-1.5 text-sm font-mono rounded transition-colors border ${
-                categoryFilter === cat.key
-                  ? "bg-terminal-cyan/20 text-terminal-cyan border-terminal-cyan/50"
-                  : "text-terminal-foreground/80 border-terminal-comment/30 hover:border-terminal-comment/60 hover:bg-terminal-comment/10"
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
-
         <div className="flex flex-col lg:flex-row gap-6">
-          {/* Sidebar - Year/Month Filter */}
+          {/* Sidebar - Archive */}
           <aside className="lg:w-48 shrink-0">
             <div className="bg-terminal-background border border-terminal-comment/30 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-4 pb-2 border-b border-terminal-comment/20">
@@ -131,7 +120,7 @@ const Blog = () => {
               <div className="mb-4">
                 <h3 className="text-xs font-mono text-terminal-comment uppercase tracking-wider mb-2">Years</h3>
                 <div className="space-y-1">
-                  {years.map(year => (
+                  {years.map((year) => (
                     <button
                       key={year}
                       onClick={() => updateFilter("year", yearFilter === year ? null : year)}
@@ -152,13 +141,16 @@ const Blog = () => {
                 <div>
                   <h3 className="text-xs font-mono text-terminal-comment uppercase tracking-wider mb-2">Months</h3>
                   <div className="space-y-1">
-                    {months.map(month => {
-                      // Only show months that have standalone posts in the selected year
-                      const hasPostsInMonth = blogPosts.filter(p => !p.series).some(post => {
-                        const date = new Date(post.date);
-                        return date.getFullYear().toString() === yearFilter && 
-                               date.toLocaleString("default", { month: "long" }) === month;
-                      });
+                    {months.map((month) => {
+                      const hasPostsInMonth = blogPosts
+                        .filter((p) => !p.series && (p.category || "tech") === category)
+                        .some((post) => {
+                          const date = new Date(post.date);
+                          return (
+                            date.getFullYear().toString() === yearFilter &&
+                            date.toLocaleString("default", { month: "long" }) === month
+                          );
+                        });
 
                       if (!hasPostsInMonth) return null;
 
@@ -198,21 +190,10 @@ const Blog = () => {
             {/* Active Filters Display */}
             {hasActiveFilters && (
               <div className="mb-6 flex flex-wrap items-center gap-2">
-                {categoryFilter !== "tech" && (
-                  <span className="px-3 py-1 text-xs font-mono bg-terminal-cyan/10 border border-terminal-cyan/30 text-terminal-cyan rounded">
-                    Category: {categoryFilter === "life" ? "BeyondCode" : "TechBlog"}
-                    <button 
-                      onClick={() => updateFilter("category", "tech")}
-                      className="ml-2 hover:text-terminal-red"
-                    >
-                      <X size={12} />
-                    </button>
-                  </span>
-                )}
                 {yearFilter && (
                   <span className="px-3 py-1 text-xs font-mono bg-terminal-cyan/10 border border-terminal-cyan/30 text-terminal-cyan rounded">
                     Year: {yearFilter}
-                    <button 
+                    <button
                       onClick={() => updateFilter("year", null)}
                       className="ml-2 hover:text-terminal-red"
                     >
@@ -223,7 +204,7 @@ const Blog = () => {
                 {monthFilter && (
                   <span className="px-3 py-1 text-xs font-mono bg-terminal-cyan/10 border border-terminal-cyan/30 text-terminal-cyan rounded">
                     Month: {monthFilter}
-                    <button 
+                    <button
                       onClick={() => updateFilter("month", null)}
                       className="ml-2 hover:text-terminal-red"
                     >
@@ -235,7 +216,7 @@ const Blog = () => {
                   <span className="px-3 py-1 text-xs font-mono bg-terminal-purple/10 border border-terminal-purple/30 text-terminal-purple rounded">
                     Tag: {tagFilter}
                     <Link
-                      to="/blog/"
+                      to={canonicalPath}
                       className="ml-2 hover:text-terminal-red"
                     >
                       <X size={12} />
@@ -248,12 +229,12 @@ const Blog = () => {
             <div className="space-y-4">
               {filteredPosts.length > 0 ? (
                 filteredPosts.map((post, i) => (
-                  <BlogCard key={post.id} post={post} index={i} />
+                  <BlogCard key={post.id} post={post} index={i} basePath={canonicalPath} />
                 ))
               ) : (
                 <div className="text-center py-10 text-terminal-comment">
                   <p>No posts found</p>
-                  <button 
+                  <button
                     onClick={clearAllFilters}
                     className="text-terminal-cyan hover:underline mt-2 inline-block"
                   >
@@ -269,4 +250,4 @@ const Blog = () => {
   );
 };
 
-export default Blog;
+export default BlogListing;

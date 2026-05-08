@@ -13,9 +13,11 @@ import { post as optimizingDockerfilesGuide } from "./posts/optimizing-dockerfil
 import { post as pythonMultiprocessingGuide } from "./posts/python-multiprocessing-guide";
 import { post as masteringPythonAsyncio } from "./posts/mastering-python-asyncio";
 import { post as rustByDoingPart1 } from "./posts/rust-by-doing-build-your-own-x-part-1";
+import { post as canadianCarOwnership } from "./posts/canadian-car-ownership-financial-analysis";
 
 // latest blog post on top as the sequence is show on FE starting with first as latest
 export const blogPosts: BlogPost[] = [
+  canadianCarOwnership,
   courierHttp,
   reviewLensAiPoweredReviewIntelligence,
   transactionalOutboxPattern,
