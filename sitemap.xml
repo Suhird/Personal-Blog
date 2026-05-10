@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>    <loc>https://suhird.me/</loc>
-    <lastmod>2026-05-08</lastmod>
+    <lastmod>2026-05-10</lastmod>
     <priority>1.0</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>    <loc>https://suhird.me/tech-blog/</loc>
-    <lastmod>2026-05-08</lastmod>
+    <lastmod>2026-05-10</lastmod>
     <priority>0.9</priority>
     <changefreq>daily</changefreq>
   </url>
   <url>    <loc>https://suhird.me/beyond-code/</loc>
-    <lastmod>2026-05-08</lastmod>
+    <lastmod>2026-05-10</lastmod>
     <priority>0.9</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>    <loc>https://suhird.me/series/</loc>
-    <lastmod>2026-05-08</lastmod>
+    <lastmod>2026-05-10</lastmod>
     <priority>0.9</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>    <loc>https://suhird.me/projects/</loc>
-    <lastmod>2026-05-08</lastmod>
+    <lastmod>2026-05-10</lastmod>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>    <loc>https://suhird.me/about/</loc>
-    <lastmod>2026-05-08</lastmod>
+    <lastmod>2026-05-10</lastmod>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>    <loc>https://suhird.me/contact/</loc>
-    <lastmod>2026-05-08</lastmod>
+    <lastmod>2026-05-10</lastmod>
     <priority>0.7</priority>
     <changefreq>monthly</changefreq>
   </url>
