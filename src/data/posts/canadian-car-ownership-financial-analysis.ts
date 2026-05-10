@@ -9,6 +9,15 @@ export const post: BlogPost = {
   tags: ["Canada", "Finance", "Life"],
   readTime: "12 min",
   slug: "canadian-car-ownership-financial-analysis",
-  htmlFile: "/posts/canadian-car-ownership-financial-analysis.html",
+  content: `
+## The 20/4/10 Rule — The Gold Standard
+## Canadian Salaries vs. What You Can Actually Afford
+## The True Monthly Cost of Ownership
+## The Negative Equity Debt Treadmill
+## The $735,000 Opportunity Cost
+## Predictive Outlook: 2026–2031
+## The Path Forward: Summary of Recommendations
+## Sources & References
+`,
   category: "life",
 };

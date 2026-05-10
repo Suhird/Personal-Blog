@@ -10,6 +10,7 @@ import ShareLinks from "@/components/blog/ShareLinks";
 import PostNotFound from "@/components/blog/PostNotFound";
 import TableOfContents from "@/components/blog/TableOfContents";
 import SeriesNavigation from "@/components/blog/SeriesNavigation";
+import CanadianCarOwnership from "@/components/blog/posts/CanadianCarOwnership";
 import { ArrowUp } from "lucide-react";
 
 const BlogPost = () => {
@@ -146,7 +147,7 @@ Pelientesque auctor nisi id magna consequat sagittis.
           {JSON.stringify(jsonLdSchema)}
         </script>
       </Helmet>
-      <article className={`blog-container py-16 ${post?.htmlFile ? "blog-container-wide" : ""}`}>
+      <article className="blog-container py-16">
         <Link
           to={post.category === "life" ? "/beyond-code/" : "/tech-blog/"}
           className="blog-link mb-8 inline-block"
@@ -156,7 +157,7 @@ Pelientesque auctor nisi id magna consequat sagittis.
 
         <PostHeader post={post} getTagClass={getTagClass} />
 
-        {!isLoading && contentToRender && !post?.htmlFile && (
+        {!isLoading && contentToRender && (
           <TableOfContents content={contentToRender} />
         )}
 
@@ -165,13 +166,8 @@ Pelientesque auctor nisi id magna consequat sagittis.
             <div className="text-center">
               <p className="terminal-prompt">Loading content...</p>
             </div>
-          ) : post?.htmlFile ? (
-            <iframe
-              src={post.htmlFile}
-              title={post.title}
-              className="w-full rounded-lg border border-terminal-comment/30 h-[85vh] md:h-[90vh] lg:h-[95vh]"
-              loading="lazy"
-            />
+          ) : post?.slug === "canadian-car-ownership-financial-analysis" ? (
+            <CanadianCarOwnership />
           ) : (
             <MarkdownRenderer content={contentToRender} />
           )}
