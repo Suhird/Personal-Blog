@@ -51,23 +51,36 @@ const About = () => {
               <p className="text-muted-foreground">
                 This blog is my digital space where I share what I learn about
                 software development, code optimization, and other technical
-                topics. My goal is to explain complex concepts in a simple and
-                approachable way.
+                topics.My goal is to explain complex concepts in a simple and approachable way
+                Sometimes I also write about stuff which is "Beyond Code".
               </p>
             </div>
           </div>
 
           <h2>My Journey</h2>
           <p>
-            I started coding when I was 15 years old, creating Solar System
-            models in C++ .My second most loved subject is Physics hence writing
-            orbital equations in C++ and simulating the solar system really got
-            me hooked to Computer programming. My interest in programming grew
-            throughout high school, leading me to pursue a Computer Science
-            degree. During my Masters at University of Windsor, I learned a lot about Statistics, Machine Learning and Neural Networks.
+            I started coding when I was 15, building Solar System simulations in C++.
+            Physics was always my second love — writing orbital equations and watching
+            planets orbit on screen was the moment I got hooked on programming. That
+            curiosity stuck with me through high school and led me to Computer Science.
           </p>
           <p>
-            In my personal time, I enjoy playing video games, reading books and working on my stealth startup idea. 
+            During my Master's at the University of Windsor, I dove deep into the math
+            side of computing — probability theory, statistical modeling, and neural
+            network architectures. That foundation in reasoning about uncertainty and
+            pattern recognition still shapes how I approach systems design today.
+          </p>
+          <p>
+            Outside of work, I'm the Founder of{" "}
+            <a
+              href="https://nordhird.com"
+              target="_blank"
+              rel="noreferrer"
+              className="text-terminal-cyan hover:underline"
+            >
+              NordHird
+            </a>
+            , a startup company building Sovereign softwares for Sovereign Canada. If I still have some time left, I spend rest of it playing video games,reading web novels and swimming.
           </p>
 
           <h2>Professional Experience</h2>
