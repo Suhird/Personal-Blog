@@ -8,8 +8,8 @@ export interface Experience {
 export const experience: Experience[] = [
   {
     title: "Senior Software Engineer",
-    company: "Mastercard",
-    period: "September 2025 - Present",
+    company: "Recorded Future| A Mastercard company",
+    period: "Sep 2025 - Present",
     description: [
       "Building tools for Threat Intelligence and Security Analytics at Mastercard.",
       "Working with Python, async and multiprocessing.",
