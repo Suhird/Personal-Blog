@@ -58,7 +58,7 @@ Expected:
 | Setting | Value |
 |---|---|
 | Framework preset | None |
-| Build command | `npm ci && npm run build` |
+| Build command | `npm run build` |
 | Build output directory | `dist` |
 | Node version | `22` |
 
@@ -67,6 +67,8 @@ Expected:
 ```text
 NODE_VERSION=22
 ```
+
+Cloudflare installs dependencies automatically before running the build command. This repository has both `package-lock.json` and `bun.lockb`; Cloudflare currently detects Bun and runs `bun install --frozen-lockfile`, so keep `bun.lockb` in sync when `package.json` changes.
 
 7. Deploy.
 
