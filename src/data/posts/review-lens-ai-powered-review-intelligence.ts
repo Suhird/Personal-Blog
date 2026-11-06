@@ -10,4 +10,5 @@ export const post: BlogPost = {
   readTime: "14 min",
   slug: "review-lens-ai-powered-review-intelligence",
   markdownFile: "review-lens-ai-powered-review-intelligence",
+  image: "/review_lens_title_architecture.png",
 };

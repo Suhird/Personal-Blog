@@ -11,7 +11,7 @@ import PostNotFound from "@/components/blog/PostNotFound";
 import TableOfContents from "@/components/blog/TableOfContents";
 import SeriesNavigation from "@/components/blog/SeriesNavigation";
 import CanadianCarOwnership from "@/components/blog/posts/CanadianCarOwnership";
-import { getPostCanonical } from "@/utils/postPaths";
+import { getPostCanonical, getPostSocialImage } from "@/utils/postPaths";
 import { ArrowUp } from "lucide-react";
 
 const BlogPost = () => {
@@ -100,6 +100,7 @@ Pelientesque auctor nisi id magna consequat sagittis.
 
   // Construct canonical URL
   const canonicalUrl = getPostCanonical(post);
+  const socialImage = getPostSocialImage(post);
 
   // Create JSON-LD schema for blog post
   const jsonLdSchema = {
@@ -107,6 +108,7 @@ Pelientesque auctor nisi id magna consequat sagittis.
     "@type": "BlogPosting",
     "headline": post.title,
     "description": post.description,
+    "image": [socialImage],
     "datePublished": post.date,
     "dateModified": post.date,
     "author": {
@@ -134,11 +136,18 @@ Pelientesque auctor nisi id magna consequat sagittis.
         <meta property="og:description" content={post.description} />
         <meta property="og:url" content={canonicalUrl} />
         <meta property="og:site_name" content="Suhird's Blog" />
+        <meta property="og:image" content={socialImage} />
+        <meta property="og:image:type" content="image/jpeg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content={post.title} />
         
         {/* Twitter Card Tags */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={post.title} />
         <meta name="twitter:description" content={post.description} />
+        <meta name="twitter:image" content={socialImage} />
+        <meta name="twitter:image:alt" content={post.title} />
         
         {/* Canonical URL */}
         <link rel="canonical" href={canonicalUrl} />

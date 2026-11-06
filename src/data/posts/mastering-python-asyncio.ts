@@ -10,6 +10,7 @@ export const post: BlogPost = {
   readTime: "9 min",
   slug: "mastering-python-asyncio",
   markdownFile: "mastering-python-asyncio",
+  image: "/python_gil_concurrency.png",
   series: {
     id: "python-concurrency",
     title: "Advanced Python Concurrency",

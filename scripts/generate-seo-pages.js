@@ -1,48 +1,60 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import {
+  AUTHOR_NAME,
+  DIST_DIR,
+  OG_DEFAULT_PATH,
+  OG_HEIGHT,
+  OG_WIDTH,
+  SITE_NAME,
+  SITE_URL,
+  postPath,
+  postSection,
+  readPosts,
+} from './lib/postMeta.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const DIST_DIR = path.resolve(__dirname, '../dist');
-const POSTS_DIR = path.resolve(__dirname, '../src/data/posts');
 const INDEX_HTML = path.join(DIST_DIR, 'index.html');
+const OG_MANIFEST = path.join(DIST_DIR, 'og/manifest.json');
 
-function extractPostMeta(filePath) {
-  const content = fs.readFileSync(filePath, 'utf-8');
+function escapeHtml(value = '') {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
 
-  const extract = (field) => {
-    const regex = new RegExp(`${field}:\\s*"([^"]+)"`);
-    const m = content.match(regex);
-    return m ? m[1] : '';
-  };
+function loadOgManifest() {
+  if (!fs.existsSync(OG_MANIFEST)) {
+    console.warn('OG manifest not found — run scripts/generate-og-images.js first. Falling back to the default card.');
+    return {};
+  }
+  return JSON.parse(fs.readFileSync(OG_MANIFEST, 'utf-8'));
+}
 
-  const extractArray = (field) => {
-    const regex = new RegExp(`${field}:\\s*\\[([^\\]]*)\\]`);
-    const m = content.match(regex);
-    if (!m) return [];
-    return m[1]
-      .split(',')
-      .map(s => s.trim().replace(/^["']|["']$/g, ''))
-      .filter(Boolean);
+function imageFor(manifest, post) {
+  const entry = manifest[post.slug] || manifest.default || {
+    path: OG_DEFAULT_PATH,
+    width: OG_WIDTH,
+    height: OG_HEIGHT,
+    alt: `${SITE_NAME} — ${AUTHOR_NAME}`,
   };
 
   return {
-    title: extract('title'),
-    description: extract('description'),
-    date: extract('date'),
-    slug: extract('slug'),
-    tags: extractArray('tags'),
-    readTime: extract('readTime'),
-    category: extract('category'),
+    url: `${SITE_URL}${entry.path}`,
+    width: entry.width || OG_WIDTH,
+    height: entry.height || OG_HEIGHT,
+    alt: entry.alt || post.title,
   };
 }
 
-function buildSeoHtml(template, post, legacy = false) {
-  const section = post.category === 'life' ? 'beyond-code' : 'tech-blog';
-  const canonicalUrl = `https://suhird.me/${section}/${post.slug}/`;
-  const canonicalPath = `/${section}/${post.slug}/`;
+function buildSeoHtml(template, post, image, legacy = false) {
+  const canonicalUrl = `${SITE_URL}${postPath(post)}`;
+  const canonicalPath = postPath(post);
   const keywords = post.tags.join(', ');
   const robots = legacy ? 'noindex, follow' : 'index, follow';
   const legacyRedirect = legacy
@@ -54,12 +66,13 @@ function buildSeoHtml(template, post, legacy = false) {
     '@type': 'BlogPosting',
     headline: post.title,
     description: post.description,
+    image: [image.url],
     datePublished: post.date,
     dateModified: post.date,
     author: {
       '@type': 'Person',
-      name: 'Suhird Singh',
-      url: 'https://suhird.me/',
+      name: AUTHOR_NAME,
+      url: `${SITE_URL}/`,
     },
     url: canonicalUrl,
     keywords: keywords,
@@ -69,33 +82,40 @@ function buildSeoHtml(template, post, legacy = false) {
     },
     publisher: {
       '@type': 'Person',
-      name: 'Suhird Singh',
-      url: 'https://suhird.me/',
+      name: AUTHOR_NAME,
+      url: `${SITE_URL}/`,
     },
   };
 
   const metaBlock = `
-    <title>${post.title} - Suhird's Blog</title>
-    <meta name="description" content="${post.description}" data-rh="true" />
-    <meta name="keywords" content="${keywords}" data-rh="true" />
-    <meta name="author" content="Suhird Singh" data-rh="true" />
+    <title>${escapeHtml(post.title)} - ${escapeHtml(SITE_NAME)}</title>
+    <meta name="description" content="${escapeHtml(post.description)}" data-rh="true" />
+    <meta name="keywords" content="${escapeHtml(keywords)}" data-rh="true" />
+    <meta name="author" content="${escapeHtml(AUTHOR_NAME)}" data-rh="true" />
     <meta name="robots" content="${robots}" data-rh="true" />
     <link rel="canonical" href="${canonicalUrl}" data-rh="true" />${legacyRedirect}
 
     <!-- Open Graph -->
     <meta property="og:type" content="article" data-rh="true" />
     <meta property="og:url" content="${canonicalUrl}" data-rh="true" />
-    <meta property="og:title" content="${post.title}" data-rh="true" />
-    <meta property="og:description" content="${post.description}" data-rh="true" />
-    <meta property="og:site_name" content="Suhird's Blog" data-rh="true" />
+    <meta property="og:title" content="${escapeHtml(post.title)}" data-rh="true" />
+    <meta property="og:description" content="${escapeHtml(post.description)}" data-rh="true" />
+    <meta property="og:site_name" content="${escapeHtml(SITE_NAME)}" data-rh="true" />
+    <meta property="og:image" content="${image.url}" data-rh="true" />
+    <meta property="og:image:type" content="image/jpeg" data-rh="true" />
+    <meta property="og:image:width" content="${image.width}" data-rh="true" />
+    <meta property="og:image:height" content="${image.height}" data-rh="true" />
+    <meta property="og:image:alt" content="${escapeHtml(image.alt)}" data-rh="true" />
     <meta property="article:published_time" content="${post.date}" data-rh="true" />
-    <meta property="article:author" content="Suhird Singh" data-rh="true" />
-    <meta property="article:tag" content="${post.tags.join('" data-rh="true" />\n    <meta property="article:tag" content="')}" data-rh="true" />
+    <meta property="article:author" content="${escapeHtml(AUTHOR_NAME)}" data-rh="true" />
+    ${post.tags.map((tag) => `<meta property="article:tag" content="${escapeHtml(tag)}" data-rh="true" />`).join('\n    ')}
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" data-rh="true" />
-    <meta name="twitter:title" content="${post.title}" data-rh="true" />
-    <meta name="twitter:description" content="${post.description}" data-rh="true" />
+    <meta name="twitter:title" content="${escapeHtml(post.title)}" data-rh="true" />
+    <meta name="twitter:description" content="${escapeHtml(post.description)}" data-rh="true" />
+    <meta name="twitter:image" content="${image.url}" data-rh="true" />
+    <meta name="twitter:image:alt" content="${escapeHtml(image.alt)}" data-rh="true" />
 
     <!-- JSON-LD -->
     <script type="application/ld+json" data-rh="true">${JSON.stringify(jsonLd)}</script>
@@ -129,33 +149,34 @@ function main() {
   }
 
   const baseTemplate = fs.readFileSync(INDEX_HTML, 'utf-8');
-  const postFiles = fs.readdirSync(POSTS_DIR).filter(f => f.endsWith('.ts'));
+  const ogManifest = loadOgManifest();
+  const posts = readPosts();
 
   // Generate SEO HTML for each blog post
-  postFiles.forEach(file => {
-    const post = extractPostMeta(path.join(POSTS_DIR, file));
+  posts.forEach((post) => {
     if (!post.slug) {
-      console.warn(`Skipping ${file} — no slug found`);
+      console.warn(`Skipping ${post.file} — no slug found`);
       return;
     }
 
-    const section = post.category === 'life' ? 'beyond-code' : 'tech-blog';
+    const section = postSection(post);
     const routeDir = path.join(DIST_DIR, section, post.slug);
     if (!fs.existsSync(routeDir)) {
       fs.mkdirSync(routeDir, { recursive: true });
     }
 
-    const seoHtml = buildSeoHtml(baseTemplate, post);
+    const image = imageFor(ogManifest, post);
+    const seoHtml = buildSeoHtml(baseTemplate, post, image);
     const outPath = path.join(routeDir, 'index.html');
     fs.writeFileSync(outPath, seoHtml);
-    console.log(`Generated SEO HTML: /${section}/${post.slug}/index.html`);
+    console.log(`Generated SEO HTML: /${section}/${post.slug}/index.html (og:image ${image.url})`);
 
     // Keep the old /blog/<slug>/ URL alive with a canonical + client-side redirect.
     const legacyDir = path.join(DIST_DIR, 'blog', post.slug);
     if (!fs.existsSync(legacyDir)) {
       fs.mkdirSync(legacyDir, { recursive: true });
     }
-    fs.writeFileSync(path.join(legacyDir, 'index.html'), buildSeoHtml(baseTemplate, post, true));
+    fs.writeFileSync(path.join(legacyDir, 'index.html'), buildSeoHtml(baseTemplate, post, image, true));
     console.log(`Generated legacy redirect: /blog/${post.slug}/index.html -> /${section}/${post.slug}/`);
   });
 
@@ -165,7 +186,7 @@ function main() {
   if (!rootHtml.includes('sitemap.xml')) {
     rootHtml = rootHtml.replace(
       '</head>',
-      '    <link rel="sitemap" type="application/xml" href="https://suhird.me/sitemap.xml" />\n  </head>'
+      `    <link rel="sitemap" type="application/xml" href="${SITE_URL}/sitemap.xml" />\n  </head>`
     );
     fs.writeFileSync(INDEX_HTML, rootHtml);
     console.log('Updated root index.html with sitemap link');

@@ -14,6 +14,8 @@ export interface BlogPost {
   markdownFile?: string;
   htmlFile?: string;
   category?: "tech" | "life";
+  /** Optional local artwork used to build this post's social preview card. */
+  image?: string;
   series?: {
     id: string;
     title: string;

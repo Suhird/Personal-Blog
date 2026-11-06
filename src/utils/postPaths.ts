@@ -16,3 +16,12 @@ export function getPostPath(post: Pick<BlogPost, "slug" | "category">): string {
 export function getPostCanonical(post: Pick<BlogPost, "slug" | "category">): string {
   return `https://suhird.me${getPostPath(post)}`;
 }
+
+/**
+ * Social preview image for a post. Every post gets a generated card at
+ * /og/<slug>.jpg (see scripts/generate-og-images.js), so crawlers and the
+ * client always reference the exact same file.
+ */
+export function getPostSocialImage(post: Pick<BlogPost, "slug">): string {
+  return `https://suhird.me/og/${post.slug}.jpg`;
+}
