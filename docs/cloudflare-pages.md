@@ -1,6 +1,6 @@
 # Deploying the blog to Cloudflare Pages
 
-This branch adds the files Cloudflare Pages expects while keeping the existing GitHub Pages build intact.
+This branch adds the files Cloudflare Pages expects. Cloudflare Pages is now the production host; the old GitHub Pages deployment has been removed.
 
 ## What was added
 
@@ -52,7 +52,7 @@ Expected:
 1. Push this branch to GitHub.
 2. Open the Cloudflare dashboard → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**.
 3. Pick the `Suhird/Personal-Blog` repository.
-4. Select the `cloudflare-pages` branch for the first deployment.
+4. Select `main` as the production branch.
 5. Use these build settings:
 
 | Setting | Value |
@@ -74,32 +74,20 @@ Cloudflare installs dependencies automatically before running the build command.
 
 The first deployment gives you a `*.pages.dev` URL. Test it before touching DNS.
 
-## Deploy from GitHub Actions
+## Automatic deployments on main
 
-The repository includes `.github/workflows/deploy.yaml`, which deploys on every push to `main` and can also be started manually.
+The Pages project is connected to GitHub with `main` as the production branch. Automatic production deployments are enabled, so any merge or push to `main` triggers a new Cloudflare build.
 
-Add these GitHub repository secrets:
-
-| Secret | Value |
+| Setting | Value |
 |---|---|
-| `CLOUDFLARE_API_TOKEN` | A Cloudflare API token with **Account → Cloudflare Pages → Edit** |
-| `CLOUDFLARE_ACCOUNT_ID` | Your Cloudflare account ID |
+| Production branch | `main` |
+| Build command | `npm run build` |
+| Build output directory | `dist` |
+| Node version | `22` |
 
-The workflow runs:
+Cloudflare installs dependencies before running the build command. This repository has both `package-lock.json` and `bun.lockb`; Cloudflare detects Bun and runs `bun install --frozen-lockfile`, so keep `bun.lockb` in sync when `package.json` changes.
 
-```bash
-npm ci
-npm run build
-npx wrangler pages deploy dist --project-name=suhird-blog --branch=main
-```
-
-If you use the GitHub Action, disable Cloudflare's automatic Git deployments to avoid deploying twice:
-
-**Pages project → Settings → Builds & deployments → Automatic deployments → Disable**
-
-Then set **Production branch** to `main`.
-
-The old GitHub Pages workflow was replaced, and `public/CNAME` was removed.
+No GitHub Actions workflow or Cloudflare API token is required for this path. The old GitHub Pages workflow was removed, and `public/CNAME` is gone.
 
 ## Deploy from the CLI
 
@@ -133,13 +121,13 @@ www.suhird.me
 6. Enable **Always Use HTTPS**.
 7. Wait for the certificate to become active.
 
-Do not remove the GitHub Pages DNS records until the Cloudflare deployment and custom domain both work. Keep the old setup available until you have checked the home page, a post page, a legacy `/blog/...` link, images, the sitemap, and HTTPS on mobile.
+The production DNS records now point to Cloudflare Pages. Before changing anything else, check the home page, a post page, a legacy `/blog/...` link, images, the sitemap, and HTTPS on mobile.
 
 ## What happens to GitHub Pages
 
 GitHub Pages is no longer part of the deployment path:
 
-- `.github/workflows/deploy.yaml` now deploys to Cloudflare Pages.
+- The old GitHub Pages workflow was removed.
 - `public/CNAME` was removed.
 - The existing generated static routes and `dist/404.html` remain for Cloudflare.
 
