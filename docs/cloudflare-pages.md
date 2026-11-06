@@ -74,6 +74,33 @@ Cloudflare installs dependencies automatically before running the build command.
 
 The first deployment gives you a `*.pages.dev` URL. Test it before touching DNS.
 
+## Deploy from GitHub Actions
+
+The repository includes `.github/workflows/deploy.yaml`, which deploys on every push to `main` and can also be started manually.
+
+Add these GitHub repository secrets:
+
+| Secret | Value |
+|---|---|
+| `CLOUDFLARE_API_TOKEN` | A Cloudflare API token with **Account → Cloudflare Pages → Edit** |
+| `CLOUDFLARE_ACCOUNT_ID` | Your Cloudflare account ID |
+
+The workflow runs:
+
+```bash
+npm ci
+npm run build
+npx wrangler pages deploy dist --project-name=suhird-blog --branch=main
+```
+
+If you use the GitHub Action, disable Cloudflare's automatic Git deployments to avoid deploying twice:
+
+**Pages project → Settings → Builds & deployments → Automatic deployments → Disable**
+
+Then set **Production branch** to `main`.
+
+The old GitHub Pages workflow was replaced, and `public/CNAME` was removed.
+
 ## Deploy from the CLI
 
 ```bash
@@ -110,14 +137,21 @@ Do not remove the GitHub Pages DNS records until the Cloudflare deployment and c
 
 ## What happens to GitHub Pages
 
-Nothing breaks. The repository still contains:
+GitHub Pages is no longer part of the deployment path:
 
-- `public/CNAME`
-- `dist/404.html`
-- the generated static routes
-- the GitHub Pages deploy script
+- `.github/workflows/deploy.yaml` now deploys to Cloudflare Pages.
+- `public/CNAME` was removed.
+- The existing generated static routes and `dist/404.html` remain for Cloudflare.
 
-You can continue using GitHub Pages, switch to Cloudflare Pages, or run both during the transition. Cloudflare ignores the `CNAME` file; it is just a static file in the output.
+To turn off the old GitHub Pages site:
+
+1. Open the repository on GitHub.
+2. Go to **Settings → Pages**.
+3. Remove the custom domain if it is still listed.
+4. Set **Source** to **None** or use **Unpublish site**.
+5. Optionally delete the old `gh-pages` branch.
+
+The `gh-pages` npm script may remain for emergency use, but it is not called by CI anymore.
 
 ## Adding a backend later
 
