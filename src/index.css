@@ -207,6 +207,7 @@
 
 html {
   overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* Sheerluck.dev Typography */
@@ -217,6 +218,7 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   overflow-x: hidden;
+  overflow-x: clip;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -webkit-overflow-scrolling: touch;

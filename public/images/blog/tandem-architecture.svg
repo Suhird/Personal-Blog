@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650" role="img" aria-labelledby="title desc">
+  <title id="title">Tandem permit triage architecture</title>
+  <desc id="desc">A local LLM extracts a typed state from permit documents, a decision model makes a bounded routing choice, a deterministic policy gate can veto or escalate, and a human makes the final approval.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#89dceb"/>
+    </marker>
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#f38ba8"/>
+    </marker>
+    <style>
+      .bg { fill:#1e1e2e; }
+      .box { fill:#181825; stroke:#45475a; stroke-width:1.5; }
+      .box-cyan { fill:#11242b; stroke:#89dceb; stroke-width:1.8; }
+      .box-green { fill:#17251a; stroke:#a6e3a1; stroke-width:1.8; }
+      .box-mauve { fill:#241b2f; stroke:#cba6f7; stroke-width:1.8; }
+      .box-yellow { fill:#2a2618; stroke:#f9e2af; stroke-width:1.8; }
+      .box-red { fill:#2a151b; stroke:#f38ba8; stroke-width:1.8; }
+      .title { fill:#cdd6f4; font:700 22px "JetBrains Mono","Hack",monospace; }
+      .sub { fill:#a6adc8; font:14px "JetBrains Mono","Hack",monospace; }
+      .label { fill:#cdd6f4; font:700 14px "JetBrains Mono","Hack",monospace; }
+      .small { fill:#a6adc8; font:12px "JetBrains Mono","Hack",monospace; }
+      .mono { fill:#f9e2af; font:11px "JetBrains Mono","Hack",monospace; }
+      .line { stroke:#89dceb; stroke-width:2; fill:none; }
+      .dash { stroke:#6c7086; stroke-width:1.5; fill:none; stroke-dasharray:6 5; }
+      .veto { stroke:#f38ba8; stroke-width:1.8; fill:none; stroke-dasharray:6 5; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1200" height="650" rx="18"/>
+  <text class="title" x="48" y="48">TANDEM: TWO MODELS, ONE DECISION</text>
+  <text class="sub" x="48" y="74">The LLM reads the application. The decision model routes it. Code checks the facts. A human approves.</text>
+
+  <!-- input -->
+  <rect class="box-mauve" x="48" y="150" width="220" height="230" rx="12"/>
+  <text class="label" x="70" y="182" fill="#cba6f7">Unstructured input</text>
+  <text class="small" x="70" y="212">permit application PDF</text>
+  <text class="small" x="70" y="234">drawings, surveys, photos</text>
+  <text class="small" x="70" y="256">contractor licence</text>
+  <text class="small" x="70" y="278">email threads</text>
+  <text class="mono" x="70" y="330">untrusted data</text>
+  <text class="small" x="70" y="354">no tools, no URLs</text>
+
+  <!-- llm -->
+  <rect class="box-green" x="320" y="120" width="260" height="150" rx="12"/>
+  <text class="label" x="342" y="152" fill="#a6e3a1">Local LLM · Qwen</text>
+  <text class="small" x="342" y="182">extract fields</text>
+  <text class="small" x="342" y="204">attach evidence spans</text>
+  <text class="small" x="342" y="226">draft the resident summary</text>
+  <text class="mono" x="342" y="252">temperature 0 · JSON schema</text>
+
+  <!-- state -->
+  <rect class="box-yellow" x="630" y="120" width="210" height="150" rx="12"/>
+  <text class="label" x="652" y="152" fill="#f9e2af">Typed state</text>
+  <text class="small" x="652" y="182">permit type</text>
+  <text class="small" x="652" y="204">zoning + overlays</text>
+  <text class="small" x="652" y="226">missing items</text>
+  <text class="mono" x="652" y="252">validated schema</text>
+
+  <!-- decision -->
+  <rect class="box-cyan" x="630" y="340" width="210" height="160" rx="12"/>
+  <text class="label" x="652" y="372" fill="#89dceb">Decision model</text>
+  <text class="small" x="652" y="402">route · Choice</text>
+  <text class="small" x="652" y="424">priority · Score</text>
+  <text class="small" x="652" y="446">checks · Noul</text>
+  <text class="mono" x="652" y="478">Jev or local classifier</text>
+
+  <!-- policy -->
+  <rect class="box-red" x="890" y="340" width="140" height="160" rx="12"/>
+  <text class="label" x="910" y="372" fill="#f38ba8">Policy gate</text>
+  <text class="small" x="910" y="402">deadlines</text>
+  <text class="small" x="910" y="424">fees</text>
+  <text class="small" x="910" y="446">overlays</text>
+  <text class="mono" x="910" y="478">can veto</text>
+
+  <!-- human -->
+  <rect class="box-mauve" x="890" y="120" width="140" height="150" rx="12"/>
+  <text class="label" x="910" y="152" fill="#cba6f7">Human review</text>
+  <text class="small" x="910" y="182">evidence first</text>
+  <text class="small" x="910" y="204">approve</text>
+  <text class="small" x="910" y="226">override</text>
+  <text class="mono" x="910" y="252">final authority</text>
+
+  <!-- outcome -->
+  <rect class="box-green" x="1070" y="230" width="100" height="170" rx="12"/>
+  <text class="label" x="1086" y="262" fill="#a6e3a1">Outcome</text>
+  <text class="small" x="1086" y="292">route</text>
+  <text class="small" x="1086" y="314">letter</text>
+  <text class="small" x="1086" y="336">audit</text>
+  <text class="small" x="1086" y="358">metrics</text>
+
+  <!-- flow -->
+  <path class="line" d="M 268 220 L 320 195" marker-end="url(#arrow)"/>
+  <path class="line" d="M 580 195 L 630 195" marker-end="url(#arrow)"/>
+  <path class="line" d="M 735 270 L 735 340" marker-end="url(#arrow)"/>
+  <path class="line" d="M 840 420 L 890 420" marker-end="url(#arrow)"/>
+  <path class="line" d="M 960 340 L 960 270" marker-end="url(#arrow)"/>
+  <path class="line" d="M 1030 195 L 1070 240" marker-end="url(#arrow)"/>
+
+  <!-- evidence + veto -->
+  <path class="dash" d="M 840 195 L 890 195" marker-end="url(#arrow)"/>
+  <text x="844" y="186" fill="#6c7086" style="font:9px 'JetBrains Mono','Hack',monospace">evidence</text>
+  <path class="veto" d="M 890 460 L 840 460" marker-end="url(#arrow-red)"/>
+  <text class="small" x="846" y="480" fill="#f38ba8">veto</text>
+  <path class="veto" d="M 960 270 L 960 340" marker-end="url(#arrow-red)"/>
+  <text class="small" x="970" y="310" fill="#f38ba8">override</text>
+
+  <!-- audit -->
+  <rect class="box" x="48" y="546" width="1122" height="66" rx="10"/>
+  <text class="small" x="72" y="572" fill="#f9e2af">Append-only audit log: input hash · prompt version · state · decision · policy verdict · human action</text>
+  <text class="small" x="72" y="594">Replay any decision from the stored state and model versions. The LLM never approves. The decision model never executes.</text>
+</svg>

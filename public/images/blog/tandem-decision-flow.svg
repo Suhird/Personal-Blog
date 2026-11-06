@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">Tandem decision ownership</title>
+  <desc id="desc">Four lanes show who owns each step: the local LLM extracts and explains, the decision model chooses and scores, policy code verifies and vetoes, and the human approves or overrides.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#89dceb"/>
+    </marker>
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#f38ba8"/>
+    </marker>
+    <style>
+      .bg { fill:#1e1e2e; }
+      .box { fill:#181825; stroke:#45475a; stroke-width:1.5; }
+      .box-cyan { fill:#11242b; stroke:#89dceb; stroke-width:1.8; }
+      .box-green { fill:#17251a; stroke:#a6e3a1; stroke-width:1.8; }
+      .box-mauve { fill:#241b2f; stroke:#cba6f7; stroke-width:1.8; }
+      .box-yellow { fill:#2a2618; stroke:#f9e2af; stroke-width:1.8; }
+      .box-red { fill:#2a151b; stroke:#f38ba8; stroke-width:1.8; }
+      .title { fill:#cdd6f4; font:700 22px "JetBrains Mono","Hack",monospace; }
+      .sub { fill:#a6adc8; font:14px "JetBrains Mono","Hack",monospace; }
+      .label { fill:#cdd6f4; font:700 14px "JetBrains Mono","Hack",monospace; }
+      .small { fill:#a6adc8; font:12px "JetBrains Mono","Hack",monospace; }
+      .mono { fill:#f9e2af; font:11px "JetBrains Mono","Hack",monospace; }
+      .line { stroke:#89dceb; stroke-width:2; fill:none; }
+      .veto { stroke:#f38ba8; stroke-width:1.8; fill:none; stroke-dasharray:6 5; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1200" height="620" rx="18"/>
+  <text class="title" x="48" y="48">WHO OWNS WHICH DECISION</text>
+  <text class="sub" x="48" y="74">Four lanes, four responsibilities. The model that is best at language is not the model that approves.</text>
+
+  <!-- lanes -->
+  <rect class="box-green" x="48" y="120" width="260" height="380" rx="14"/>
+  <text class="label" x="70" y="152" fill="#a6e3a1">LOCAL LLM</text>
+  <text class="small" x="70" y="174">language in, structure out</text>
+
+  <rect class="box-cyan" x="330" y="120" width="260" height="380" rx="14"/>
+  <text class="label" x="352" y="152" fill="#89dceb">DECISION MODEL</text>
+  <text class="small" x="352" y="174">bounded choice, calibrated</text>
+
+  <rect class="box-red" x="612" y="120" width="260" height="380" rx="14"/>
+  <text class="label" x="634" y="152" fill="#f38ba8">POLICY CODE</text>
+  <text class="small" x="634" y="174">facts and authority</text>
+
+  <rect class="box-mauve" x="894" y="120" width="258" height="380" rx="14"/>
+  <text class="label" x="916" y="152" fill="#cba6f7">HUMAN</text>
+  <text class="small" x="916" y="174">final approval</text>
+
+  <!-- llm steps -->
+  <rect class="box" x="68" y="200" width="220" height="66" rx="8"/>
+  <text class="label" x="84" y="226">1. Extract fields</text>
+  <text class="small" x="84" y="248">typed state + evidence spans</text>
+  <rect class="box" x="68" y="282" width="220" height="66" rx="8"/>
+  <text class="label" x="84" y="308">2. Attach evidence</text>
+  <text class="small" x="84" y="330">page, section, quote</text>
+  <rect class="box" x="68" y="364" width="220" height="66" rx="8"/>
+  <text class="label" x="84" y="390">3. Draft summary</text>
+  <text class="small" x="84" y="412">for the clerk and resident</text>
+
+  <!-- decision steps -->
+  <rect class="box" x="350" y="200" width="220" height="66" rx="8"/>
+  <text class="label" x="366" y="226">1. Choose route</text>
+  <text class="small" x="366" y="248">fast / standard / specialist</text>
+  <rect class="box" x="350" y="282" width="220" height="66" rx="8"/>
+  <text class="label" x="366" y="308">2. Score priority</text>
+  <text class="small" x="366" y="330">1–5, with confidence</text>
+  <rect class="box" x="350" y="364" width="220" height="66" rx="8"/>
+  <text class="label" x="366" y="390">3. Answer checks</text>
+  <text class="small" x="366" y="412">site visit? missing item?</text>
+
+  <!-- policy steps -->
+  <rect class="box" x="632" y="200" width="220" height="66" rx="8"/>
+  <text class="label" x="648" y="226">1. Verify facts</text>
+  <text class="small" x="648" y="248">deadline, fee, zoning</text>
+  <rect class="box" x="632" y="282" width="220" height="66" rx="8"/>
+  <text class="label" x="648" y="308">2. Check transitions</text>
+  <text class="small" x="648" y="330">is this route allowed?</text>
+  <rect class="box" x="632" y="364" width="220" height="66" rx="8"/>
+  <text class="label" x="648" y="390">3. Veto or escalate</text>
+  <text class="small" x="648" y="412">never approve</text>
+
+  <!-- human steps -->
+  <rect class="box" x="914" y="200" width="218" height="66" rx="8"/>
+  <text class="label" x="930" y="226">1. Read evidence</text>
+  <text class="small" x="930" y="248">before the recommendation</text>
+  <rect class="box" x="914" y="282" width="218" height="66" rx="8"/>
+  <text class="label" x="930" y="308">2. Approve / override</text>
+  <text class="small" x="930" y="330">the final call</text>
+  <rect class="box" x="914" y="364" width="218" height="66" rx="8"/>
+  <text class="label" x="930" y="390">3. Record reason</text>
+  <text class="small" x="930" y="412">override data, with consent</text>
+
+  <!-- flow -->
+  <path class="line" d="M 288 233 L 350 233" marker-end="url(#arrow)"/>
+  <path class="line" d="M 570 233 L 632 233" marker-end="url(#arrow)"/>
+  <path class="line" d="M 852 233 L 914 233" marker-end="url(#arrow)"/>
+
+  <!-- veto + override -->
+  <path class="veto" d="M 632 460 L 570 460" marker-end="url(#arrow-red)"/>
+  <text x="642" y="448" fill="#f38ba8" style="font:10px 'JetBrains Mono','Hack',monospace">veto</text>
+  <path class="veto" d="M 914 460 L 852 460" marker-end="url(#arrow-red)"/>
+  <text x="922" y="448" fill="#f38ba8" style="font:10px 'JetBrains Mono','Hack',monospace">override</text>
+
+  <!-- bottom -->
+  <rect class="box" x="48" y="536" width="1104" height="54" rx="10"/>
+  <text class="small" x="72" y="560" fill="#f9e2af">The LLM never chooses the route. The decision model never approves. The policy layer never infers. The human never loses the final call.</text>
+  <text class="small" x="72" y="580">The dual architecture is a division of labour, not a vote.</text>
+</svg>

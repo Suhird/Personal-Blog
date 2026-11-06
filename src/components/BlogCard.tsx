@@ -25,11 +25,10 @@ export interface BlogPost {
 
 interface BlogCardProps {
   post: BlogPost;
-  index?: number;
   basePath?: string;
 }
 
-const BlogCard = ({ post, index, basePath = "/tech-blog/" }: BlogCardProps) => {
+const BlogCard = ({ post, basePath = "/tech-blog/" }: BlogCardProps) => {
   const getTagClass = (index: number) => {
     const classes = ["tag-1", "tag-2", "tag-3", "tag-4"];
     return classes[index % classes.length];
@@ -67,7 +66,6 @@ const BlogCard = ({ post, index, basePath = "/tech-blog/" }: BlogCardProps) => {
         </div>
       )}
       <h2 className="post-title text-lg">
-        {index !== undefined && <span className="text-terminal-comment mr-1">{index + 1}.</span>}
         <Link to={getPostPath(post)} className="hover:underline">
           {post.title}
         </Link>

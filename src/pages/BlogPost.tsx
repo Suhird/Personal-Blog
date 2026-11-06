@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet-async";
 import Layout from "@/components/Layout";
 import { blogPosts } from "@/data/blogPosts";
 import { useEffect, useState } from "react";
+import type { ComponentType } from "react";
 import { loadMarkdownFile } from "@/utils/markdownLoader";
 import MarkdownRenderer from "@/components/blog/MarkdownRenderer";
 import PostHeader from "@/components/blog/PostHeader";
@@ -11,8 +12,14 @@ import PostNotFound from "@/components/blog/PostNotFound";
 import TableOfContents from "@/components/blog/TableOfContents";
 import SeriesNavigation from "@/components/blog/SeriesNavigation";
 import CanadianCarOwnership from "@/components/blog/posts/CanadianCarOwnership";
+import CanadaBudget2026 from "@/components/blog/posts/CanadaBudget2026";
 import { getPostCanonical, getPostSocialImage } from "@/utils/postPaths";
 import { ArrowUp } from "lucide-react";
+
+const customPostComponents: Record<string, ComponentType> = {
+  "canadian-car-ownership-financial-analysis": CanadianCarOwnership,
+  "canada-budget-2026": CanadaBudget2026,
+};
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -101,6 +108,7 @@ Pelientesque auctor nisi id magna consequat sagittis.
   // Construct canonical URL
   const canonicalUrl = getPostCanonical(post);
   const socialImage = getPostSocialImage(post);
+  const CustomPost = customPostComponents[post.slug];
 
   // Create JSON-LD schema for blog post
   const jsonLdSchema = {
@@ -176,8 +184,8 @@ Pelientesque auctor nisi id magna consequat sagittis.
             <div className="text-center">
               <p className="terminal-prompt">Loading content...</p>
             </div>
-          ) : post?.slug === "canadian-car-ownership-financial-analysis" ? (
-            <CanadianCarOwnership />
+          ) : CustomPost ? (
+            <CustomPost />
           ) : (
             <MarkdownRenderer content={contentToRender} />
           )}

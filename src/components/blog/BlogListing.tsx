@@ -228,8 +228,8 @@ const BlogListing = ({ category, pageTitle, pageDescription, canonicalPath }: Bl
 
             <div className="space-y-4">
               {filteredPosts.length > 0 ? (
-                filteredPosts.map((post, i) => (
-                  <BlogCard key={post.id} post={post} index={i} basePath={canonicalPath} />
+                filteredPosts.map((post) => (
+                  <BlogCard key={post.id} post={post} basePath={canonicalPath} />
                 ))
               ) : (
                 <div className="text-center py-10 text-terminal-comment">

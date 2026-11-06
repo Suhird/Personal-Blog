@@ -51,20 +51,16 @@
     <lastmod>2026-11-04</lastmod>
     <priority>0.8</priority>
   </url>
+  <url>    <loc>https://suhird.me/beyond-code/canada-budget-2026/</loc>
+    <lastmod>2026-11-06</lastmod>
+    <priority>0.8</priority>
+  </url>
   <url>    <loc>https://suhird.me/beyond-code/canadian-car-ownership-financial-analysis/</loc>
     <lastmod>2026-05-08</lastmod>
     <priority>0.8</priority>
   </url>
   <url>    <loc>https://suhird.me/tech-blog/courier-http-postman-alternative/</loc>
     <lastmod>2026-04-04</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>    <loc>https://suhird.me/tech-blog/durable-ai-agents/</loc>
-    <lastmod>2026-06-08</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>    <loc>https://suhird.me/tech-blog/ebpf-programmable-kernel/</loc>
-    <lastmod>2026-09-21</lastmod>
     <priority>0.8</priority>
   </url>
   <url>    <loc>https://suhird.me/tech-blog/event-driven-patterns-kafka/</loc>
@@ -95,16 +91,8 @@
     <lastmod>2026-07-28</lastmod>
     <priority>0.8</priority>
   </url>
-  <url>    <loc>https://suhird.me/tech-blog/local-first-crdt/</loc>
-    <lastmod>2026-09-10</lastmod>
-    <priority>0.8</priority>
-  </url>
   <url>    <loc>https://suhird.me/tech-blog/mastering-python-asyncio/</loc>
     <lastmod>2025-11-15</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>    <loc>https://suhird.me/tech-blog/mcp-protocol/</loc>
-    <lastmod>2026-07-09</lastmod>
     <priority>0.8</priority>
   </url>
   <url>    <loc>https://suhird.me/tech-blog/optimizing-dockerfiles-guide/</loc>
@@ -131,8 +119,8 @@
     <lastmod>2026-04-07</lastmod>
     <priority>0.8</priority>
   </url>
-  <url>    <loc>https://suhird.me/tech-blog/small-language-models-edge/</loc>
-    <lastmod>2026-08-20</lastmod>
+  <url>    <loc>https://suhird.me/tech-blog/tandem-permit-triage/</loc>
+    <lastmod>2026-11-06</lastmod>
     <priority>0.8</priority>
   </url>
   <url>    <loc>https://suhird.me/tech-blog/temporal-durable-execution/</loc>
@@ -145,10 +133,6 @@
   </url>
   <url>    <loc>https://suhird.me/tech-blog/transactional-outbox-pattern/</loc>
     <lastmod>2026-01-14</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>    <loc>https://suhird.me/tech-blog/webassembly-components-wasi/</loc>
-    <lastmod>2026-08-31</lastmod>
     <priority>0.8</priority>
   </url>
   <url>    <loc>https://suhird.me/tech-blog/webassembly-rust-primer/</loc>
