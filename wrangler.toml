@@ -1,0 +1,10 @@
+name = "suhird-blog"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-11-06"
+
+# Add bindings here when you need a backend or database, for example:
+#
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "suhird-blog"
+# database_id = "your-d1-database-id"

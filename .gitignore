@@ -24,3 +24,7 @@ lerna-debug.log*
 *.sln
 *.sw?
 
+
+# Cloudflare Pages / Wrangler
+.wrangler
+.dev.vars
