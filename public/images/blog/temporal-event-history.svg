@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="660" viewBox="0 0 1200 660" role="img" aria-labelledby="title desc">
+  <title id="title">Temporal event history and deterministic replay</title>
+  <desc id="desc">A workflow event history shows commands, activity retries, timers, and signals. On worker restart the workflow replays history and continues without losing state.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#89dceb"/>
+    </marker>
+    <style>
+      .bg { fill:#1e1e2e; }
+      .panel { fill:#181825; stroke:#45475a; stroke-width:1.5; }
+      .title { fill:#cdd6f4; font:700 22px "JetBrains Mono","Hack",monospace; }
+      .sub { fill:#a6adc8; font:14px "JetBrains Mono","Hack",monospace; }
+      .label { fill:#cdd6f4; font:600 14px "JetBrains Mono","Hack",monospace; }
+      .small { fill:#a6adc8; font:12px "JetBrains Mono","Hack",monospace; }
+      .cyan { fill:#89dceb; }
+      .blue { fill:#89b4fa; }
+      .green { fill:#a6e3a1; }
+      .yellow { fill:#f9e2af; }
+      .red { fill:#f38ba8; }
+      .mauve { fill:#cba6f7; }
+      .line { stroke:#89dceb; stroke-width:2; fill:none; }
+      .dash { stroke:#6c7086; stroke-width:1.5; fill:none; stroke-dasharray:6 5; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1200" height="660" rx="18"/>
+  <text class="title" x="48" y="54">DURABLE EXECUTION: THE EVENT HISTORY IS THE STATE</text>
+  <text class="sub" x="48" y="80">A worker can crash. The workflow cannot. Every command and result is appended to a replayable log.</text>
+
+  <!-- timeline rail -->
+  <line x1="70" y1="355" x2="1130" y2="355" stroke="#45475a" stroke-width="3"/>
+  <text class="small" x="70" y="396">t=0</text>
+  <text class="small" x="1050" y="396">time</text>
+
+  <!-- event nodes -->
+  <g>
+    <circle cx="130" cy="355" r="11" fill="#89dceb"/>
+    <text class="label" x="105" y="325">WorkflowStarted</text>
+    <text class="small" x="105" y="342">order_id=8812</text>
+  </g>
+  <g>
+    <circle cx="335" cy="355" r="11" fill="#89b4fa"/>
+    <text class="label" x="285" y="325">ActivityScheduled</text>
+    <text class="small" x="285" y="342">charge_card(8812)</text>
+  </g>
+  <g>
+    <circle cx="520" cy="355" r="11" fill="#f38ba8"/>
+    <text class="label" x="470" y="300">ActivityFailed</text>
+    <text class="small" x="470" y="317">timeout / 503</text>
+    <path class="dash" d="M 335 375 C 380 455, 475 455, 520 375" marker-end="url(#arrow)"/>
+    <text class="small" x="380" y="472">retry policy: backoff 2s, max 5</text>
+  </g>
+  <g>
+    <circle cx="690" cy="355" r="11" fill="#a6e3a1"/>
+    <text class="label" x="640" y="325">ActivityCompleted</text>
+    <text class="small" x="640" y="342">txn_9f2c</text>
+  </g>
+  <g>
+    <circle cx="855" cy="355" r="11" fill="#f9e2af"/>
+    <text class="label" x="805" y="300">TimerStarted</text>
+    <text class="small" x="805" y="317">wait 24h</text>
+    <path class="dash" d="M 690 375 C 735 455, 815 455, 855 375" marker-end="url(#arrow)"/>
+    <text class="small" x="760" y="472">durable sleep: no worker held</text>
+  </g>
+  <g>
+    <circle cx="1010" cy="355" r="11" fill="#cba6f7"/>
+    <text class="label" x="960" y="325">SignalReceived</text>
+    <text class="small" x="960" y="342">shipment_confirmed</text>
+  </g>
+
+  <!-- crash and replay -->
+  <rect class="panel" x="70" y="520" width="1060" height="96" rx="10"/>
+  <text class="label" x="92" y="550" fill="#f38ba8">WORKER CRASH AT t=14s</text>
+  <text class="small" x="92" y="575">A new worker polls the task queue, replays the same history, and reaches the exact same decision point.</text>
+  <text class="small" x="92" y="597">No local variables survived. No duplicate charge. No lost order. The log did the remembering.</text>
+  <path class="line" d="M 335 430 L 335 505" marker-end="url(#arrow)"/>
+  <path class="line" d="M 520 430 L 520 505" marker-end="url(#arrow)"/>
+  <path class="line" d="M 690 430 L 690 505" marker-end="url(#arrow)"/>
+
+  <!-- side note -->
+  <rect x="70" y="108" width="480" height="150" rx="10" class="panel"/>
+  <text class="label" x="92" y="138" fill="#89dceb">DETERMINISTIC WORKFLOW CODE</text>
+  <text class="small" x="92" y="165">@workflow.run</text>
+  <text class="small" x="92" y="186">async def order(self, order_id):</text>
+  <text class="small" x="92" y="207">    await workflow.execute_activity(</text>
+  <text class="small" x="92" y="228">        charge_card, order_id, ...)</text>
+  <text class="small" x="92" y="249">    await workflow.sleep(timedelta(hours=24))</text>
+</svg>

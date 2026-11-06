@@ -35,12 +35,19 @@ function extractPostMeta(filePath) {
     slug: extract('slug'),
     tags: extractArray('tags'),
     readTime: extract('readTime'),
+    category: extract('category'),
   };
 }
 
-function buildSeoHtml(template, post) {
-  const canonicalUrl = `https://suhird.me/blog/${post.slug}/`;
+function buildSeoHtml(template, post, legacy = false) {
+  const section = post.category === 'life' ? 'beyond-code' : 'tech-blog';
+  const canonicalUrl = `https://suhird.me/${section}/${post.slug}/`;
+  const canonicalPath = `/${section}/${post.slug}/`;
   const keywords = post.tags.join(', ');
+  const robots = legacy ? 'noindex, follow' : 'index, follow';
+  const legacyRedirect = legacy
+    ? `\n    <meta http-equiv="refresh" content="0; url=${canonicalPath}" />\n    <script>window.location.replace(${JSON.stringify(canonicalPath)} + window.location.search + window.location.hash);</script>`
+    : '';
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -69,29 +76,29 @@ function buildSeoHtml(template, post) {
 
   const metaBlock = `
     <title>${post.title} - Suhird's Blog</title>
-    <meta name="description" content="${post.description}" />
-    <meta name="keywords" content="${keywords}" />
-    <meta name="author" content="Suhird Singh" />
-    <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="${canonicalUrl}" />
+    <meta name="description" content="${post.description}" data-rh="true" />
+    <meta name="keywords" content="${keywords}" data-rh="true" />
+    <meta name="author" content="Suhird Singh" data-rh="true" />
+    <meta name="robots" content="${robots}" data-rh="true" />
+    <link rel="canonical" href="${canonicalUrl}" data-rh="true" />${legacyRedirect}
 
     <!-- Open Graph -->
-    <meta property="og:type" content="article" />
-    <meta property="og:url" content="${canonicalUrl}" />
-    <meta property="og:title" content="${post.title}" />
-    <meta property="og:description" content="${post.description}" />
-    <meta property="og:site_name" content="Suhird's Blog" />
-    <meta property="article:published_time" content="${post.date}" />
-    <meta property="article:author" content="Suhird Singh" />
-    <meta property="article:tag" content="${post.tags.join('" />\n    <meta property="article:tag" content="')}" />
+    <meta property="og:type" content="article" data-rh="true" />
+    <meta property="og:url" content="${canonicalUrl}" data-rh="true" />
+    <meta property="og:title" content="${post.title}" data-rh="true" />
+    <meta property="og:description" content="${post.description}" data-rh="true" />
+    <meta property="og:site_name" content="Suhird's Blog" data-rh="true" />
+    <meta property="article:published_time" content="${post.date}" data-rh="true" />
+    <meta property="article:author" content="Suhird Singh" data-rh="true" />
+    <meta property="article:tag" content="${post.tags.join('" data-rh="true" />\n    <meta property="article:tag" content="')}" data-rh="true" />
 
     <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="${post.title}" />
-    <meta name="twitter:description" content="${post.description}" />
+    <meta name="twitter:card" content="summary_large_image" data-rh="true" />
+    <meta name="twitter:title" content="${post.title}" data-rh="true" />
+    <meta name="twitter:description" content="${post.description}" data-rh="true" />
 
     <!-- JSON-LD -->
-    <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+    <script type="application/ld+json" data-rh="true">${JSON.stringify(jsonLd)}</script>
 `;
 
   // Replace the generic <title> and meta tags in the template with our SEO block
@@ -132,7 +139,8 @@ function main() {
       return;
     }
 
-    const routeDir = path.join(DIST_DIR, 'blog', post.slug);
+    const section = post.category === 'life' ? 'beyond-code' : 'tech-blog';
+    const routeDir = path.join(DIST_DIR, section, post.slug);
     if (!fs.existsSync(routeDir)) {
       fs.mkdirSync(routeDir, { recursive: true });
     }
@@ -140,7 +148,15 @@ function main() {
     const seoHtml = buildSeoHtml(baseTemplate, post);
     const outPath = path.join(routeDir, 'index.html');
     fs.writeFileSync(outPath, seoHtml);
-    console.log(`Generated SEO HTML: /blog/${post.slug}/index.html`);
+    console.log(`Generated SEO HTML: /${section}/${post.slug}/index.html`);
+
+    // Keep the old /blog/<slug>/ URL alive with a canonical + client-side redirect.
+    const legacyDir = path.join(DIST_DIR, 'blog', post.slug);
+    if (!fs.existsSync(legacyDir)) {
+      fs.mkdirSync(legacyDir, { recursive: true });
+    }
+    fs.writeFileSync(path.join(legacyDir, 'index.html'), buildSeoHtml(baseTemplate, post, true));
+    console.log(`Generated legacy redirect: /blog/${post.slug}/index.html -> /${section}/${post.slug}/`);
   });
 
   // Copy generic index.html for static pages (already done by generate-static-routes.js)

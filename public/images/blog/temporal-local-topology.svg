@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="640" viewBox="0 0 1200 640" role="img" aria-labelledby="title desc">
+  <title id="title">Temporal local development topology</title>
+  <desc id="desc">A local Temporal stack with a browser UI, a client process, the Temporal server, PostgreSQL persistence, a task queue, and Python workers.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#89dceb"/>
+    </marker>
+    <style>
+      .bg { fill:#1e1e2e; }
+      .box { fill:#181825; stroke:#45475a; stroke-width:1.5; }
+      .box-cyan { fill:#11242b; stroke:#89dceb; stroke-width:1.8; }
+      .box-green { fill:#17251a; stroke:#a6e3a1; stroke-width:1.8; }
+      .box-mauve { fill:#241b2f; stroke:#cba6f7; stroke-width:1.8; }
+      .title { fill:#cdd6f4; font:700 22px "JetBrains Mono","Hack",monospace; }
+      .sub { fill:#a6adc8; font:14px "JetBrains Mono","Hack",monospace; }
+      .label { fill:#cdd6f4; font:700 15px "JetBrains Mono","Hack",monospace; }
+      .small { fill:#a6adc8; font:12px "JetBrains Mono","Hack",monospace; }
+      .mono { fill:#f9e2af; font:12px "JetBrains Mono","Hack",monospace; }
+      .line { stroke:#89dceb; stroke-width:2; fill:none; }
+      .dash { stroke:#6c7086; stroke-width:1.5; fill:none; stroke-dasharray:6 5; }
+    </style>
+  </defs>
+  <rect class="bg" width="1200" height="640" rx="18"/>
+  <text class="title" x="48" y="52">LOCAL TEMPORAL: ONE COMMAND, REAL DURABILITY</text>
+  <text class="sub" x="48" y="78">docker compose up, then point every client and worker at localhost:7233.</text>
+
+  <!-- browser -->
+  <rect class="box-cyan" x="62" y="130" width="240" height="150" rx="12"/>
+  <text class="label" x="86" y="164" fill="#89dceb">Temporal UI</text>
+  <text class="small" x="86" y="192">http://localhost:8233</text>
+  <text class="small" x="86" y="216">inspect histories, retries,</text>
+  <text class="small" x="86" y="238">signals, and pending activities</text>
+  <text class="mono" x="86" y="264">docker service: temporal-ui</text>
+
+  <!-- client -->
+  <rect class="box-mauve" x="380" y="130" width="250" height="150" rx="12"/>
+  <text class="label" x="404" y="164" fill="#cba6f7">Your app / client</text>
+  <text class="small" x="404" y="192">workflow.start()</text>
+  <text class="small" x="404" y="216">workflow.signal()</text>
+  <text class="small" x="404" y="240">workflow.query()</text>
+  <text class="mono" x="404" y="266">localhost:7233</text>
+
+  <!-- server -->
+  <rect class="box-green" x="700" y="110" width="430" height="220" rx="12"/>
+  <text class="label" x="724" y="144" fill="#a6e3a1">Temporal Server</text>
+  <text class="small" x="724" y="172">frontend :7233  |  history  |  matching  |  worker</text>
+  <text class="small" x="724" y="196">namespaces, task queues, retention</text>
+  <rect x="724" y="216" width="180" height="74" rx="8" fill="#1e1e2e" stroke="#45475a"/>
+  <text class="small" x="740" y="243">task queue</text>
+  <text class="mono" x="740" y="267">orders</text>
+  <rect x="924" y="216" width="180" height="74" rx="8" fill="#1e1e2e" stroke="#45475a"/>
+  <text class="small" x="940" y="243">event history</text>
+  <text class="mono" x="940" y="267">append-only</text>
+
+  <!-- postgres -->
+  <rect class="box" x="700" y="410" width="300" height="120" rx="12"/>
+  <text class="label" x="724" y="444">PostgreSQL</text>
+  <text class="small" x="724" y="472">temporal + temporal_visibility</text>
+  <text class="mono" x="724" y="500">volume: temporal-pgdata</text>
+
+  <!-- worker -->
+  <rect class="box-cyan" x="62" y="410" width="540" height="150" rx="12"/>
+  <text class="label" x="86" y="444" fill="#89dceb">Python worker process</text>
+  <text class="small" x="86" y="472">@workflow.defn  /  @activity.defn</text>
+  <text class="small" x="86" y="496">polls task queue "orders" and executes activities</text>
+  <text class="small" x="86" y="520">safe to run 1 worker locally, N workers in production</text>
+  <text class="mono" x="86" y="546">python -m worker</text>
+
+  <!-- connections -->
+  <path class="line" d="M 302 205 L 380 205" marker-end="url(#arrow)"/>
+  <path class="line" d="M 630 205 L 700 205" marker-end="url(#arrow)"/>
+  <path class="line" d="M 630 470 C 660 470, 670 500, 700 490" marker-end="url(#arrow)"/>
+  <path class="line" d="M 850 330 L 850 410" marker-end="url(#arrow)"/>
+  <path class="dash" d="M 924 290 L 924 330 L 602 330 L 602 410" marker-end="url(#arrow)"/>
+  <text class="small" x="640" y="318">long poll</text>
+  <text class="small" x="658" y="196">gRPC</text>
+
+  <text class="small" x="62" y="610">Everything on this diagram is a container you can run offline. The same API calls work against Temporal Cloud.</text>
+</svg>

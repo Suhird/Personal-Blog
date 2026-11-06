@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Binance 2026 attack chain</title>
+  <desc id="desc">A fake job interview delivers malware to an engineer's laptop, pivots through an internal AI tool to two more laptops, reaches the withdrawal service, and drains hot wallets across ten chains.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#f38ba8"/>
+    </marker>
+    <style>
+      .bg { fill:#1e1e2e; }
+      .box { fill:#181825; stroke:#45475a; stroke-width:1.5; }
+      .box-red { fill:#2a151b; stroke:#f38ba8; stroke-width:1.8; }
+      .box-yellow { fill:#2a2618; stroke:#f9e2af; stroke-width:1.8; }
+      .box-cyan { fill:#11242b; stroke:#89dceb; stroke-width:1.8; }
+      .box-mauve { fill:#241b2f; stroke:#cba6f7; stroke-width:1.8; }
+      .title { fill:#cdd6f4; font:700 22px "JetBrains Mono","Hack",monospace; }
+      .sub { fill:#a6adc8; font:14px "JetBrains Mono","Hack",monospace; }
+      .label { fill:#cdd6f4; font:700 14px "JetBrains Mono","Hack",monospace; }
+      .small { fill:#a6adc8; font:12px "JetBrains Mono","Hack",monospace; }
+      .mono { fill:#f9e2af; font:11px "JetBrains Mono","Hack",monospace; }
+      .line { stroke:#f38ba8; stroke-width:2; fill:none; }
+      .dash { stroke:#6c7086; stroke-width:1.5; fill:none; stroke-dasharray:6 5; }
+    </style>
+  </defs>
+  <rect class="bg" width="1200" height="720" rx="18"/>
+  <text class="title" x="48" y="50">BINANCE, OCTOBER 2026: FROM A FAKE INTERVIEW TO $6.3 BILLION</text>
+  <text class="sub" x="48" y="76">The private keys never leaked. The withdrawal service was convinced to sign.</text>
+
+  <!-- stage 1 -->
+  <rect class="box-yellow" x="52" y="112" width="250" height="150" rx="12"/>
+  <text class="label" x="72" y="144" fill="#f9e2af">1. The lure</text>
+  <text class="small" x="72" y="172">fake recruiter on a job site</text>
+  <text class="small" x="72" y="194">two interviews with "staff"</text>
+  <text class="small" x="72" y="216">"complete this assignment"</text>
+  <text class="mono" x="72" y="242">malware, obfuscated</text>
+
+  <rect class="box-red" x="342" y="112" width="250" height="150" rx="12"/>
+  <text class="label" x="362" y="144" fill="#f38ba8">2. Engineer laptop</text>
+  <text class="small" x="362" y="172">code runs with user rights</text>
+  <text class="small" x="362" y="194">persistence + recon</text>
+  <text class="small" x="362" y="216">credentials in memory</text>
+  <text class="mono" x="362" y="242">trusted device, trusted VPN</text>
+
+  <rect class="box-mauve" x="632" y="112" width="250" height="150" rx="12"/>
+  <text class="label" x="652" y="144" fill="#cba6f7">3. Internal AI tool</text>
+  <text class="small" x="652" y="172">compromised assistant</text>
+  <text class="small" x="652" y="194">reaches two more laptops</text>
+  <text class="small" x="652" y="216">lateral movement, not phishing</text>
+  <text class="mono" x="652" y="242">one tool, many identities</text>
+
+  <rect class="box-red" x="922" y="112" width="230" height="150" rx="12"/>
+  <text class="label" x="942" y="144" fill="#f38ba8">4. Withdrawal service</text>
+  <text class="small" x="942" y="172">access to order path</text>
+  <text class="small" x="942" y="194">no private key leak needed</text>
+  <text class="small" x="942" y="216">requests look legitimate</text>
+  <text class="mono" x="942" y="242">sign, broadcast, repeat</text>
+
+  <!-- stage 5 -->
+  <rect class="box-cyan" x="52" y="322" width="360" height="160" rx="12"/>
+  <text class="label" x="72" y="354" fill="#89dceb">5. The drain</text>
+  <text class="small" x="72" y="382">10 blockchains, hot wallets</text>
+  <text class="small" x="72" y="404">~20 minutes of transfers</text>
+  <text class="small" x="72" y="426">BTC, ETH, USDT, USDC, XRP</text>
+  <text class="mono" x="72" y="452">~$6.3B affected</text>
+
+  <rect class="box-yellow" x="452" y="322" width="360" height="160" rx="12"/>
+  <text class="label" x="472" y="354" fill="#f9e2af">6. Launder + freeze race</text>
+  <text class="small" x="472" y="382">Tornado Cash funding</text>
+  <text class="small" x="472" y="404">stablecoins frozen fast</text>
+  <text class="small" x="472" y="426">Aave borrow to escape freezes</text>
+  <text class="mono" x="472" y="452">~$3B frozen on-chain</text>
+
+  <rect class="box-red" x="852" y="322" width="300" height="160" rx="12"/>
+  <text class="label" x="872" y="354" fill="#f38ba8">7. Response</text>
+  <text class="small" x="872" y="382">withdrawals paused ~3 days</text>
+  <text class="small" x="872" y="404">SAFU + treasury cover losses</text>
+  <text class="small" x="872" y="426">FBI, Secret Service, TRM, Chainalysis</text>
+  <text class="mono" x="872" y="452">attributed to TraderTraitor</text>
+
+  <path class="line" d="M 302 187 L 342 187" marker-end="url(#arrow)"/>
+  <path class="line" d="M 592 187 L 632 187" marker-end="url(#arrow)"/>
+  <path class="line" d="M 882 187 L 922 187" marker-end="url(#arrow)"/>
+  <path class="line" d="M 1037 262 C 1037 300, 250 290, 232 322" marker-end="url(#arrow)"/>
+  <path class="line" d="M 412 402 L 452 402" marker-end="url(#arrow)"/>
+  <path class="line" d="M 812 402 L 852 402" marker-end="url(#arrow)"/>
+
+  <!-- bottom -->
+  <rect x="52" y="530" width="1096" height="150" rx="12" class="box"/>
+  <text class="label" x="76" y="562" fill="#89dceb">THE CONTROL FAILURES, IN ORDER OF IMPORTANCE</text>
+  <text class="small" x="76" y="590">1. A single device could reach a production withdrawal path. Device trust was treated as human trust.</text>
+  <text class="small" x="76" y="612">2. The withdrawal service had no velocity circuit breaker strong enough to stop 20 minutes of anomalous outflow.</text>
+  <text class="small" x="76" y="634">3. Hot wallets held far more than daily operational needs; cold storage segregation was insufficient.</text>
+  <text class="small" x="76" y="656">4. The initial incident response scoped the breach to one laptop. The attacker had multiple footholds and wiped tooling.</text>
+  <text class="small" x="76" y="678">5. AI tools and internal automation inherited broad permissions without independent authorization checks.</text>
+</svg>

@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">Small language model distillation and deployment pipeline</title>
+  <desc id="desc">A large teacher model generates data, a smaller student is fine-tuned, quantized, evaluated, and deployed to edge devices with a fallback path.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#89dceb"/>
+    </marker>
+    <style>
+      .bg { fill:#1e1e2e; }
+      .box { fill:#181825; stroke:#45475a; stroke-width:1.5; }
+      .box-cyan { fill:#11242b; stroke:#89dceb; stroke-width:1.8; }
+      .box-green { fill:#17251a; stroke:#a6e3a1; stroke-width:1.8; }
+      .box-mauve { fill:#241b2f; stroke:#cba6f7; stroke-width:1.8; }
+      .box-yellow { fill:#2a2618; stroke:#f9e2af; stroke-width:1.8; }
+      .title { fill:#cdd6f4; font:700 22px "JetBrains Mono","Hack",monospace; }
+      .sub { fill:#a6adc8; font:14px "JetBrains Mono","Hack",monospace; }
+      .label { fill:#cdd6f4; font:700 14px "JetBrains Mono","Hack",monospace; }
+      .small { fill:#a6adc8; font:12px "JetBrains Mono","Hack",monospace; }
+      .mono { fill:#f9e2af; font:11px "JetBrains Mono","Hack",monospace; }
+      .line { stroke:#89dceb; stroke-width:2; fill:none; }
+      .dash { stroke:#6c7086; stroke-width:1.5; fill:none; stroke-dasharray:6 5; }
+    </style>
+  </defs>
+  <rect class="bg" width="1200" height="620" rx="18"/>
+  <text class="title" x="48" y="50">THE 3B SWEET SPOT: DISTILL, QUANTIZE, MEASURE, SHIP</text>
+  <text class="sub" x="48" y="76">A small model wins when the task is narrow, the latency budget is tight, and the data cannot leave the device.</text>
+
+  <rect class="box-mauve" x="52" y="120" width="210" height="150" rx="12"/>
+  <text class="label" x="72" y="152" fill="#cba6f7">Teacher</text>
+  <text class="small" x="72" y="180">70B frontier model</text>
+  <text class="small" x="72" y="202">generates labeled</text>
+  <text class="small" x="72" y="224">traces + rationales</text>
+  <text class="mono" x="72" y="250">expensive, offline</text>
+
+  <rect class="box-cyan" x="312" y="120" width="210" height="150" rx="12"/>
+  <text class="label" x="332" y="152" fill="#89dceb">Distill</text>
+  <text class="small" x="332" y="180">SFT on task traces</text>
+  <text class="small" x="332" y="202">rejection sampling</text>
+  <text class="small" x="332" y="224">preference tuning</text>
+  <text class="mono" x="332" y="250">student: 1B-7B</text>
+
+  <rect class="box-yellow" x="572" y="120" width="210" height="150" rx="12"/>
+  <text class="label" x="592" y="152" fill="#f9e2af">Quantize</text>
+  <text class="small" x="592" y="180">INT8 / FP8 / 4-bit</text>
+  <text class="small" x="592" y="202">GPTQ / AWQ / GGUF</text>
+  <text class="small" x="592" y="224">measure quality drop</text>
+  <text class="mono" x="592" y="250">fit the memory budget</text>
+
+  <rect class="box-green" x="832" y="120" width="316" height="150" rx="12"/>
+  <text class="label" x="852" y="152" fill="#a6e3a1">Evaluate + ship</text>
+  <text class="small" x="852" y="180">task accuracy, latency, memory</text>
+  <text class="small" x="852" y="202">safety + refusal behavior</text>
+  <text class="small" x="852" y="224">edge runtime: llama.cpp / ONNX</text>
+  <text class="mono" x="852" y="250">fallback to cloud on low confidence</text>
+
+  <path class="line" d="M 262 195 L 312 195" marker-end="url(#arrow)"/>
+  <path class="line" d="M 522 195 L 572 195" marker-end="url(#arrow)"/>
+  <path class="line" d="M 782 195 L 832 195" marker-end="url(#arrow)"/>
+
+  <!-- tradeoff table -->
+  <rect x="52" y="320" width="1096" height="220" rx="12" class="box"/>
+  <text class="label" x="76" y="352" fill="#89dceb">WHAT CHANGES AS YOU SHRINK THE MODEL</text>
+  <text class="small" x="76" y="384">Quality: narrow tasks survive; open-ended reasoning degrades first.</text>
+  <text class="small" x="76" y="408">Latency: prefill drops fast; decode speed depends on memory bandwidth.</text>
+  <text class="small" x="76" y="432">Memory: KV cache scales with context, not just parameters.</text>
+  <text class="small" x="76" y="456">Safety: smaller models are easier to jailbreak; keep guardrails outside.</text>
+  <text class="small" x="76" y="480">Ops: one binary and a model file beats a GPU cluster, but updates are now device updates.</text>
+  <text class="small" x="76" y="512" fill="#f9e2af">Rule: if a 3B model gets within 2-3 points of the 70B model on your eval set, ship the 3B model.</text>
+
+  <text class="small" x="52" y="586">The best edge model is the one that fails safely: detect low confidence, ask for clarification, or fall back to a larger model.</text>
+</svg>

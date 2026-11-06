@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">RAG ingestion and query pipeline</title>
+  <desc id="desc">Two pipelines: offline ingestion with parsing, chunking, enrichment, embedding, and indexing; online retrieval with query rewriting, hybrid search, reranking, context assembly, and generation.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#89dceb"/>
+    </marker>
+    <style>
+      .bg { fill:#1e1e2e; }
+      .box { fill:#181825; stroke:#45475a; stroke-width:1.5; }
+      .box-cyan { fill:#11242b; stroke:#89dceb; stroke-width:1.8; }
+      .box-green { fill:#17251a; stroke:#a6e3a1; stroke-width:1.8; }
+      .box-mauve { fill:#241b2f; stroke:#cba6f7; stroke-width:1.8; }
+      .box-yellow { fill:#2a2618; stroke:#f9e2af; stroke-width:1.8; }
+      .title { fill:#cdd6f4; font:700 22px "JetBrains Mono","Hack",monospace; }
+      .sub { fill:#a6adc8; font:14px "JetBrains Mono","Hack",monospace; }
+      .label { fill:#cdd6f4; font:700 14px "JetBrains Mono","Hack",monospace; }
+      .small { fill:#a6adc8; font:12px "JetBrains Mono","Hack",monospace; }
+      .mono { fill:#f9e2af; font:11px "JetBrains Mono","Hack",monospace; }
+      .line { stroke:#89dceb; stroke-width:2; fill:none; }
+      .dash { stroke:#6c7086; stroke-width:1.5; fill:none; stroke-dasharray:6 5; }
+    </style>
+  </defs>
+  <rect class="bg" width="1200" height="720" rx="18"/>
+  <text class="title" x="48" y="50">RAG IS TWO PIPELINES, NOT ONE PROMPT</text>
+  <text class="sub" x="48" y="76">Most failures are ingestion failures that show up as generation failures.</text>
+
+  <!-- offline -->
+  <rect x="48" y="104" width="1104" height="240" rx="14" fill="none" stroke="#a6e3a1" stroke-dasharray="8 6"/>
+  <text class="small" x="72" y="132" fill="#a6e3a1">OFFLINE / INGESTION (runs on a schedule, not on every request)</text>
+
+  <rect class="box-green" x="72" y="160" width="160" height="120" rx="10"/>
+  <text class="label" x="90" y="190" fill="#a6e3a1">Parse</text>
+  <text class="small" x="90" y="216">PDF, HTML,</text>
+  <text class="small" x="90" y="238">tickets, code</text>
+  <text class="mono" x="90" y="262">keep structure</text>
+
+  <rect class="box-green" x="272" y="160" width="170" height="120" rx="10"/>
+  <text class="label" x="290" y="190" fill="#a6e3a1">Chunk</text>
+  <text class="small" x="290" y="216">semantic splits</text>
+  <text class="small" x="290" y="238">overlap 10-15%</text>
+  <text class="mono" x="290" y="262">attach metadata</text>
+
+  <rect class="box-green" x="482" y="160" width="170" height="120" rx="10"/>
+  <text class="label" x="500" y="190" fill="#a6e3a1">Enrich</text>
+  <text class="small" x="500" y="216">title, section,</text>
+  <text class="small" x="500" y="238">author, date</text>
+  <text class="mono" x="500" y="262">ACLs + source</text>
+
+  <rect class="box-green" x="692" y="160" width="170" height="120" rx="10"/>
+  <text class="label" x="710" y="190" fill="#a6e3a1">Embed</text>
+  <text class="small" x="710" y="216">batch + cache</text>
+  <text class="small" x="710" y="238">model version</text>
+  <text class="mono" x="710" y="262">store vector id</text>
+
+  <rect class="box-green" x="902" y="160" width="220" height="120" rx="10"/>
+  <text class="label" x="920" y="190" fill="#a6e3a1">Index</text>
+  <text class="small" x="920" y="216">vector + BM25 + metadata</text>
+  <text class="small" x="920" y="238">Postgres / OpenSearch</text>
+  <text class="mono" x="920" y="262">one source of truth</text>
+
+  <path class="line" d="M 232 220 L 272 220" marker-end="url(#arrow)"/>
+  <path class="line" d="M 442 220 L 482 220" marker-end="url(#arrow)"/>
+  <path class="line" d="M 652 220 L 692 220" marker-end="url(#arrow)"/>
+  <path class="line" d="M 862 220 L 902 220" marker-end="url(#arrow)"/>
+
+  <!-- online -->
+  <rect x="48" y="376" width="1104" height="286" rx="14" fill="none" stroke="#89dceb" stroke-dasharray="8 6"/>
+  <text class="small" x="72" y="404" fill="#89dceb">ONLINE / QUERY (p99 under 2s is a product feature)</text>
+
+  <rect class="box-cyan" x="72" y="432" width="150" height="120" rx="10"/>
+  <text class="label" x="90" y="462" fill="#89dceb">Query</text>
+  <text class="small" x="90" y="488">rewrite + expand</text>
+  <text class="small" x="90" y="510">detect intent</text>
+  <text class="mono" x="90" y="534">cache key</text>
+
+  <rect class="box-cyan" x="262" y="432" width="180" height="120" rx="10"/>
+  <text class="label" x="280" y="462" fill="#89dceb">Hybrid search</text>
+  <text class="small" x="280" y="488">dense top-50</text>
+  <text class="small" x="280" y="510">BM25 top-50</text>
+  <text class="mono" x="280" y="534">reciprocal rank fusion</text>
+
+  <rect class="box-cyan" x="482" y="432" width="170" height="120" rx="10"/>
+  <text class="label" x="500" y="462" fill="#89dceb">Rerank</text>
+  <text class="small" x="500" y="488">cross-encoder</text>
+  <text class="small" x="500" y="510">top-50 to top-8</text>
+  <text class="mono" x="500" y="534">quality jump lives here</text>
+
+  <rect class="box-yellow" x="692" y="432" width="190" height="120" rx="10"/>
+  <text class="label" x="710" y="462" fill="#f9e2af">Assemble context</text>
+  <text class="small" x="710" y="488">dedupe + cite</text>
+  <text class="small" x="710" y="510">budget tokens</text>
+  <text class="mono" x="710" y="534">never drop ACLs</text>
+
+  <rect class="box-mauve" x="922" y="432" width="200" height="120" rx="10"/>
+  <text class="label" x="940" y="462" fill="#cba6f7">Generate + verify</text>
+  <text class="small" x="940" y="488">answer with citations</text>
+  <text class="small" x="940" y="510">groundedness check</text>
+  <text class="mono" x="940" y="534">log query + sources</text>
+
+  <path class="line" d="M 222 492 L 262 492" marker-end="url(#arrow)"/>
+  <path class="line" d="M 442 492 L 482 492" marker-end="url(#arrow)"/>
+  <path class="line" d="M 652 492 L 692 492" marker-end="url(#arrow)"/>
+  <path class="line" d="M 882 492 L 922 492" marker-end="url(#arrow)"/>
+
+  <!-- eval loop -->
+  <path class="dash" d="M 1022 552 C 1022 618, 150 618, 150 552" marker-end="url(#arrow)"/>
+  <text class="small" x="400" y="640" fill="#f9e2af">EVAL SET: real questions + expected sources + graded answers. Run it on every change.</text>
+
+  <text class="small" x="72" y="700">The model is the least interesting part. Retrieval quality, permissions, freshness, and evaluation decide whether RAG works.</text>
+</svg>

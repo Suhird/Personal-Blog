@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650" role="img" aria-labelledby="title desc">
+  <title id="title">Inference cost stack and optimization levers</title>
+  <desc id="desc">Cost per million tokens is driven by GPU time, utilization, model size, context length, and output tokens. Batching, quantization, caching, and routing reduce the bill.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#89dceb"/>
+    </marker>
+    <style>
+      .bg { fill:#1e1e2e; }
+      .box { fill:#181825; stroke:#45475a; stroke-width:1.5; }
+      .box-cyan { fill:#11242b; stroke:#89dceb; stroke-width:1.8; }
+      .box-green { fill:#17251a; stroke:#a6e3a1; stroke-width:1.8; }
+      .box-mauve { fill:#241b2f; stroke:#cba6f7; stroke-width:1.8; }
+      .box-yellow { fill:#2a2618; stroke:#f9e2af; stroke-width:1.8; }
+      .box-red { fill:#2a151b; stroke:#f38ba8; stroke-width:1.8; }
+      .title { fill:#cdd6f4; font:700 22px "JetBrains Mono","Hack",monospace; }
+      .sub { fill:#a6adc8; font:14px "JetBrains Mono","Hack",monospace; }
+      .label { fill:#cdd6f4; font:700 14px "JetBrains Mono","Hack",monospace; }
+      .small { fill:#a6adc8; font:12px "JetBrains Mono","Hack",monospace; }
+      .mono { fill:#f9e2af; font:11px "JetBrains Mono","Hack",monospace; }
+      .line { stroke:#89dceb; stroke-width:2; fill:none; }
+      .dash { stroke:#6c7086; stroke-width:1.5; fill:none; stroke-dasharray:6 5; }
+    </style>
+  </defs>
+  <rect class="bg" width="1200" height="650" rx="18"/>
+  <text class="title" x="48" y="50">WHERE YOUR INFERENCE BILL ACTUALLY COMES FROM</text>
+  <text class="sub" x="48" y="76">GPU hours are the denominator. Tokens are the numerator. Utilization is the multiplier nobody budgets for.</text>
+
+  <!-- cost equation -->
+  <rect class="box-cyan" x="52" y="110" width="1096" height="80" rx="12"/>
+  <text class="label" x="76" y="142" fill="#89dceb">COST PER 1M OUTPUT TOKENS</text>
+  <text class="mono" x="76" y="170">(GPU $/hour x batch time) / tokens produced  +  idle time  +  retries  +  cache misses</text>
+
+  <!-- levers -->
+  <rect class="box-green" x="52" y="228" width="250" height="160" rx="12"/>
+  <text class="label" x="72" y="260" fill="#a6e3a1">Batching</text>
+  <text class="small" x="72" y="288">continuous batching keeps</text>
+  <text class="small" x="72" y="310">the GPU fed</text>
+  <text class="small" x="72" y="332">bigger batch -> lower cost</text>
+  <text class="mono" x="72" y="358">watch p99 latency</text>
+
+  <rect class="box-mauve" x="322" y="228" width="250" height="160" rx="12"/>
+  <text class="label" x="342" y="260" fill="#cba6f7">Quantization</text>
+  <text class="small" x="342" y="288">FP16 -> INT8 / FP8 / 4-bit</text>
+  <text class="small" x="342" y="310">less memory, more throughput</text>
+  <text class="small" x="342" y="332">quality must be measured</text>
+  <text class="mono" x="342" y="358">not free, not always safe</text>
+
+  <rect class="box-yellow" x="592" y="228" width="250" height="160" rx="12"/>
+  <text class="label" x="612" y="260" fill="#f9e2af">Caching</text>
+  <text class="small" x="612" y="288">prompt prefix cache</text>
+  <text class="small" x="612" y="310">exact response cache</text>
+  <text class="small" x="612" y="332">semantic cache (careful)</text>
+  <text class="mono" x="612" y="358">biggest win for agents</text>
+
+  <rect class="box-red" x="862" y="228" width="286" height="160" rx="12"/>
+  <text class="label" x="882" y="260" fill="#f38ba8">Routing + truncation</text>
+  <text class="small" x="882" y="288">small model first, escalate</text>
+  <text class="small" x="882" y="310">cap context, summarize history</text>
+  <text class="small" x="882" y="332">stream and stop early</text>
+  <text class="mono" x="882" y="358">output tokens cost more</text>
+
+  <!-- cost waterfall -->
+  <rect class="box" x="52" y="428" width="1096" height="150" rx="12"/>
+  <text class="label" x="76" y="460">A REAL 70B MODEL, THREE DEPLOYMENTS</text>
+  <text class="small" x="76" y="488">Naive: one request per GPU, FP16, no cache, no batching</text>
+  <text class="small" x="76" y="512">Tuned: continuous batching + prefix cache + FP8</text>
+  <text class="small" x="76" y="536">Routed: 80% of traffic to a 7B model, 20% to 70B, semantic cache for FAQs</text>
+  <text class="mono" x="880" y="488">100% baseline</text>
+  <text class="mono" x="880" y="512">~35-50%</text>
+  <text class="mono" x="880" y="536">~10-20%</text>
+
+  <text class="small" x="52" y="616">Measure tokens per second per dollar, not tokens per second. A fast GPU that is 20% utilized is an expensive space heater.</text>
+</svg>

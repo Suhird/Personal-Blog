@@ -11,6 +11,7 @@ import PostNotFound from "@/components/blog/PostNotFound";
 import TableOfContents from "@/components/blog/TableOfContents";
 import SeriesNavigation from "@/components/blog/SeriesNavigation";
 import CanadianCarOwnership from "@/components/blog/posts/CanadianCarOwnership";
+import { getPostCanonical } from "@/utils/postPaths";
 import { ArrowUp } from "lucide-react";
 
 const BlogPost = () => {
@@ -98,7 +99,7 @@ Pelientesque auctor nisi id magna consequat sagittis.
 `;
 
   // Construct canonical URL
-  const canonicalUrl = `https://suhird.me/blog/${post.slug}/`;
+  const canonicalUrl = getPostCanonical(post);
 
   // Create JSON-LD schema for blog post
   const jsonLdSchema = {

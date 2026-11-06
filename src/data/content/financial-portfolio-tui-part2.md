@@ -1,6 +1,6 @@
 # Building a Financial Portfolio TUI with Python and Textual (Part 2: AI-Powered Analysis)
 
-In [Part 1](/blog/financial-portfolio-tui-part-1), I built the terminal interface — the sidebar file explorer, the holdings tables, the Bloomberg-style amber color scheme. The app looked great, but it was just... displaying data.
+In [Part 1](/tech-blog/financial-portfolio-tui-part-1/), I built the terminal interface — the sidebar file explorer, the holdings tables, the Bloomberg-style amber color scheme. The app looked great, but it was just... displaying data.
 
 That's boring.
 

@@ -13,6 +13,8 @@ const Layout = ({ children }: LayoutProps) => {
   // Map pathname to display name
   const getDisplayPath = (pathname: string) => {
     if (pathname === "/") return "Home";
+    if (pathname.startsWith("/tech-blog")) return "TechBlog";
+    if (pathname.startsWith("/beyond-code")) return "BeyondCode";
     if (pathname.startsWith("/blog")) return "Blog";
     if (pathname.startsWith("/series")) return "Series";
     if (pathname === "/projects") return "Projects";

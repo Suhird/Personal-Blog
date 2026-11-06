@@ -239,4 +239,4 @@ In Part 2, we'll tackle a more practical problem: **processing large text files*
 
 Spoiler: I processed 2GB of log files in 3 seconds instead of 4 minutes.
 
-[Continue to Part 2 →](/blog/accelerating-python-rust-pyo3-part-2)
+[Continue to Part 2 →](/tech-blog/accelerating-python-rust-pyo3-part-2/)

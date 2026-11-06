@@ -1,6 +1,6 @@
 # Accelerating Python with Rust & PyO3 (Part 2: Real-World Data Processing)
 
-In [Part 1](/blog/accelerating-python-rust-pyo3-part-1), we counted primes. Good for benchmarks, boring in practice. Let's do something real: processing a large CSV file and extracting statistics.
+In [Part 1](/tech-blog/accelerating-python-rust-pyo3-part-1/), we counted primes. Good for benchmarks, boring in practice. Let's do something real: processing a large CSV file and extracting statistics.
 
 This is what I actually needed when I started this journey. My script was parsing application logs, extracting metrics, and generating reports. With 500MB+ files, it took forever.
 

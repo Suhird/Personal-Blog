@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650" role="img" aria-labelledby="title desc">
+  <title id="title">AI gateway request flow</title>
+  <desc id="desc">A request passes through authentication, rate limits, cache, routing, guardrails, provider adapters, and observability before reaching an LLM provider.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#89dceb"/>
+    </marker>
+    <style>
+      .bg { fill:#1e1e2e; }
+      .box { fill:#181825; stroke:#45475a; stroke-width:1.5; }
+      .box-cyan { fill:#11242b; stroke:#89dceb; stroke-width:1.8; }
+      .box-green { fill:#17251a; stroke:#a6e3a1; stroke-width:1.8; }
+      .box-mauve { fill:#241b2f; stroke:#cba6f7; stroke-width:1.8; }
+      .box-yellow { fill:#2a2618; stroke:#f9e2af; stroke-width:1.8; }
+      .box-red { fill:#2a151b; stroke:#f38ba8; stroke-width:1.8; }
+      .title { fill:#cdd6f4; font:700 22px "JetBrains Mono","Hack",monospace; }
+      .sub { fill:#a6adc8; font:14px "JetBrains Mono","Hack",monospace; }
+      .label { fill:#cdd6f4; font:700 14px "JetBrains Mono","Hack",monospace; }
+      .small { fill:#a6adc8; font:12px "JetBrains Mono","Hack",monospace; }
+      .mono { fill:#f9e2af; font:11px "JetBrains Mono","Hack",monospace; }
+      .line { stroke:#89dceb; stroke-width:2; fill:none; }
+      .dash { stroke:#6c7086; stroke-width:1.5; fill:none; stroke-dasharray:6 5; }
+    </style>
+  </defs>
+  <rect class="bg" width="1200" height="650" rx="18"/>
+  <text class="title" x="48" y="50">THE AI GATEWAY: ONE CONTROL PLANE FOR EVERY MODEL CALL</text>
+  <text class="sub" x="48" y="76">Your app should not know which provider it is talking to, how much it costs, or whether the prompt is allowed.</text>
+
+  <!-- client -->
+  <rect class="box-mauve" x="52" y="170" width="160" height="170" rx="12"/>
+  <text class="label" x="74" y="202" fill="#cba6f7">Client apps</text>
+  <text class="small" x="74" y="230">web, mobile</text>
+  <text class="small" x="74" y="252">agents, batch jobs</text>
+  <text class="small" x="74" y="274">CLI, notebooks</text>
+  <text class="mono" x="74" y="304">one API shape</text>
+
+  <!-- gateway -->
+  <rect x="272" y="120" width="640" height="400" rx="16" fill="none" stroke="#89dceb" stroke-dasharray="8 6"/>
+  <text class="small" x="296" y="148" fill="#89dceb">GATEWAY (stateless pods, horizontally scaled)</text>
+
+  <rect class="box-cyan" x="296" y="172" width="280" height="98" rx="10"/>
+  <text class="label" x="316" y="202" fill="#89dceb">1. Identity + quota</text>
+  <text class="small" x="316" y="228">API key -> tenant + scopes</text>
+  <text class="small" x="316" y="250">requests/min and tokens/day</text>
+
+  <rect class="box-green" x="608" y="172" width="280" height="98" rx="10"/>
+  <text class="label" x="628" y="202" fill="#a6e3a1">2. Cache</text>
+  <text class="small" x="628" y="228">exact hash for deterministic calls</text>
+  <text class="small" x="628" y="250">semantic cache with a threshold</text>
+
+  <rect class="box-mauve" x="296" y="300" width="280" height="98" rx="10"/>
+  <text class="label" x="316" y="330" fill="#cba6f7">3. Route</text>
+  <text class="small" x="316" y="356">model allowlist, region, cost cap</text>
+  <text class="small" x="316" y="378">fallback chain + circuit breaker</text>
+
+  <rect class="box-yellow" x="608" y="300" width="280" height="98" rx="10"/>
+  <text class="label" x="628" y="330" fill="#f9e2af">4. Guardrails</text>
+  <text class="small" x="628" y="356">PII redaction, prompt injection</text>
+  <text class="small" x="628" y="378">schema validation on output</text>
+
+  <rect class="box-red" x="296" y="420" width="592" height="88" rx="10"/>
+  <text class="label" x="316" y="450" fill="#f38ba8">5. Observe every call</text>
+  <text class="small" x="316" y="474">tenant, model, prompt version, tokens, latency, cost</text>
+  <text class="small" x="316" y="496">cache hit, refusal, tool calls, finish reason, error class</text>
+
+  <!-- providers -->
+  <rect class="box" x="960" y="150" width="190" height="100" rx="10"/>
+  <text class="label" x="980" y="182">Provider A</text>
+  <text class="small" x="980" y="208">frontier model</text>
+  <text class="mono" x="980" y="230">expensive / smart</text>
+
+  <rect class="box" x="960" y="280" width="190" height="100" rx="10"/>
+  <text class="label" x="980" y="312">Provider B</text>
+  <text class="small" x="980" y="338">fast model</text>
+  <text class="mono" x="980" y="360">cheap / high volume</text>
+
+  <rect class="box" x="960" y="410" width="190" height="100" rx="10"/>
+  <text class="label" x="980" y="442">Self-hosted</text>
+  <text class="small" x="980" y="468">vLLM / Ollama</text>
+  <text class="mono" x="980" y="490">data stays inside</text>
+
+  <!-- connections -->
+  <path class="line" d="M 212 255 L 272 255" marker-end="url(#arrow)"/>
+  <path class="line" d="M 576 220 L 608 220" marker-end="url(#arrow)"/>
+  <path class="line" d="M 436 270 L 436 300" marker-end="url(#arrow)"/>
+  <path class="line" d="M 748 270 L 748 300" marker-end="url(#arrow)"/>
+  <path class="line" d="M 888 350 L 960 200" marker-end="url(#arrow)"/>
+  <path class="line" d="M 888 365 L 960 330" marker-end="url(#arrow)"/>
+  <path class="line" d="M 888 380 L 960 460" marker-end="url(#arrow)"/>
+
+  <!-- bottom -->
+  <rect x="52" y="556" width="1098" height="66" rx="10" class="box"/>
+  <text class="small" x="76" y="582" fill="#f9e2af">Why centralize? One place to rotate keys, cap spend, fail over, redact PII, and answer "which model produced this output?"</text>
+  <text class="small" x="76" y="604">Keep the gateway dumb about business logic. It routes and enforces policy; it should not become a second application server.</text>
+</svg>

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { blogPosts } from "@/data/blogPosts";
+import { getPostPath } from "@/utils/postPaths";
 
 const ProcessList = () => {
   const featuredPosts = blogPosts.slice(0, 5);
@@ -43,7 +44,7 @@ const ProcessList = () => {
                 <td className="py-2 pr-4">{time}</td>
                 <td className="py-2">
                   <Link 
-                    to={`/blog/${post.slug}/`}
+                    to={getPostPath(post)}
                     className="text-terminal-yellow hover:underline decoration-terminal-yellow/50 underline-offset-4"
                   >
                     ./{post.slug.substring(0, 30)}... --read

@@ -5,7 +5,7 @@ const TechBlog = () => {
     <BlogListing
       category="tech"
       pageTitle="TechBlog"
-      pageDescription="Technical deep dives into gRPC, GraphQL, Python, Go, Rust, microservices, and cloud architecture."
+      pageDescription="Technical deep dives into AI, security, distributed systems, Python, Rust, and the architecture behind modern software."
       canonicalPath="/tech-blog/"
     />
   );

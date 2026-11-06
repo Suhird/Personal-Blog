@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import TechBlog from "./pages/TechBlog";
 import BeyondCode from "./pages/BeyondCode";
 import BlogPost from "./pages/BlogPost";
+import LegacyPostRedirect from "./pages/LegacyPostRedirect";
 import Series from "./pages/Series";
 import Projects from "./pages/Projects";
 import About from "./pages/About";
@@ -39,9 +40,11 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/tech-blog" element={<TechBlog />} />
+                <Route path="/tech-blog/:slug" element={<BlogPost />} />
                 <Route path="/beyond-code" element={<BeyondCode />} />
+                <Route path="/beyond-code/:slug" element={<BlogPost />} />
                 <Route path="/blog" element={<Navigate to="/tech-blog" replace />} />
-                <Route path="/blog/:slug" element={<BlogPost />} />
+                <Route path="/blog/:slug" element={<LegacyPostRedirect />} />
                 <Route path="/series" element={<Series />} />
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/about" element={<About />} />

@@ -28,6 +28,7 @@ function getBlogPostMeta(filePath) {
   return {
     slug: extractField(content, 'slug'),
     date: extractField(content, 'date'),
+    category: extractField(content, 'category'),
   };
 }
 
@@ -42,7 +43,7 @@ function generateSitemap() {
       return null;
     }
     return {
-      loc: `/blog/${meta.slug}/`,
+      loc: `/${meta.category === 'life' ? 'beyond-code' : 'tech-blog'}/${meta.slug}/`,
       lastmod: meta.date ? meta.date.split('T')[0] : new Date().toISOString().split('T')[0],
       priority: '0.8',
     };

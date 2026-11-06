@@ -3,6 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import Layout from "@/components/Layout";
 import { blogPosts } from "@/data/blogPosts";
+import { getPostPath } from "@/utils/postPaths";
 import { Calendar, X } from "lucide-react";
 
 interface SeriesGroup {
@@ -276,7 +277,7 @@ const Series = () => {
                                 {idx + 1}.
                               </span>
                               <h3 className="post-title">
-                                <Link to={`/blog/${post.slug}/`} className="hover:underline">
+                                <Link to={getPostPath(post)} className="hover:underline">
                                   {post.title}
                                 </Link>
                               </h3>

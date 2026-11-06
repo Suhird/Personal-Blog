@@ -33,7 +33,8 @@ const Header = () => {
   const isActive = (href: string) => {
     const cleanPath = pathname.replace(/\/$/, "");
     const cleanHref = href.replace(/\/$/, "");
-    return cleanPath === cleanHref;
+    if (cleanHref === "") return cleanPath === "";
+    return cleanPath === cleanHref || cleanPath.startsWith(`${cleanHref}/`);
   };
 
   const isChildActive = (children?: { title: string; href: string }[]) => {

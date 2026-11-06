@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { BlogPost } from "@/components/BlogCard";
 import { ChevronLeft, ChevronRight, List } from "lucide-react";
+import { getPostPath } from "@/utils/postPaths";
 
 interface SeriesNavigationProps {
   currentPost: BlogPost;
@@ -26,7 +27,7 @@ const SeriesNavigation = ({ currentPost, allPosts, className = "" }: SeriesNavig
     <div className={`flex justify-between items-center ${className}`}>
       {prevPost ? (
         <Link 
-          to={`/blog/${prevPost.slug}/`}
+          to={getPostPath(prevPost)}
           className="flex items-center gap-2 px-4 py-2 text-sm font-mono text-terminal-comment border border-terminal-comment/30 rounded hover:bg-terminal-comment/10 hover:text-terminal-foreground hover:border-terminal-cyan transition-all"
         >
           <ChevronLeft size={16} />
@@ -38,7 +39,7 @@ const SeriesNavigation = ({ currentPost, allPosts, className = "" }: SeriesNavig
 
       {nextPost && (
         <Link 
-          to={`/blog/${nextPost.slug}/`}
+          to={getPostPath(nextPost)}
           className="flex items-center gap-2 px-4 py-2 text-sm font-mono text-terminal-comment border border-terminal-comment/30 rounded hover:bg-terminal-comment/10 hover:text-terminal-foreground hover:border-terminal-cyan transition-all"
         >
           <span>Next</span>

@@ -12,10 +12,10 @@ const SITEMAP_PATH = path.resolve(__dirname, '../public/sitemap.xml');
 const ROUTE_SEO = {
   '/tech-blog/': {
     title: 'TechBlog - Suhird Singh',
-    description: 'Technical deep dives into gRPC, GraphQL, Python, Go, Rust, microservices, and cloud architecture.',
+    description: 'Technical deep dives into AI, security, distributed systems, Python, Rust, and the architecture behind modern software.',
     canonical: 'https://suhird.me/tech-blog/',
     ogTitle: 'TechBlog - Suhird Singh',
-    ogDescription: 'Technical deep dives into gRPC, GraphQL, Python, Go, Rust, microservices, and cloud architecture.',
+    ogDescription: 'Technical deep dives into AI, security, distributed systems, Python, Rust, and the architecture behind modern software.',
   },
   '/beyond-code/': {
     title: 'BeyondCode - Suhird Singh',
@@ -63,50 +63,50 @@ function injectSeoMeta(html, seo) {
   // Replace description
   result = result.replace(
     /<meta name="description" content="[^"]*" \/>/,
-    `<meta name="description" content="${seo.description}" />`
+    `<meta name="description" content="${seo.description}" data-rh="true" />`
   );
 
   // Replace canonical
   result = result.replace(
     /<link rel="canonical" href="[^"]*" \/>/,
-    `<link rel="canonical" href="${seo.canonical}" />`
+    `<link rel="canonical" href="${seo.canonical}" data-rh="true" />`
   );
 
   // Replace Open Graph title
   result = result.replace(
     /<meta property="og:title" content="[^"]*" \/>/,
-    `<meta property="og:title" content="${seo.ogTitle}" />`
+    `<meta property="og:title" content="${seo.ogTitle}" data-rh="true" />`
   );
 
   // Replace Open Graph description
   result = result.replace(
     /<meta property="og:description" content="[^"]*" \/>/,
-    `<meta property="og:description" content="${seo.ogDescription}" />`
+    `<meta property="og:description" content="${seo.ogDescription}" data-rh="true" />`
   );
 
   // Replace Open Graph URL
   result = result.replace(
     /<meta property="og:url" content="[^"]*" \/>/,
-    `<meta property="og:url" content="${seo.canonical}" />`
+    `<meta property="og:url" content="${seo.canonical}" data-rh="true" />`
   );
 
   // Replace Twitter title
   result = result.replace(
     /<meta name="twitter:title" content="[^"]*" \/>/,
-    `<meta name="twitter:title" content="${seo.ogTitle}" />`
+    `<meta name="twitter:title" content="${seo.ogTitle}" data-rh="true" />`
   );
 
   // Replace Twitter description
   result = result.replace(
     /<meta name="twitter:description" content="[^"]*" \/>/,
-    `<meta name="twitter:description" content="${seo.ogDescription}" />`
+    `<meta name="twitter:description" content="${seo.ogDescription}" data-rh="true" />`
   );
 
   // Add robots noindex if specified (for redirect pages)
   if (seo.robots) {
     result = result.replace(
       /<meta name="robots" content="[^"]*" \/>/,
-      `<meta name="robots" content="${seo.robots}" />`
+      `<meta name="robots" content="${seo.robots}" data-rh="true" />`
     );
   }
 
@@ -178,7 +178,10 @@ const blogRedirectSeo = {
   robots: 'noindex, follow',
 };
 
-const blogHtml = injectSeoMeta(baseHtml, blogRedirectSeo);
+const blogHtml = injectSeoMeta(baseHtml, blogRedirectSeo).replace(
+  '<head>',
+  '<head>\n    <meta http-equiv="refresh" content="0; url=/tech-blog/" />\n    <script>window.location.replace("/tech-blog/" + window.location.search + window.location.hash);</script>'
+);
 fs.writeFileSync(path.join(blogDir, 'index.html'), blogHtml);
 console.log('Generated: /blog/index.html (redirect page with noindex)');
 

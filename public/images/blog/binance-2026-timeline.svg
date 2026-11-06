@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="460" viewBox="0 0 1200 460" role="img" aria-labelledby="title desc">
+  <title id="title">Binance 2026 attack timeline</title>
+  <desc id="desc">Preparation began at least 36 hours before the theft. The attacker tested on two wallets, rehearsed on a third, then installed the same code on a Binance hot wallet and drained funds in about 20 minutes.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#f38ba8"/>
+    </marker>
+    <style>
+      .bg { fill:#1e1e2e; }
+      .box { fill:#181825; stroke:#45475a; stroke-width:1.5; }
+      .title { fill:#cdd6f4; font:700 22px "JetBrains Mono","Hack",monospace; }
+      .sub { fill:#a6adc8; font:14px "JetBrains Mono","Hack",monospace; }
+      .label { fill:#cdd6f4; font:700 13px "JetBrains Mono","Hack",monospace; }
+      .small { fill:#a6adc8; font:11px "JetBrains Mono","Hack",monospace; }
+      .mono { fill:#f9e2af; font:11px "JetBrains Mono","Hack",monospace; }
+    </style>
+  </defs>
+  <rect class="bg" width="1200" height="460" rx="18"/>
+  <text class="title" x="48" y="48">36 HOURS OF PREPARATION, 20 MINUTES OF EXECUTION</text>
+  <text class="sub" x="48" y="74">The attacker tested, rehearsed, then ran the same code against a production hot wallet.</text>
+
+  <line x1="70" y1="230" x2="1130" y2="230" stroke="#45475a" stroke-width="3"/>
+
+  <circle cx="130" cy="230" r="10" fill="#f9e2af"/>
+  <text class="label" x="92" y="200" fill="#f9e2af">T-36h</text>
+  <text class="small" x="92" y="264">wallet funded through</text>
+  <text class="small" x="92" y="282">Tornado Cash</text>
+
+  <circle cx="330" cy="230" r="10" fill="#f9e2af"/>
+  <text class="label" x="286" y="200" fill="#f9e2af">T-30h</text>
+  <text class="small" x="286" y="264">first attack code</text>
+  <text class="small" x="286" y="282">tested on 2 wallets</text>
+
+  <circle cx="530" cy="230" r="10" fill="#fab387"/>
+  <text class="label" x="486" y="200" fill="#fab387">T-26h</text>
+  <text class="small" x="486" y="264">final version rehearsed</text>
+  <text class="small" x="486" y="282">on a third wallet</text>
+
+  <circle cx="730" cy="230" r="10" fill="#f38ba8"/>
+  <text class="label" x="690" y="200" fill="#f38ba8">T-22h</text>
+  <text class="small" x="690" y="264">test funds routed back</text>
+  <text class="small" x="690" y="282">to the attacker</text>
+
+  <circle cx="930" cy="230" r="12" fill="#f38ba8"/>
+  <text class="label" x="872" y="190" fill="#f38ba8">T-0</text>
+  <text class="small" x="862" y="264">same code installed on</text>
+  <text class="small" x="862" y="282">a Binance hot wallet</text>
+
+  <circle cx="1080" cy="230" r="12" fill="#89dceb"/>
+  <text class="label" x="1030" y="200" fill="#89dceb">+20 min</text>
+  <text class="small" x="1010" y="264">drain complete across</text>
+  <text class="small" x="1010" y="282">10 blockchains</text>
+
+  <path d="M 130 230 L 330 230" stroke="#f38ba8" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M 330 230 L 530 230" stroke="#f38ba8" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M 530 230 L 730 230" stroke="#f38ba8" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M 730 230 L 930 230" stroke="#f38ba8" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M 930 230 L 1080 230" stroke="#89dceb" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="70" y="340" width="1060" height="80" rx="10" class="box"/>
+  <text class="small" x="92" y="368" fill="#f9e2af">The rehearsal is the tell. A production-safe system should treat a new withdrawal pattern as hostile until an independent control confirms it.</text>
+  <text class="small" x="92" y="392">Small test withdrawals, a third dry run, then a full drain is a signature worth alerting on across wallets, not just accounts.</text>
+</svg>
