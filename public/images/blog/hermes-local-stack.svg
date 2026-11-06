@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+  <title id="title">Hermes Agent with a local Qwen model on a Ryzen AI MAX+ 395</title>
+  <desc id="desc">Hermes Agent talks to a local llama.cpp Vulkan server over an OpenAI-compatible API. The server runs Qwen3.6-35B-A3B at Q4_K_M with a vision projector and MTP speculative decoding on a Radeon 8060S with 91 GiB of unified memory.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#89dceb"/>
+    </marker>
+    <style>
+      .bg { fill:#1e1e2e; }
+      .box { fill:#181825; stroke:#45475a; stroke-width:1.5; }
+      .box-cyan { fill:#11242b; stroke:#89dceb; stroke-width:1.8; }
+      .box-green { fill:#17251a; stroke:#a6e3a1; stroke-width:1.8; }
+      .box-mauve { fill:#241b2f; stroke:#cba6f7; stroke-width:1.8; }
+      .box-yellow { fill:#2a2618; stroke:#f9e2af; stroke-width:1.8; }
+      .title { fill:#cdd6f4; font:700 22px "JetBrains Mono","Hack",monospace; }
+      .sub { fill:#a6adc8; font:14px "JetBrains Mono","Hack",monospace; }
+      .label { fill:#cdd6f4; font:700 14px "JetBrains Mono","Hack",monospace; }
+      .small { fill:#a6adc8; font:12px "JetBrains Mono","Hack",monospace; }
+      .mono { fill:#f9e2af; font:11px "JetBrains Mono","Hack",monospace; }
+      .line { stroke:#89dceb; stroke-width:2; fill:none; }
+    </style>
+  </defs>
+  <rect class="bg" width="1200" height="700" rx="18"/>
+  <text class="title" x="48" y="48">LOCAL AGENT STACK ON MY DESK</text>
+  <text class="sub" x="48" y="74">Hermes Agent on the left, llama.cpp on the right, and one 22 GB model in the middle.</text>
+
+  <!-- Hermes -->
+  <rect class="box-mauve" x="48" y="112" width="300" height="188" rx="12"/>
+  <text class="label" x="70" y="144" fill="#cba6f7">Hermes Agent v0.22.7</text>
+  <text class="small" x="70" y="172">CLI or desktop app</text>
+  <text class="small" x="70" y="194">system prompt + tool schemas</text>
+  <text class="small" x="70" y="216">memory, skills, approvals</text>
+  <text class="small" x="70" y="238">tools: terminal, files, web, browser</text>
+  <text class="mono" x="70" y="268">model.provider: llamacpp</text>
+
+  <!-- API -->
+  <rect class="box-cyan" x="390" y="152" width="230" height="108" rx="12"/>
+  <text class="label" x="412" y="184" fill="#89dceb">OpenAI-compatible API</text>
+  <text class="small" x="412" y="212">/v1/chat/completions</text>
+  <text class="mono" x="412" y="240">127.0.0.1:18434</text>
+
+  <!-- llama.cpp -->
+  <rect class="box-green" x="680" y="112" width="472" height="188" rx="12"/>
+  <text class="label" x="702" y="144" fill="#a6e3a1">llama.cpp Vulkan b11671</text>
+  <text class="small" x="702" y="172">ctx-size 262144, batch 4096 / ubatch 2048</text>
+  <text class="small" x="702" y="194">KV cache q8_0, flash-attn on</text>
+  <text class="small" x="702" y="216">MTP speculative decoding, draft-n 2</text>
+  <text class="small" x="702" y="238">vision projector loaded</text>
+  <text class="mono" x="702" y="268">--jinja --metrics --slots</text>
+
+  <!-- model -->
+  <rect class="box-yellow" x="680" y="334" width="472" height="132" rx="12"/>
+  <text class="label" x="702" y="366" fill="#f9e2af">Qwen3.6-35B-A3B-UD-Q4_K_M</text>
+  <text class="small" x="702" y="394">35B total parameters, 3B active per token</text>
+  <text class="small" x="702" y="416">22 GB GGUF + 861 MB vision projector</text>
+  <text class="mono" x="702" y="444">~34 GB GPU-addressable memory while running</text>
+
+  <!-- hardware -->
+  <rect class="box" x="48" y="334" width="572" height="180" rx="12"/>
+  <text class="label" x="70" y="366">Machine</text>
+  <text class="small" x="70" y="394">AMD Ryzen AI MAX+ 395, 16C / 32T</text>
+  <text class="small" x="70" y="416">Radeon 8060S integrated GPU</text>
+  <text class="small" x="70" y="438">91 GiB usable unified memory, 183 GiB swap</text>
+  <text class="small" x="70" y="460">Omarchy Linux (Arch), kernel 7.2.15</text>
+  <text class="mono" x="70" y="488">shared memory: the GPU and CPU see the same pool</text>
+
+  <!-- metrics -->
+  <rect class="box-cyan" x="48" y="536" width="1104" height="128" rx="12"/>
+  <text class="label" x="70" y="566" fill="#89dceb">Measured on this box</text>
+  <text class="small" x="70" y="592">4,354-token prompt: 3.18 s prefill (1,368 tok/s)</text>
+  <text class="small" x="70" y="614">220-token answer: 2.39 s (91.5 tok/s), 5.61 s wall for the whole request</text>
+  <text class="small" x="70" y="636">Tool call test: correct JSON call, 446 completion tokens including reasoning</text>
+  <text class="small" x="700" y="592">First token after idle waits for model load.</text>
+  <text class="small" x="700" y="614">Long contexts and other open apps reduce headroom.</text>
+  <text class="small" x="700" y="636">Numbers are single-run observations, not a benchmark suite.</text>
+
+  <path class="line" d="M 348 206 L 390 206" marker-end="url(#arrow)"/>
+  <path class="line" d="M 620 206 L 680 206" marker-end="url(#arrow)"/>
+  <path class="line" d="M 916 300 L 916 334" marker-end="url(#arrow)"/>
+  <path class="line" d="M 680 400 L 620 400" marker-end="url(#arrow)"/>
+</svg>

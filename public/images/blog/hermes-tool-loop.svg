@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="660" viewBox="0 0 1200 660" role="img" aria-labelledby="title desc">
+  <title id="title">How Hermes Agent uses tools with a local model</title>
+  <desc id="desc">The user sends a request. Hermes plans, selects a tool, checks approval, executes it, feeds the result back to the model, and repeats until it can answer. Memory, skills, and MCP servers sit beside the loop.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#89dceb"/>
+    </marker>
+    <style>
+      .bg { fill:#1e1e2e; }
+      .box { fill:#181825; stroke:#45475a; stroke-width:1.5; }
+      .box-cyan { fill:#11242b; stroke:#89dceb; stroke-width:1.8; }
+      .box-green { fill:#17251a; stroke:#a6e3a1; stroke-width:1.8; }
+      .box-mauve { fill:#241b2f; stroke:#cba6f7; stroke-width:1.8; }
+      .box-yellow { fill:#2a2618; stroke:#f9e2af; stroke-width:1.8; }
+      .box-red { fill:#2a151b; stroke:#f38ba8; stroke-width:1.8; }
+      .title { fill:#cdd6f4; font:700 22px "JetBrains Mono","Hack",monospace; }
+      .sub { fill:#a6adc8; font:14px "JetBrains Mono","Hack",monospace; }
+      .label { fill:#cdd6f4; font:700 14px "JetBrains Mono","Hack",monospace; }
+      .small { fill:#a6adc8; font:12px "JetBrains Mono","Hack",monospace; }
+      .mono { fill:#f9e2af; font:11px "JetBrains Mono","Hack",monospace; }
+      .line { stroke:#89dceb; stroke-width:2; fill:none; }
+      .dash { stroke:#6c7086; stroke-width:1.5; fill:none; stroke-dasharray:6 5; }
+    </style>
+  </defs>
+  <rect class="bg" width="1200" height="660" rx="18"/>
+  <text class="title" x="48" y="48">HOW A TOOL CALL ACTUALLY HAPPENS</text>
+  <text class="sub" x="48" y="74">The model does not run tools. It asks for them, Hermes checks them, and the result goes back into the prompt.</text>
+
+  <!-- user -->
+  <rect class="box-mauve" x="48" y="130" width="180" height="130" rx="12"/>
+  <text class="label" x="68" y="162" fill="#cba6f7">You</text>
+  <text class="small" x="68" y="190">ask a question</text>
+  <text class="small" x="68" y="212">or give a task</text>
+  <text class="mono" x="68" y="240">CLI / desktop / chat</text>
+
+  <!-- loop boundary -->
+  <rect x="270" y="112" width="560" height="390" rx="16" fill="none" stroke="#89dceb" stroke-dasharray="8 6"/>
+  <text class="small" x="294" y="140" fill="#89dceb">HERMES AGENT LOOP</text>
+
+  <rect class="box-cyan" x="294" y="168" width="240" height="96" rx="10"/>
+  <text class="label" x="314" y="198" fill="#89dceb">1. Plan</text>
+  <text class="small" x="314" y="224">read request + memory</text>
+  <text class="small" x="314" y="246">choose next action</text>
+
+  <rect class="box-green" x="566" y="168" width="240" height="96" rx="10"/>
+  <text class="label" x="586" y="198" fill="#a6e3a1">2. Pick a tool</text>
+  <text class="small" x="586" y="224">terminal, read_file, patch</text>
+  <text class="small" x="586" y="246">web, browser, MCP</text>
+
+  <rect class="box-yellow" x="294" y="300" width="240" height="96" rx="10"/>
+  <text class="label" x="314" y="330" fill="#f9e2af">3. Check + execute</text>
+  <text class="small" x="314" y="356">approval policy, sandbox</text>
+  <text class="small" x="314" y="378">tool runs outside the model</text>
+
+  <rect class="box-cyan" x="566" y="300" width="240" height="96" rx="10"/>
+  <text class="label" x="586" y="330" fill="#89dceb">4. Observe</text>
+  <text class="small" x="586" y="356">stdout, file, page, JSON</text>
+  <text class="small" x="586" y="378">append to conversation</text>
+
+  <rect class="box-red" x="294" y="426" width="512" height="58" rx="10"/>
+  <text class="small" x="314" y="452" fill="#f38ba8">Repeat until the model can answer. Limits stop runaway loops.</text>
+  <text class="mono" x="314" y="472">local model: large system prompt + tool schemas = slower first token</text>
+
+  <!-- side rails -->
+  <rect class="box" x="866" y="130" width="286" height="150" rx="12"/>
+  <text class="label" x="886" y="162">Tools and integrations</text>
+  <text class="small" x="886" y="190">terminal, process, read_file, patch</text>
+  <text class="small" x="886" y="212">web_search, browser_exec</text>
+  <text class="small" x="886" y="234">vision_analyze, image_generate, TTS</text>
+  <text class="small" x="886" y="256">delegate_task, execute_code, cronjob</text>
+  <text class="mono" x="886" y="278">MCP servers add more</text>
+
+  <rect class="box" x="866" y="308" width="286" height="150" rx="12"/>
+  <text class="label" x="886" y="340">State that survives</text>
+  <text class="small" x="886" y="368">memory: facts and preferences</text>
+  <text class="small" x="886" y="390">skills: reusable procedures</text>
+  <text class="small" x="886" y="412">sessions: searchable history</text>
+  <text class="mono" x="886" y="440">stored under ~/.hermes</text>
+
+  <rect class="box" x="48" y="480" width="180" height="110" rx="12"/>
+  <text class="label" x="68" y="512">Final answer</text>
+  <text class="small" x="68" y="540">text, file, command</text>
+  <text class="small" x="68" y="562">or another tool call</text>
+
+  <!-- arrows -->
+  <path class="line" d="M 228 196 L 294 196" marker-end="url(#arrow)"/>
+  <path class="line" d="M 414 264 L 414 300" marker-end="url(#arrow)"/>
+  <path class="line" d="M 534 216 L 566 216" marker-end="url(#arrow)"/>
+  <path class="line" d="M 686 264 L 686 300" marker-end="url(#arrow)"/>
+  <path class="line" d="M 566 348 L 534 348" marker-end="url(#arrow)"/>
+  <path class="line" d="M 414 396 L 414 426" marker-end="url(#arrow)"/>
+  <path class="dash" d="M 806 348 C 840 348, 840 216, 806 216" marker-end="url(#arrow)"/>
+  <path class="line" d="M 270 196 L 228 196" marker-end="url(#arrow)"/>
+
+  <text class="small" x="48" y="628">On my machine the model answers at about 90 tokens/s once it starts, but the first token is slower because Hermes sends the whole tool schema and system prompt.</text>
+</svg>

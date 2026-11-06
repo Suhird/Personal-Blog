@@ -1,18 +1,18 @@
 ![AI gateway flow](/images/blog/ai-gateway-flow.svg)
 
-*One control plane for keys, cost, routing, and policy. Your application should not care which model answers.*
+*Every model call goes through the same gateway and telemetry path.*
 
-## The spreadsheet problem
+## Keys in too many places
 
-It starts innocently. One team uses OpenAI. Another uses Anthropic. A third runs a local model for sensitive data. The mobile app calls one provider directly, the batch pipeline calls another, and the internal agent has a key in an environment variable that nobody remembers rotating.
+It starts with one team using one provider. Then another team uses a second, and a third runs a local model for sensitive data. The mobile app calls one provider directly, the batch pipeline calls another, and the internal agent has a key in an environment variable that nobody remembers rotating.
 
 Then finance asks a simple question: *which feature is spending the most on inference?* Nobody can answer. The keys are scattered, the logs are in three formats, and the "fallback" is a `try/except` that silently retries the same provider.
 
-An AI gateway is the control plane that fixes this. It sits between your applications and model providers, exposes one API, and centralizes the concerns that should not be reimplemented in every service.
+An AI gateway puts those decisions in one place. It sits between your applications and model providers, exposes one API, and centralizes the concerns that should not be reimplemented in every service.
 
 ## What belongs in the gateway
 
-A good gateway does a small number of things well:
+The gateway I want does a few things:
 
 - **Authentication and tenancy**: map an API key to a tenant, user, and scopes.
 - **Quotas and rate limits**: requests per minute, tokens per day, spend per month.
@@ -72,9 +72,9 @@ routes:
 
 The application sends a task name, not a provider model. The gateway owns the mapping. When a provider has an outage, you change the route table, not fifty services.
 
-## Routing is a product decision
+## Routing
 
-There are four routing strategies worth implementing:
+I use four routing strategies:
 
 1. **Static**: one model per task. Simple, predictable.
 2. **Cost-based**: use the cheapest model that meets a quality threshold on your eval set.
@@ -85,7 +85,7 @@ A useful default is **small model first, escalate on uncertainty**. Classify the
 
 Shadow routing is also valuable: send a copy of production traffic to a candidate model without returning its output, then compare offline. You get real distribution data without risking user experience.
 
-## Caching: the biggest lever and the easiest mistake
+## Caching
 
 There are three kinds of cache:
 
@@ -95,9 +95,9 @@ There are three kinds of cache:
 
 Semantic caching fails in the obvious way: two questions can be semantically similar and require different answers. "What is the refund window for EU customers?" and "What is the refund window for US customers?" are close in embedding space and different in policy. Use semantic caching only for a curated set of intents, with a high threshold, and always include the tenant and policy version in the cache key.
 
-## Guardrails: enforce, do not suggest
+## Guardrails
 
-The gateway is a good place for stateless guardrails:
+Stateless guardrails fit here:
 
 - redact PII before the prompt leaves your network
 - block known prompt-injection patterns (defense in depth, not a boundary)
@@ -108,7 +108,7 @@ The gateway is a good place for stateless guardrails:
 
 The gateway cannot enforce authorization for tools. That must happen at the tool boundary, because the model can be tricked. The gateway can enforce *which tools are visible* to a tenant and *which model* may call them, but the final check belongs next to the side effect.
 
-## Observability: one trace, every token
+## Observability
 
 Use OpenTelemetry's GenAI semantic conventions where possible, and record at minimum:
 
@@ -123,7 +123,7 @@ Use OpenTelemetry's GenAI semantic conventions where possible, and record at min
 
 A single trace should let you answer: *why did this request cost $0.14 and take 9 seconds?* Without that, you are optimizing blind.
 
-Cost attribution is the feature finance actually wants. Tag every request with a tenant and feature, aggregate daily, and alert on anomalous spend per tenant. A runaway agent loop is much easier to stop when you can see it in a dashboard.
+The cost breakdown is usually the first thing finance asks for. Tag every request with a tenant and feature, aggregate daily, and alert on anomalous spend per tenant. A runaway agent loop is much easier to stop when you can see it in a dashboard.
 
 ## Multi-tenancy and key management
 
@@ -141,7 +141,7 @@ If you support bring-your-own-key for enterprise customers, isolate those reques
 
 ## Failure modes
 
-An AI gateway is on the critical path, so design for its failure:
+It sits on the critical path, so plan for failure:
 
 - **Gateway down**: clients should have a circuit breaker and a degraded path, not an infinite retry.
 - **Provider down**: fallback must be pre-tested, not discovered during an incident.
@@ -162,8 +162,6 @@ Managed gateways exist, and they are a good default if you want routing, caching
 
 Either way, keep the interface OpenAI-compatible so you can switch later. The gateway is an abstraction; do not let it become a lock-in.
 
-## The takeaway
+## What I would put in the first version
 
-The AI gateway is the difference between "we call a model somewhere" and "we operate inference as a platform." It gives you one place to rotate keys, cap spend, fail over, redact data, and answer the question every engineering leader eventually asks: *where is the money going?*
-
-Keep it boring. Route, enforce, observe. The models will change every quarter; the control plane should not.
+The gateway gives you one place to rotate keys, cap spend, fail over, redact data, and attribute cost. That is enough to justify it before the number of providers grows. I would keep it boring: route, enforce, observe. The models change often; the control plane should not.

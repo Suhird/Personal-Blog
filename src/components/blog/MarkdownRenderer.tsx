@@ -103,12 +103,36 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
             </code>
           );
         },
-        img: ({ node, ...props }) => (
-          <img
-            {...props}
-            className="max-h-[500px] w-auto max-w-full object-contain mx-auto rounded-lg border border-terminal-comment/30 my-4"
-          />
-        ),
+        img: ({ node, src, alt, ...props }) => {
+          const isDiagram = typeof src === "string" && src.endsWith(".svg");
+
+          if (isDiagram) {
+            return (
+              <div className="my-4 overflow-x-auto rounded-lg border border-terminal-comment/30">
+                <a href={src} target="_blank" rel="noreferrer">
+                  <img
+                    {...props}
+                    src={src}
+                    alt={alt}
+                    loading="lazy"
+                    className="blog-diagram"
+                  />
+                </a>
+              </div>
+            );
+          }
+
+          return (
+            <a href={src} target="_blank" rel="noreferrer" title="Open full image">
+              <img
+                {...props}
+                src={src}
+                alt={alt}
+                className="max-h-[500px] w-auto max-w-full object-contain mx-auto rounded-lg border border-terminal-comment/30 my-4"
+              />
+            </a>
+          );
+        },
         a: ({ node, href, children, ...props }) => (
           <a
             href={href}

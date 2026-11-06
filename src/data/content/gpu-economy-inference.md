@@ -1,14 +1,12 @@
 ![Inference cost stack](/images/blog/inference-cost-stack.svg)
 
-*GPU hours are the denominator. Tokens are the numerator. Utilization is the multiplier nobody budgets for.*
+*Cost depends on GPU time, utilization, and the number of tokens produced.*
 
-## The bill that did not match the demo
+## The first GPU bill
 
-A team prototypes a document assistant on a single A100. It feels fast and cheap. They launch, traffic grows, and the monthly GPU bill arrives at roughly the cost of a small engineering team. The model did not get bigger. The prompts did not get much longer. The problem is that the GPU was idle most of the time, and the architecture had no idea.
+A team prototypes a document assistant on a single A100. It works well in the demo. They launch, traffic grows, and the monthly GPU bill arrives at roughly the cost of a small engineering team. The model and prompts stayed roughly the same. The GPU was idle most of the time, and nothing measured that.
 
-Inference cost is not a model price list. It is an operations problem: how many tokens per second can you produce per dollar, at the latency your users will tolerate? The answer is driven by batching, memory bandwidth, context length, quantization, caching, and routing.
-
-This is a practical guide to the levers, in the order they usually pay off.
+Inference cost is an operations problem: how many useful tokens per second can you produce per dollar, at the latency users will tolerate? The answer depends on batching, memory bandwidth, context length, quantization, caching, and routing. These are the levers I check, in the order they usually help.
 
 ## The unit economics
 
@@ -48,15 +46,15 @@ KV bytes ≈ 2 × layers × heads × head_dim × sequence_length × batch_size �
 
 At long context and high batch size, the KV cache can exceed the model weights. That is why context length is a cost multiplier, not a free feature.
 
-## Lever 1: continuous batching
+## Start with continuous batching
 
 Static batching waits for a batch to fill, runs it, and waits again. Continuous batching admits new requests as slots free up, so the GPU stays busy while sequences finish at different times.
 
-This is the single biggest throughput win for serving. It is also why a naive "one request per GPU" service is so expensive: it leaves most of the hardware idle.
+For serving, this is the biggest throughput win. It is also why a naive "one request per GPU" service is so expensive: it leaves most of the hardware idle.
 
 The trade-off is latency. Larger batches improve throughput but increase queueing delay and time to first token. Tune the maximum batch size against your p95 SLO, not against the benchmark's tokens/s.
 
-## Lever 2: quantization
+## Quantization
 
 Quantization reduces the precision of weights and activations:
 
@@ -65,11 +63,11 @@ Quantization reduces the precision of weights and activations:
 - **INT8**: widely supported, usually small quality loss.
 - **4-bit (GPTQ, AWQ, GGUF)**: fits larger models on smaller GPUs, but quality varies by task.
 
-The win is not just memory. Lower precision can increase memory bandwidth efficiency, which directly speeds up decode. The risk is quality regression on edge cases: structured output, math, code, and long-context reasoning.
+The win is memory and bandwidth. Lower precision can increase memory bandwidth efficiency, which directly speeds up decode. The risk is quality regression on edge cases: structured output, math, code, and long-context reasoning.
 
 Always measure on your eval set. A 4-bit model that is 2 points worse on a benchmark may be fine for classification and unacceptable for contract analysis.
 
-## Lever 3: caching
+## Caching
 
 Three caches, in order of safety:
 
@@ -79,7 +77,7 @@ Three caches, in order of safety:
 
 For agents, prefix caching is the biggest win because the system prompt and tool definitions are large and repeated. Design prompts so the stable prefix comes first and the variable content comes last.
 
-## Lever 4: routing and model right-sizing
+## Routing and model size
 
 Most traffic does not need a frontier model. A router can classify requests and send them to the cheapest model that meets quality:
 
@@ -92,9 +90,9 @@ A common pattern is **cascade**: try the small model, validate the output, escal
 
 Measure the escalation rate and the quality of the small tier. A router that escalates 90% of the time is just adding latency.
 
-## Lever 5: context discipline
+## Context length
 
-Context is expensive three times: prefill compute, KV memory, and per-token price. Treat it like a budget.
+Long context costs prefill time, KV memory, and per-token price. Treat it like a budget.
 
 - Summarize conversation history instead of appending forever.
 - Retrieve fewer, better chunks (see [RAG at Scale](/tech-blog/rag-at-scale/)).
@@ -102,7 +100,7 @@ Context is expensive three times: prefill compute, KV memory, and per-token pric
 - Cap output tokens; streaming does not reduce cost, it just hides latency.
 - Use structured outputs to avoid verbose prose when a JSON object will do.
 
-A 32k-token prompt that could be 4k is an 8× prefill cost and a much larger KV cache. The cheapest token is the one you do not send.
+A 32k-token prompt that could be 4k is an 8× prefill cost and a much larger KV cache. Shorter prompts are usually cheaper than faster GPUs.
 
 ## A simple cost model
 
@@ -126,7 +124,7 @@ print(cost_per_million(2.50, 2000, 0.65))  # ~$0.53 per 1M tokens
 
 This ignores prefill/decode mix, memory limits, and retries, but it exposes the key sensitivity: utilization. At 20% utilization, the same GPU costs more than three times as much per token.
 
-## Measuring the right things
+## What I measure
 
 Instrument every deployment with:
 
@@ -150,9 +148,9 @@ If you only watch GPU utilization, you will optimize for a busy GPU, not a cheap
 
 The break-even point is utilization. At low volume, APIs win. At high, steady volume with a tuned serving stack, self-hosting can be 3–10× cheaper. The crossover depends on your model size, latency SLO, and how much engineering time you are willing to spend.
 
-## The takeaway
+## What I would fix first
 
-Inference cost engineering is not a quest for the cheapest GPU. It is the discipline of keeping the hardware busy with useful tokens:
+The work is keeping the hardware busy with useful tokens:
 
 1. Batch continuously.
 2. Quantize and measure.
@@ -161,4 +159,4 @@ Inference cost engineering is not a quest for the cheapest GPU. It is the discip
 5. Treat context as a budget.
 6. Measure cost per million tokens, not GPU utilization.
 
-The model is a fixed input. The utilization, batching, and routing are the variables you control. That is where the bill is won.
+The model is one input. Utilization, batching, and routing are what you control.

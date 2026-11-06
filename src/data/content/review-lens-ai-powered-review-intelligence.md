@@ -1,6 +1,6 @@
 # ReviewLens: AI-Powered Consumer Review Intelligence, Running 100% Locally
 
-Stop trusting star ratings. Here's how to build a system that reads thousands of reviews for you — detecting fake ones, spotting quality drift, and surfacing what real buyers actually care about.
+I built ReviewLens because star ratings were not enough. I wanted a local tool that could read thousands of reviews, flag likely fakes, spot quality drift over time, and show what buyers kept mentioning.
 
 The source code is available on [GitHub](https://github.com/suhird/review-lens).
 

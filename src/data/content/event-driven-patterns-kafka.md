@@ -1,14 +1,14 @@
 # Event-Driven Patterns in Kafka
 
-Explore how shifting from synchronous API calls to event-driven architectures can decouple your microservices and unlock scalability.
+I used these patterns on a checkout flow that started as synchronous REST calls between four services. The call graph worked in staging and fell apart under load. Moving the side effects to events fixed the coupling, but it introduced a different set of problems around ordering, replay, and state.
 
 ## Introduction
 
-In the world of microservices, one of the biggest challenges is maintaining loose coupling. When Service A calls Service B synchronously (e.g., via REST or gRPC), they become temporally coupled. If Service B is down or slow, Service A suffers.
+When Service A calls Service B synchronously, the two are coupled in time. If Service B is slow, Service A waits. If Service B is down, the request fails even when the work could have been done later.
 
-**Event-Driven Architecture (EDA)** flips this interaction. Instead of asking for data or commanding an action, a service simply emits an event: *"Something happened"*. Other services listen and react.
+An event-driven architecture changes the interaction. Instead of asking for data or issuing a command, a service writes an event: *something happened*. Other services read it and react on their own schedule.
 
-Apache Kafka is the de-facto backbone for EDA because it provides a durable, replayable log of these events. In this post, we'll explore powerful patterns for building robust systems with Kafka, using a fictional e-commerce platform called **ShopStream**.
+Kafka is a common backbone for this because it keeps a durable, replayable log. I use a fictional shop, ShopStream, to show the patterns I have used in production.
 
 ## The Case Study: ShopStream
 
@@ -18,7 +18,7 @@ Apache Kafka is the de-facto backbone for EDA because it provides a durable, rep
 3.  **Shipping**: We need to dispatch goods.
 4.  **Notifications**: Users need emails/SMS updates.
 
-Let's look at how we can implement this.
+The order flow looked like this.
 
 ---
 

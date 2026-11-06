@@ -1,10 +1,10 @@
 ![Durable execution timeline](/images/blog/temporal-hero.webp)
 
-*The event history is the source of truth. Workers are disposable; the workflow is not.*
+*The event history keeps the workflow state. Workers can be replaced.*
 
-## The retry loop that looked fine until it wasn't
+## A retry loop with no memory
 
-Every distributed system starts with a function like this:
+A lot of systems start with a function like this:
 
 ```python
 def process_order(order_id: str):
@@ -14,13 +14,13 @@ def process_order(order_id: str):
     return {"charge": charge, "reserve": reserve}
 ```
 
-Then the network happens. `gateway.charge` times out after the card was already charged. Your retry charges it again. `inventory.reserve` succeeds, but the process dies before `notify`. A deploy rolls the pod at 2 a.m. and the in-memory retry counter disappears. You add a `try/except` with `time.sleep(30)`, then a Redis lock, then a database table called `pending_jobs`, then a cron job to clean up the table. Six months later, nobody can answer the only question that matters: *what actually happened to order 8812?*
+Then a request times out after the card was charged. The retry charges it again. `inventory.reserve` succeeds, but the process dies before `notify`. A deploy rolls the pod at 2 a.m. and the in-memory retry counter disappears. You add a `try/except` with `time.sleep(30)`, then a Redis lock, then a database table called `pending_jobs`, then a cron job to clean up the table. Six months later, nobody can answer the question that matters: *what happened to order 8812?*
 
-The industry has a name for the thing you are accidentally building: a workflow engine. Temporal is the version of that engine that already survived the incidents you are about to invent.
+What you end up building is a workflow engine. Temporal is one that already handles the failure cases you are about to invent.
 
-This is part one of a two-part series. Here we will build the mental model: durable execution, event history, deterministic replay, workflows, activities, and the retry semantics that make side effects safe. In [part two](/tech-blog/temporal-local-setup/), we will run the whole thing locally with Docker, Python, and the Temporal UI.
+I wrote this in two parts. This one covers durable execution, event history, deterministic replay, workflows, activities, and the retry semantics that make side effects safe. [Part two](/tech-blog/temporal-local-setup/) is the local setup with Docker, Python, and the Temporal UI.
 
-## What "durable execution" actually means
+## What durable execution means
 
 A normal program keeps its state in memory and its progress in the call stack. If the process dies, both disappear. A durable execution engine flips that: the **event history** is the state, and the call stack is reconstructed by replaying the history.
 
@@ -37,13 +37,13 @@ When a worker picks up a workflow task, it runs your workflow function from the 
 
 ![Temporal event history and deterministic replay](/images/blog/temporal-event-history.svg)
 
-*Replay is not "running it again." It is reconstructing the decision path from recorded facts.*
+*Replay rebuilds the decision path from the recorded events.*
 
-This is why the workflow function must be **deterministic**. Given the same history, it must make the same decisions in the same order. If it calls `random.random()` or reads the wall clock directly, two replays can diverge, and the engine will refuse to continue. Determinism is not a style preference; it is the contract that makes recovery possible.
+This is why the workflow function must be **deterministic**. Given the same history, it must make the same decisions in the same order. If it calls `random.random()` or reads the wall clock directly, two replays can diverge, and the engine will refuse to continue. Determinism is the contract that makes replay possible.
 
-## The two kinds of code: workflows and activities
+## Workflows and activities
 
-Temporal forces a distinction that most retry libraries blur.
+Temporal separates two kinds of code that most retry libraries blur.
 
 **Workflows** are the orchestration. They decide *what* happens next. They are deterministic, replayable, and cheap. They should not do I/O, call APIs, read files, or sleep with the language's native sleep.
 
@@ -133,7 +133,7 @@ async def charge_card(order_id: str) -> str:
     )
 ```
 
-If the activity times out after the provider charged the card, the retry sends the same key. The provider returns the original charge instead of creating a second one. This is the difference between "retried" and "safe." Temporal gives you the former; you still have to design the latter.
+If the activity times out after the provider charged the card, the retry sends the same key. The provider returns the original charge instead of creating a second one. Temporal can retry the call. It cannot make the provider deduplicate it; that is why the key matters.
 
 For activities that are not naturally idempotent, use a transactional outbox or a deduplication table in the same database as the side effect. The activity should be able to say, "I already did this, here is the receipt."
 
@@ -153,7 +153,7 @@ Temporal is not a message queue. It uses queues internally, but its contract is 
 
 If you put a network call directly in a workflow, you will get non-deterministic replay and a broken workflow. If you put an infinite loop in a workflow without `continue_as_new`, you will hit history size limits. If you treat activities as pure functions, you will be surprised by duplicate emails.
 
-The mental model is closer to a database transaction log than to a job queue. You are defining a state machine, and the engine is persisting the transitions.
+It behaves more like a database transaction log than a job queue. You define a state machine, and the engine persists the transitions.
 
 ## History size and the continue-as-new escape hatch
 
@@ -177,7 +177,7 @@ class FeedProcessor:
             workflow.continue_as_new(cursor)
 ```
 
-Think of it as log compaction for orchestration. The business process is continuous; the execution history is bounded.
+That is log compaction for orchestration. The business process is continuous; the execution history is bounded.
 
 ## When to reach for Temporal
 
@@ -189,12 +189,12 @@ Use it when at least two of these are true:
 - You need retries, timeouts, and compensation without building a bespoke state machine.
 - You are orchestrating AI agents, data pipelines, provisioning, payments, or order fulfillment.
 
-Do not use it for a single API call, a stateless request/response path, or a high-throughput event firehose where every event is independent. A queue and a consumer are simpler. Temporal earns its complexity when the *sequence* and *state* are the product.
+Do not use it for a single API call, a stateless request/response path, or a high-throughput event firehose where every event is independent. A queue and a consumer are simpler. It is worth the extra machinery when the sequence and state are the part you need to get right.
 
-## The takeaway
+## Where I would use it
 
-The retry loop in the opening was not wrong because it retried. It was wrong because it had no memory. Durable execution gives your code a memory that survives crashes, deploys, and time.
+The retry loop in the opening did what it was told. It just had no memory. Temporal keeps that memory outside the process, so a crash or a deploy does not reset the work.
 
-In the next post, we will make this concrete: a `docker-compose.yml`, a PostgreSQL-backed Temporal server, a Python worker, a starter script, a time-skipping test, and the UI screens you will actually use when something goes wrong.
+The next post is the setup: a `docker-compose.yml`, a PostgreSQL-backed server, a Python worker, a starter script, a time-skipping test, and the UI screens I use when something goes wrong.
 
-The full local setup is here: [Temporal, Part 2: Running a Production-Grade Workflow Engine on Your Laptop](/tech-blog/temporal-local-setup/).
+The full local setup is here: [Temporal, Part 2: A Local Workflow Stack with Docker and Python](/tech-blog/temporal-local-setup/).

@@ -1,6 +1,6 @@
 import { BlogPost } from "@/components/BlogCard";
+import { post as hermesAgentLocalQwen } from "./posts/hermes-agent-local-qwen";
 import { post as binanceHack } from "./posts/binance-6-billion-hack";
-import { post as bnbBridgeExploit } from "./posts/bnb-bridge-exploit";
 import { post as ebpfProgrammableKernel } from "./posts/ebpf-programmable-kernel";
 import { post as localFirstCrdt } from "./posts/local-first-crdt";
 import { post as webassemblyComponentsWasi } from "./posts/webassembly-components-wasi";
@@ -32,8 +32,8 @@ import { post as canadianCarOwnership } from "./posts/canadian-car-ownership-fin
 
 // latest blog post on top as the sequence is show on FE starting with first as latest
 export const blogPosts: BlogPost[] = [
+  hermesAgentLocalQwen,
   binanceHack,
-  bnbBridgeExploit,
   ebpfProgrammableKernel,
   localFirstCrdt,
   webassemblyComponentsWasi,

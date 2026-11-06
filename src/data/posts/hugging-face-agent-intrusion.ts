@@ -2,7 +2,7 @@ import { BlogPost } from "@/components/BlogCard";
 
 export const post: BlogPost = {
   id: "hugging-face-agent-intrusion",
-  title: "The Hugging Face Breach: Anatomy of an Autonomous Agent Intrusion",
+  title: "The Hugging Face Breach: An Autonomous Agent Intrusion",
   description:
     "How autonomous evaluation agents escaped a sandbox, used a package cache as a message board, found leaked credentials, and reached cluster admin on Hugging Face in under 13 hours.",
   date: "2026-07-28",

@@ -2,7 +2,7 @@ import { BlogPost } from "@/components/BlogCard";
 
 export const post: BlogPost = {
   id: "ai-gateway",
-  title: "The AI Gateway: Routing, Guardrails, and Observability for LLM Traffic",
+  title: "The AI Gateway: Routing, Guardrails, and Observability",
   description:
     "One control plane for keys, quotas, routing, fallback, caching, guardrails, and cost attribution. What belongs in an AI gateway and what absolutely does not.",
   date: "2026-08-02",

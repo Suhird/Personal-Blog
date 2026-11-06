@@ -1,12 +1,12 @@
 ![Local-first sync](/images/blog/local-first-sync.svg)
 
-*Write to disk first. Sync later. Merge deterministically. The spinner disappears because the source of truth is local.*
+*Each device writes locally; the sync service relays changes and the CRDT merges them.*
 
-## The loading spinner is a design choice
+## The spinner is an architecture choice
 
-Every time you open a notes app and wait for a spinner, you are watching a architectural decision: the server owns the data, and the client is a thin view. If the network is slow, the app is slow. If the network is down, the app is broken.
+When a notes app shows a spinner, the server owns the data and the client is a thin view. If the network is slow, the app is slow; if the network is down, the app is broken.
 
-Local-first software flips the default. The data lives on the device. Reads and writes are instant. The network is a synchronization mechanism, not a prerequisite for use.
+Local-first software puts the data on the device. Reads and writes are instant. The network is a synchronization mechanism, not a prerequisite for use.
 
 The term comes from Ink & Switch's 2019 essay, which laid out seven ideals:
 
@@ -18,9 +18,9 @@ The term comes from Ink & Switch's 2019 essay, which laid out seven ideals:
 6. Privacy is the default.
 7. You retain control.
 
-The hard part is not storing data locally. It is reconciling concurrent edits across devices without a central lock, without losing work, and without asking the user to resolve conflicts manually.
+Storing data locally is the easy part. Reconciling concurrent edits across devices without a central lock is the work.
 
-## The architecture
+## The pieces
 
 A local-first app has four parts:
 
@@ -31,7 +31,7 @@ A local-first app has four parts:
 
 The server still matters. It provides discovery, authentication, durable storage for offline devices, and a place to enforce access control. But it is not the only place where data can be read or written.
 
-## CRDTs in one page
+## CRDTs
 
 A Conflict-free Replicated Data Type is a data structure designed to merge concurrent updates without coordination. The three properties that matter:
 
@@ -89,9 +89,9 @@ provider.on("status", (event: { status: string }) => {
 
 Two users can type at the same time, disconnect, reconnect, and converge without a server arbitrating every keystroke. The server relays updates and stores a snapshot; the merge logic lives in the CRDT.
 
-## Permissions are harder than merging
+## Permissions
 
-CRDTs solve convergence. They do not solve authorization.
+CRDTs handle convergence. Authorization is separate.
 
 If a user loses access to a document, their device may still hold a replica. You need:
 
@@ -104,7 +104,7 @@ The local-first model makes revocation genuinely hard because the data is alread
 
 A practical pattern is **end-to-end encrypted documents with per-document keys**. The server stores ciphertext and enforces access to the key material. Revocation rotates the key and re-encrypts future updates. It is not perfect (the revoked device may retain old plaintext), but it bounds the damage.
 
-## Schema migration and long-lived data
+## Migrations
 
 A local-first app can have users on year-old clients. If the schema changes, old clients must still read their local data and sync without corrupting new clients.
 
@@ -118,7 +118,7 @@ Strategies:
 
 This is the same discipline as a distributed database, applied to clients you do not control.
 
-## Undo, redo, and user trust
+## Undo
 
 Undo in a collaborative editor is not a stack of local commands. Another user may have changed the same text. A good undo system uses:
 
@@ -128,9 +128,9 @@ Undo in a collaborative editor is not a stack of local commands. Another user ma
 
 If undo can silently revert someone else's work, users will not trust the app.
 
-## When local-first is the wrong choice
+## When I would not use it
 
-Local-first is not a universal architecture. Avoid it when:
+I would avoid local-first when:
 
 - you need strong global consistency (bank balances, inventory counts)
 - a central authority must order events (auctions, trading)
@@ -140,10 +140,6 @@ Local-first is not a universal architecture. Avoid it when:
 
 For a payment ledger, a server-authoritative database is correct. For a notes app, a design tool, or a field-service app that works in a basement, local-first is transformative.
 
-## The takeaway
+## What I would start with
 
-Local-first is not "offline mode." It is a reordering of trust: the device is the primary source of truth, and the network is an optimization.
-
-The technical core is a CRDT and a sync engine. The product core is instant feedback, offline resilience, and user control. The hard parts are permissions, migrations, and undo — the same hard parts as any distributed system, moved to the edge.
-
-Done well, the spinner disappears. Not because the network got faster, but because the app no longer waits for it.
+Local-first is more than offline mode. The device is the primary source of truth and the network is an optimization. The technical core is a CRDT and a sync engine; the hard parts are permissions, migrations, and undo. When it works, the app opens instantly because it does not wait for the network.

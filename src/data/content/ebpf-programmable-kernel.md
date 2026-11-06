@@ -1,12 +1,12 @@
 ![eBPF hook points](/images/blog/ebpf-hook-points.svg)
 
-*Attach verified programs to kernel hooks, share state through maps, and observe or steer the system without a kernel module.*
+*eBPF programs attach to kernel hooks and share state through maps.*
 
-## The latency mystery
+## A p99 problem
 
 A service starts returning p99 latencies that are 40× the median. The application logs look normal. The host CPU is not saturated. The network team says the switches are fine. The database says its queries are fast.
 
-The answer is somewhere in the kernel: a retransmit, a scheduler delay, a dropped packet, a cgroup throttling a container, a filesystem stall. Traditional tools give you snapshots and counters. You need to ask a precise question of a running system without rebuilding the kernel or restarting the process.
+The cause was somewhere in the kernel: a retransmit, a scheduler delay, a dropped packet, a cgroup throttling a container, a filesystem stall. Counters and snapshots were not enough. I needed to ask a specific question of the running system without rebuilding the kernel.
 
 That is the problem eBPF was built for.
 
@@ -14,7 +14,7 @@ That is the problem eBPF was built for.
 
 eBPF (extended Berkeley Packet Filter) is a small virtual machine inside the Linux kernel. You write a program in a restricted C-like language, compile it to eBPF bytecode, and attach it to a hook. The kernel verifies the program before running it, JIT-compiles it, and executes it when the hook fires.
 
-The verifier is the safety contract. It proves that the program:
+The verifier is what makes this safe. It proves that the program:
 
 - terminates (bounded loops)
 - only accesses memory it is allowed to access
@@ -25,7 +25,7 @@ If the verifier cannot prove safety, the program is rejected. This is why eBPF c
 
 Programs share state with user space through **maps**: hash maps, arrays, ring buffers, per-CPU maps, and more. The user-space agent loads programs, reads maps, and exports metrics or events.
 
-## The hooks that matter
+## Hooks I use
 
 eBPF can attach to many points in the kernel:
 
@@ -73,7 +73,7 @@ int count_syscalls(struct trace_event_raw_sys_enter *ctx)
 char LICENSE[] SEC("license") = "GPL";
 ```
 
-The user-space loader (using libbpf skeleton generation) attaches the program, reads the map, and prints the counts. The exact loader is boilerplate; the important part is the shape: a hook, a map, and a bounded program.
+The user-space loader (using libbpf skeleton generation) attaches the program, reads the map, and prints the counts. The loader is boilerplate. The shape is the point: a hook, a map, and a bounded program.
 
 For quick experiments, Python with BCC is convenient:
 
@@ -101,7 +101,7 @@ b.trace_print()
 
 BCC is excellent for learning and one-off debugging. For production, prefer libbpf with CO-RE (compile once, run everywhere) or a Rust framework like Aya.
 
-## What teams actually use it for
+## Where it is used
 
 - **Networking**: Cilium uses eBPF for Kubernetes networking, load balancing, and network policy, replacing kube-proxy in many clusters.
 - **Observability**: Pixie, Tetragon, and Parca use eBPF to capture traces, flows, and profiles without instrumenting every application.
@@ -111,9 +111,9 @@ BCC is excellent for learning and one-off debugging. For production, prefer libb
 
 The common thread: eBPF lets you see or control the kernel's behavior with a program that is safe enough to load into production.
 
-## Safety and limits
+## Limits
 
-The verifier is strong, but it is not a performance guarantee. A valid program can still be expensive if it runs on every packet or every syscall.
+A verified program can still be expensive if it runs on every packet or every syscall.
 
 Practical rules:
 
@@ -126,7 +126,7 @@ Practical rules:
 
 The verifier also constrains what you can do: no arbitrary kernel memory reads, no unbounded recursion, limited stack, and a restricted helper API. These limits are the price of safety.
 
-## CO-RE and kernel portability
+## CO-RE
 
 A kprobe on `tcp_sendmsg` may work on one kernel and fail on another if the function signature changes. **CO-RE** (Compile Once, Run Everywhere) uses BTF (BPF Type Format) metadata to relocate field accesses at load time, so one binary works across kernel versions.
 
@@ -137,7 +137,7 @@ For production:
 - avoid hard-coded offsets
 - test on the oldest and newest kernels you support
 
-This is the difference between a demo that works on your laptop and a tool that runs across a fleet.
+Without CO-RE, a demo that works on your laptop can fail on the next kernel.
 
 ## Operational checklist
 
@@ -150,8 +150,6 @@ This is the difference between a demo that works on your laptop and a tool that 
 7. **Measure overhead.** Compare p99 latency with the agent on and off.
 8. **Have a kill switch.** You may need to detach everything in an incident.
 
-## The takeaway
+## What I would check before shipping
 
-eBPF is not magic. It is a tiny virtual machine with a strict verifier, a narrow helper API, and a very good JIT. That combination lets you run safe, dynamic code inside the kernel, which is why it has replaced a generation of kernel modules and sidecar proxies for observability and networking.
-
-The mental model: a hook, a bounded program, a map, and a user-space agent. If you can express your question that way, you can answer it in production without a reboot.
+eBPF is a small virtual machine with a strict verifier, a narrow helper API, and a JIT. That combination is what lets it run inside the kernel without a module. The mental model is a hook, a bounded program, a map, and a user-space agent. If the question fits that shape, you can answer it in production without a reboot.

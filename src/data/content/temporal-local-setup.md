@@ -1,12 +1,12 @@
 ![Temporal local topology](/images/blog/temporal-local-topology.svg)
 
-*A complete Temporal stack on one machine: server, PostgreSQL, UI, worker, and client.*
+*A local Temporal stack: server, PostgreSQL, UI, worker, and client.*
 
-## Why run Temporal locally at all
+## Why I run it locally
 
-You can write a workflow and deploy it to a cluster to find out whether it works. You can also develop against a local server that behaves like the real thing, inspect every event in a UI, and run time-skipping tests that simulate a three-day approval in milliseconds.
+You can write a workflow, deploy it to a cluster, and find out whether it works. A local server is faster to iterate against: you can inspect every event in a UI and run time-skipping tests that simulate a three-day approval in milliseconds.
 
-Part one built the mental model: [Temporal, Part 1: Durable Execution and the End of Retry Hell](/tech-blog/temporal-durable-execution/). This post is the practical half. We will run a real Temporal server locally, write a Python workflow, start it, signal it, query it, break it, and inspect the recovery.
+Part one covered the model: [Temporal, Part 1: Durable Execution and Deterministic Replay](/tech-blog/temporal-durable-execution/). This part is the setup: a local server, a Python workflow, signals, queries, and a broken worker.
 
 There are two local options:
 
@@ -302,7 +302,7 @@ If you are using Docker, prefix with `docker compose exec temporal-admin-tools`.
 
 ## Breaking it on purpose
 
-The best way to understand durability is to kill the worker at the worst moment.
+The quickest way to see durability is to kill the worker mid-workflow.
 
 1. Start a workflow that sleeps for 60 seconds before its next activity.
 2. Stop the worker with `Ctrl+C`.
@@ -344,9 +344,9 @@ async def test_order_workflow():
             assert result == "txn-order-test-1"
 ```
 
-The time-skipping server advances timers instantly. A workflow that waits a day in production runs in milliseconds in the test. This is the single biggest reason teams adopt Temporal: the orchestration becomes unit-testable.
+The time-skipping server advances timers instantly. A workflow that waits a day in production runs in milliseconds in the test. That is the part that makes Temporal worth the setup for me: the orchestration becomes unit-testable.
 
-## Local pitfalls that waste an afternoon
+## Local pitfalls
 
 - **Wrong task queue**: the worker polls `orders`, the starter schedules on `default`. Nothing runs. Check both strings.
 - **Worker not running**: the workflow sits in `Running` with a pending activity task. The UI shows it; the logs do not, because no worker is polling.
@@ -372,12 +372,10 @@ The local stack is deliberately simple. Before production, add:
 
 Temporal Cloud removes most of the operational surface, but the application-level rules stay the same: deterministic workflows, idempotent activities, bounded histories, and explicit versioning.
 
-## The takeaway
+## Before production
 
-A local Temporal stack is one `docker compose up` away. The real value is not the server; it is the development loop: write a workflow, break it, replay it, inspect the history, and test a three-day timer in milliseconds.
-
-Start with the dev server if you are curious. Move to Compose when you want PostgreSQL and a UI you can show your team. Then take the same code to production with a checklist, not a rewrite.
+A local stack is one compose file away. The useful part is the loop: write it, break it, replay it, and watch the history. I use the dev server for a quick look and Compose when I need PostgreSQL and the UI. The same workflow code moves to production; the checklist above is what changes.
 
 The complete series:
-- [Part 1: Durable Execution and the End of Retry Hell](/tech-blog/temporal-durable-execution/)
-- [Part 2: Running a Production-Grade Workflow Engine on Your Laptop](/tech-blog/temporal-local-setup/)
+- [Part 1: Durable Execution and Deterministic Replay](/tech-blog/temporal-durable-execution/)
+- [Part 2: A Local Workflow Stack with Docker and Python](/tech-blog/temporal-local-setup/)

@@ -1,16 +1,16 @@
 ![MCP architecture](/images/blog/mcp-architecture.svg)
 
-*One protocol, many capability providers. The host owns consent; the server owns the capability.*
+*One host connects to several MCP servers over JSON-RPC.*
 
-## The integration matrix problem
+## The N×M problem
 
 Every AI application eventually grows a tools page. First it calls a search API. Then a database. Then GitHub. Then the internal ticketing system. Then a filesystem. Each integration has its own auth model, its own error format, and its own way of describing what it can do.
 
 With N applications and M tools, you get N×M integrations. Every new app re-implements every tool. Every new tool re-implements every app's calling convention. The matrix grows faster than the team.
 
-The Model Context Protocol (MCP) is an attempt to collapse that matrix. It standardizes how an AI host discovers and calls external capabilities. The common analogy is USB-C: one port, many devices, with the host negotiating what the device can do.
+The Model Context Protocol (MCP) is an attempt to collapse that matrix. It standardizes how an AI host discovers and calls external capabilities. The usual comparison is USB-C: one port, many devices, with the host negotiating what the device can do.
 
-The analogy is useful, but it hides the hard part. USB-C standardized the connector; MCP standardizes the *capability contract*. That contract is also the new attack surface.
+The comparison helps with discovery, but it hides the security question. USB-C standardized the connector; MCP standardizes the *capability contract*. That contract is now part of the attack surface.
 
 ## The architecture in one page
 
@@ -86,18 +86,18 @@ A host configuration points at the command:
 
 That is enough for a local tool. For a remote server, you run the HTTP transport behind TLS, authenticate the client, and scope the server's own credentials to the minimum it needs.
 
-## Why this is better than a pile of function calls
+## What the protocol buys you
 
-MCP gives you four things a bespoke integration does not:
+A bespoke integration usually gives you four things:
 
 1. **Discovery**: the host learns the tool list at runtime, including schemas and descriptions.
 2. **A common error model**: structured errors instead of a different exception shape per API.
 3. **Composability**: one host can use servers written by different teams in different languages.
 4. **A boundary**: the server can run in its own process or container with its own permissions.
 
-The last point is the most important and the most often ignored. MCP is not just a calling convention; it is a place to put a security boundary.
+The last point is the one I care about most. The server boundary is a place to put permissions.
 
-## The security model: the server is not trusted
+## Treat the server as third-party code
 
 Every MCP server you connect is code you are inviting into your agent's decision loop. A malicious server can:
 
@@ -107,7 +107,7 @@ Every MCP server you connect is code you are inviting into your agent's decision
 - exfiltrate data through its own network access
 - change its tool list between sessions
 
-This is the **tool poisoning** problem. The model trusts tool descriptions because they look like documentation. An attacker who controls the server controls part of the prompt.
+This is usually called **tool poisoning**. The model trusts tool descriptions because they look like documentation. An attacker who controls the server controls part of the prompt.
 
 Defenses:
 
@@ -119,9 +119,9 @@ Defenses:
 - **Log every tool call** with arguments and results; review unusual patterns.
 - **Do not let the server's tool descriptions override host policy.** The host should enforce its own allowlist and authorization.
 
-The host is the place where consent lives. If the host blindly forwards every tool to the model and executes whatever comes back, MCP becomes a remote code execution protocol with extra steps.
+Consent belongs in the host. If the host forwards every tool to the model and executes whatever comes back, MCP becomes a remote code execution protocol with extra steps.
 
-## Designing tools that models can use safely
+## Tool design
 
 The quality of an MCP server is mostly the quality of its tool design.
 
@@ -134,7 +134,7 @@ Good tools are:
 - **Honest about failure**: structured errors the model can reason about.
 - **Documented with examples**: the description is part of the prompt.
 
-Bad tools are general-purpose interpreters. `run_shell`, `eval_python`, and `http_request` are not tools; they are a security incident waiting for a prompt.
+The tools I avoid are general-purpose interpreters. `run_shell`, `eval_python`, and `http_request` are not tools; they are a security incident waiting for a prompt.
 
 A useful pattern is a **draft/commit split**:
 
@@ -143,9 +143,9 @@ A useful pattern is a **draft/commit split**:
 
 The model can be creative in the draft step. The irreversible step is a separate, auditable action.
 
-## MCP and prompt injection
+## MCP does not remove prompt injection
 
-MCP does not solve prompt injection. It gives injection more places to hide.
+MCP does not remove prompt injection. It adds more places for injected text to enter the loop.
 
 A malicious resource, a tool result, or a tool description can all carry instructions. The model cannot reliably distinguish them from the user's request. The same rules apply:
 
@@ -157,7 +157,7 @@ A malicious resource, a tool result, or a tool description can all carry instruc
 
 MCP's value is that it gives you a *place* to enforce those rules: the host, the server boundary, and the credential scope. Use it.
 
-## Operational concerns
+## Running it in production
 
 Once you have more than a demo, you need:
 
@@ -170,16 +170,12 @@ Once you have more than a demo, you need:
 
 MCP servers are infrastructure. Treat them like infrastructure.
 
-## When not to use MCP
+## When I would skip it
 
 If you have one application and one tool, a direct function call is simpler. If the tool is latency-critical and runs in-process, the JSON-RPC boundary may cost more than it buys. If you cannot sandbox or audit the server, do not connect it to an agent with sensitive data.
 
 MCP earns its keep when you have multiple hosts, multiple tools, and a need for a stable contract between teams.
 
-## The takeaway
+## Where it fits
 
-MCP is the most important plumbing standard in the agent ecosystem because it turns an N×M integration problem into an N+M problem. It also turns every server into a potential prompt-injection vector and every tool description into an attack surface.
-
-Adopt it for the contract. Secure it like you would any third-party dependency: least privilege, explicit consent, sandboxing, and logs.
-
-The USB-C analogy is right. Just remember that a USB-C port can charge your laptop or fry it. The protocol does not decide which.
+MCP turns an N×M integration problem into an N+M problem, and it makes every server a potential prompt-injection vector. I adopt it for the contract and secure it like a third-party dependency: least privilege, explicit consent, sandboxing, and logs. The protocol moves the request. The host decides what the server is allowed to do.

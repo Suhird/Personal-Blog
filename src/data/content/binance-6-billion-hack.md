@@ -1,8 +1,8 @@
 ![Binance 2026 breach](/images/blog/binance-2026-hero.webp)
 
-*The keys never left the vault. The withdrawal service was convinced to open it.*
+*The attacker reached the withdrawal service without stealing the private keys.*
 
-## Twenty minutes
+## The drain
 
 On the afternoon of October 29, 2026, wallets belonging to Binance began moving. The transfers came from hot wallets on at least ten blockchains: Ethereum, Bitcoin, Tron, Solana, and others. They went to addresses controlled by a single attacker. Most of the money left in roughly twenty minutes.
 
@@ -10,9 +10,9 @@ By the time Binance suspended deposits and withdrawals, the affected total was a
 
 The first public explanation pointed to a compromised DevOps engineer's laptop. A day later, co-CEO Richard Teng said the investigation had found additional points of breach, that the attack was more complex than a single laptop, and that the attacker had used a self-destruct mechanism to destroy tooling and tracers.
 
-The private keys controlling the wallets were not leaked. That is the sentence to sit with. The attacker did not break the cryptography. They broke the path that asks the cryptography to sign.
+Binance says the private keys controlling the wallets were not leaked. The attacker compromised the path that asks the cryptography to sign.
 
-## The timeline
+## Preparation
 
 TRM Labs reconstructed the preparation. It began at least 36 hours before the theft.
 
@@ -24,11 +24,11 @@ TRM Labs reconstructed the preparation. It began at least 36 hours before the th
 
 ![Binance attack timeline](/images/blog/binance-2026-timeline.svg)
 
-*The rehearsal is the signature. Test, validate, then execute against production.*
+*Preparation, rehearsal, and the 20-minute drain.*
 
-This is not a smash-and-grab. It is a patient, staged operation with a dry run. The attackers verified that their tooling worked before pointing it at the real thing.
+The operation was staged. The attackers verified the tooling on test wallets before pointing it at a production hot wallet.
 
-## The way in: a fake interview
+## The fake interview
 
 Binance's initial findings describe a "sophisticated, multi-stage campaign" that unfolded over several months. The entry point was social engineering, in a form that has become familiar in developer-targeted attacks.
 
@@ -41,21 +41,21 @@ According to the company's account:
 5. The attackers used that compromised machine and a compromised internal AI tool to gain control of two other engineers' laptops.
 6. From there, they reached the withdrawal systems and issued transfers that looked legitimate.
 
-The pattern is sometimes called "Contagious Interview." It targets developers with the one thing they are trained to do: open a project, install dependencies, and run the code to see if it works. A take-home assignment is a trojan horse that arrives with a plausible story.
+The pattern is sometimes called "Contagious Interview." It targets developers with the one thing they are trained to do: open a project, install dependencies, and run the code to see if it works. A take-home assignment is an easy way to get a developer to run code.
 
-The compromise of the internal AI tool is the newer wrinkle. An assistant that has access to code, tickets, and internal documentation is a high-value pivot. If it runs with a broad service identity and can reach other machines, compromising it is like compromising a trusted colleague who never gets suspicious.
+The internal AI tool is the newer part. An assistant that has access to code, tickets, and internal documentation is a high-value pivot. If it runs with a broad service identity and can reach other machines, compromising it is like compromising a trusted colleague who never gets suspicious.
 
-## What the attacker actually got
+## What the attacker got
 
 Binance says it found no evidence that the private keys controlling the affected wallets were leaked. Instead, the attackers gained access to the **withdrawal systems** and were able to make unauthorized transfers from the exchange's wallets.
 
 That distinction matters. A modern exchange does not keep a private key on a laptop and sign transactions by hand. It has a withdrawal service: a pipeline that validates requests, applies risk checks, and asks a signer, HSM, or custody system to approve. If you can convince that pipeline that a request is legitimate, you do not need the key. You need the service's trust.
 
-The attackers also had time. The campaign ran for months. They learned the internal topology, the approval paths, and the monitoring. By the time they executed, they were not guessing.
+The campaign ran for months, which gave the attackers time to learn the internal topology, the approval paths, and the monitoring. By the time they executed, they were not guessing.
 
-## Why the controls failed
+## What failed
 
-No single control is to blame. The failure is a composition.
+The failure was a combination of controls that each looked reasonable.
 
 ### 1. Device trust was treated as human trust
 
@@ -67,7 +67,7 @@ The attackers did not need to compromise every engineer. They needed one path fr
 
 ### 3. The withdrawal service had no hard velocity brake
 
-Billions left in about twenty minutes. A bank would freeze a card after a handful of anomalous transactions. A withdrawal pipeline needs a circuit breaker that is independent of the caller's identity: a maximum notional per minute, per chain, per wallet, with automatic pause and human review.
+Billions left in about twenty minutes. A bank freezes a card after a few unusual transactions; the withdrawal pipeline needed a similar limit that did not depend on the caller's identity: a maximum notional per minute, per chain, per wallet, with automatic pause and human review.
 
 ### 4. Hot wallets held too much
 
@@ -79,9 +79,9 @@ The initial theory was one laptop. The attacker had multiple footholds, moved la
 
 ### 6. AI tools inherited broad permissions
 
-An internal AI assistant with access to code, tickets, and infrastructure can be a force multiplier for defenders. It can also be a force multiplier for an attacker who compromises it. Agentic tools need their own least-privilege identity, not a service account that can reach everything.
+An internal AI assistant with access to code, tickets, and infrastructure can help defenders and attackers. The tool needs its own least-privilege identity, not a service account that can reach everything.
 
-## The freeze race
+## Freezing the funds
 
 The recovery was faster than the theft, but not fast enough for everything.
 
@@ -94,7 +94,7 @@ The attackers tried to convert frozen stablecoins into unfreezable assets. They 
 
 The remaining roughly **$3.3 billion** was mostly Bitcoin, Ether, and XRP. Those assets cannot be frozen at the issuer level. They can only be stopped when they reach an exchange or a service that cooperates with law enforcement. That is why the next phase of the incident is a tracing and laundering race, not a recovery.
 
-## The exchange response
+## Binance's response
 
 Binance paused deposits and withdrawals, said customer funds were safe, and committed to covering all losses with company funds. It initially pointed to its Secure Asset Fund for Users (SAFU), roughly $1 billion, and later said it had set aside more than $6.3 billion of its own funds.
 
@@ -116,7 +116,7 @@ The 2019 attack was operational: attackers obtained user API keys and 2FA codes 
 
 Each generation moved further from the key and closer to the decision.
 
-## What would have changed the outcome
+## Controls that would have helped
 
 No control is perfect, but a layered design makes a 20-minute, $6.3 billion drain much harder.
 
@@ -131,10 +131,6 @@ No control is perfect, but a layered design makes a 20-minute, $6.3 billion drai
 9. **Assume breach in incident response.** Scope by evidence, not by the first plausible story. Hunt for multiple footholds and tooling.
 10. **Rehearse the freeze.** Have runbooks and contacts at stablecoin issuers, analytics firms, and law enforcement before you need them.
 
-## The takeaway
+## What I would change
 
-The Binance hack is not a story about weak cryptography. It is a story about a trusted path that was too easy to walk.
-
-The attackers spent months on the human layer, 36 hours on the rehearsal, and 20 minutes on the execution. The defense has to be designed for that asymmetry: assume the laptop is compromised, assume the AI tool is compromised, assume the credential is stolen, and make the signing path require independent, hard-to-fake approval.
-
-The keys were safe. The decision was not.
+The cryptography worked as designed. The attacker did not need to break it; they used the withdrawal service's trust. The operation took months of preparation, 36 hours of rehearsal, and 20 minutes of execution, so the controls have to assume a compromised laptop, a compromised AI tool, and a stolen credential, then require independent approval for signing.

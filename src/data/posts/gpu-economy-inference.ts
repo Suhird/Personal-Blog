@@ -2,7 +2,7 @@ import { BlogPost } from "@/components/BlogCard";
 
 export const post: BlogPost = {
   id: "gpu-economy-inference",
-  title: "The GPU Economy: A Practical Guide to Inference Cost Engineering",
+  title: "Inference Cost: Batching, Quantization, and GPU Utilization",
   description:
     "Why GPU utilization, batching, quantization, caching, and routing decide your inference bill. A unit-economics guide to producing useful tokens per dollar.",
   date: "2026-08-10",

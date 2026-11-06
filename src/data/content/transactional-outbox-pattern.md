@@ -1,18 +1,14 @@
-# The Transactional Outbox Pattern: Reliability at Scale
-
-Learn how to solve the "Dual Write" problem and guarantee eventual consistency in your microservices.
+# The Transactional Outbox Pattern
 
 ## Introduction
 
-In our previous post, [Event-Driven Patterns with Kafka](event-driven-patterns-kafka), we explored how **ShopStream** uses events to decouple services. We assumed that when an order is placed, an event is magically sent to Kafka.
+In the Kafka post, [Event-Driven Patterns with Kafka](event-driven-patterns-kafka), ShopStream treats publishing an event as if it were part of the order transaction. It is not.
 
-But in the real world, "magic" usually means "hidden bugs".
-
-When **ShopStream** processes an order, it must do two things:
+When **ShopStream** processes an order, it has to do two things:
 1.  **Write to the Database**: Insert the order into the `orders` table.
 2.  **Publish to Kafka**: Send an `OrderPlaced` event to the `orders` topic.
 
-This leads to a classic distributed systems challenge: **The Dual Write Problem**.
+Those two systems do not share a transaction. That is the dual write problem.
 
 ## The Dual Write Problem
 

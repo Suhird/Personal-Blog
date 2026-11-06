@@ -1,14 +1,14 @@
 ![RAG pipeline](/images/blog/rag-pipeline.svg)
 
-*Retrieval quality is the product. The generator is the last mile.*
+*The ingestion pipeline and the query pipeline.*
 
-## The demo that lied
+## The demo worked on 20 documents
 
-A RAG prototype over 20 PDFs feels like magic. You ask a question, it answers with a citation, and everyone in the room nods. Then you point it at 2 million documents, and the same system confidently answers the wrong question using the right-sounding paragraph from 2019.
+A RAG prototype over 20 PDFs works well enough to impress everyone in the room. Point it at 2 million documents and the same system answers the wrong question using a right-sounding paragraph from 2019.
 
-The model did not get worse. The retrieval did not scale. The demo worked because the answer was always in the top three chunks of a tiny corpus. At scale, the hard problems are ingestion, chunking, permissions, freshness, and evaluation. Generation is the easy part.
+The model was the same. Retrieval was the part that broke. The demo worked because the answer was always in the top three chunks of a tiny corpus. At scale, the hard problems are ingestion, chunking, permissions, freshness, and evaluation. Generation gets the attention; retrieval decides the answer.
 
-This post is about the unsexy engineering that makes retrieval work when the corpus is large, the users are hostile, and the answers have consequences.
+The work that matters is in the pipeline.
 
 ## RAG is two pipelines
 
@@ -49,7 +49,7 @@ Store the source URI, page or section, title, author, last-modified time, and te
 
 ## Chunking: the highest-leverage decision
 
-Chunking is where most RAG systems quietly fail. Too small and the chunk lacks context. Too large and the embedding averages away the signal, and the generator gets a wall of text.
+Chunking is where I have seen the most RAG systems fail. Too small and the chunk lacks context. Too large and the embedding averages away the signal, and the generator gets a wall of text.
 
 A practical default:
 
@@ -96,7 +96,7 @@ def reciprocal_rank_fusion(result_lists, k=60):
     return sorted(scores, key=scores.get, reverse=True)
 ```
 
-The reranker is where the biggest quality jump usually lives. A cross-encoder reads the query and each candidate together, which is far more accurate than comparing independent embeddings. It is also slower, so only run it on the top 50, not the whole corpus.
+The reranker usually gives the biggest quality improvement. A cross-encoder reads the query and each candidate together, which is far more accurate than comparing independent embeddings. It is also slower, so only run it on the top 50, not the whole corpus.
 
 ## Query rewriting: the user is not a search engine
 
@@ -142,7 +142,7 @@ A RAG index is a cache of the corpus, and caches go stale.
 - **Backfills**: version the index and run a shadow index for large re-embeds.
 - **Watermarks**: record the last successful ingestion time per source, and alert when it falls behind.
 
-The most common production complaint is not "the model is dumb." It is "the answer is from the old policy." Freshness is a pipeline problem.
+The most common complaint I hear is that the answer comes from an old policy, not that the model is weak. Freshness is a pipeline problem.
 
 ## Evaluation: build the set before you tune
 
@@ -177,9 +177,9 @@ A RAG request has a budget. Spend it where it matters:
 - Cache the final answer for deterministic, high-frequency questions, with a short TTL and a cache key that includes the corpus version.
 - Stream the answer so the user sees progress while the model decodes.
 
-A p99 of 2 seconds is a product feature. A p99 of 12 seconds is a demo.
+A 2-second p99 feels instant. A 12-second p99 feels broken.
 
-## The failure modes worth memorizing
+## Failure modes I check for
 
 - The answer is in the corpus, but the chunk is too small to contain it.
 - The chunk is relevant, but the metadata filter excludes it.
@@ -190,10 +190,6 @@ A p99 of 2 seconds is a product feature. A p99 of 12 seconds is a demo.
 - The generator ignores the retrieved context and answers from parametric memory.
 - The evaluation set was written by the same person who tuned the system, so it measures nothing.
 
-## The takeaway
+## What I would build first
 
-RAG is not "put documents in a vector database and ask a model." It is a retrieval system with a generation interface. The engineering that matters is parsing, chunking, hybrid search, reranking, permissions, freshness, and evaluation.
-
-Get those right, and a modest model produces excellent answers. Get them wrong, and the best model in the world will confidently cite the wrong paragraph.
-
-The diagram is the checklist. Build both halves.
+RAG is a retrieval system with a generation interface. Parsing, chunking, hybrid search, reranking, permissions, freshness, and evaluation decide whether the answer is right. A modest model with good retrieval beats a strong model with bad retrieval. The diagram above is the checklist I use.

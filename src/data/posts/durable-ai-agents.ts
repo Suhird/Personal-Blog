@@ -2,7 +2,7 @@ import { BlogPost } from "@/components/BlogCard";
 
 export const post: BlogPost = {
   id: "durable-ai-agents",
-  title: "Durable AI Agents: Why Your Agent Needs a Workflow Engine, Not a While Loop",
+  title: "Durable AI Agents with a Workflow Engine",
   description:
     "Agents crash, tools time out, and humans take days to approve. Split the loop into a deterministic workflow and idempotent activities so a failed run resumes instead of restarting.",
   date: "2026-06-08",

@@ -1,14 +1,14 @@
 ![Small language model pipeline](/images/blog/slm-distillation-pipeline.svg)
 
-*The best model is the smallest one that passes your eval set and fits the latency budget.*
+*Teacher data, fine-tuning, quantization, and evaluation.*
 
-## The 70B model classifying support tickets
+## A 70B model for five labels
 
 A team uses a frontier model to label support tickets into five categories. It works. It also costs more than the support tool itself, adds 1.2 seconds of latency, and sends customer text to a third party.
 
 The task is a five-way classification with a known label set and thousands of historical examples. A 3B model fine-tuned on those examples can match the frontier model's accuracy, run in 80 milliseconds on a laptop, and never send data off the device.
 
-This is the case for small language models (SLMs): not "small models are as good as large models," but "most production tasks are narrower than the benchmark." When the task is narrow, the data is yours, and the latency budget is tight, a small model is often the better engineering choice.
+This is where a small language model makes sense: the task is narrow, the labels are known, and the eval set is yours. A small model is often the better engineering choice when the task is narrow and the latency budget is tight.
 
 ## When small wins
 
@@ -29,9 +29,9 @@ They are a poor fit when:
 - you cannot evaluate quality rigorously
 - you need tool use across many unfamiliar APIs
 
-The honest framing: an SLM is a **specialist**, not a smaller generalist. Treat it like a fine-tuned classifier with natural-language output, not like a junior frontier model.
+An SLM is a **specialist**, not a smaller generalist. Treat it like a fine-tuned classifier with natural-language output.
 
-## The pipeline: distill, fine-tune, quantize, evaluate
+## The pipeline
 
 ### 1. Define the task and the eval set
 
@@ -102,9 +102,9 @@ Your eval must include:
 
 If the SLM is within 2–3 points of the larger model on your task, ship the SLM and route the hard cases to the larger model.
 
-## The hybrid pattern
+## The pattern I use most
 
-The most practical deployment is not "replace the big model." It is a router:
+The deployment I use most is a router:
 
 ```text
 input -> SLM (fast, local)
@@ -118,7 +118,7 @@ This gives you the average cost and latency of the small model with the tail qua
 
 Measure the escalation rate. If it is above 20–30%, either the SLM needs better data or the task is not a good fit.
 
-## Edge deployment
+## On-device
 
 On-device inference has different constraints:
 
@@ -138,7 +138,7 @@ Runtimes to consider:
 
 A 3B model at 4-bit can fit in a few gigabytes and generate tens of tokens per second on a modern laptop. That is enough for classification, extraction, autocomplete, and short assistants.
 
-## What small models are bad at
+## Where small models fail
 
 Be honest about the limits:
 
@@ -150,11 +150,9 @@ Be honest about the limits:
 
 The mitigation is architectural: constrain the task, validate the output, keep tools narrow, and put a larger model or a human at the escalation point.
 
-## The takeaway
+## What I would ship
 
-Small language models are not a compromise. They are a design choice for narrow, high-volume, latency-sensitive, privacy-sensitive work.
-
-The winning pattern is:
+Small models are a design choice for narrow, high-volume, latency-sensitive work. The pattern I use:
 
 1. Define a measurable task.
 2. Generate clean teacher data.
@@ -163,4 +161,4 @@ The winning pattern is:
 5. Evaluate on the real distribution.
 6. Route the hard cases to a larger model.
 
-The 3B sweet spot is real, but it is earned with data and evaluation, not chosen from a leaderboard.
+The 3B sweet spot is earned with clean data and a real eval set. It is not something you pick from a leaderboard.

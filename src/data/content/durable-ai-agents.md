@@ -1,14 +1,14 @@
 ![Durable agent loop](/images/blog/durable-agent-loop.svg)
 
-*The model is an activity. The loop is a workflow. The difference is whether a crash costs you a retry or a rerun.*
+*The workflow holds the loop. Model and tool calls run as activities.*
 
-## The $400 loop
+## A run that restarts from zero
 
 A team ships an AI research agent. It plans, searches, reads pages, calls a paid data API, writes a report, and asks a human to approve the final send. The average run takes 40 minutes and costs about $6 in model and tool calls.
 
 One afternoon, the agent is 38 minutes in, holding a dozen tool results and a partially written report, when the worker pod is evicted during a node upgrade. The process dies. The orchestrator restarts it. The agent starts from the beginning, re-runs the searches, re-calls the paid API, and asks the human to approve a report it already approved. The customer sees a duplicate email. The bill shows three identical runs.
 
-This is not a model problem. It is a runtime problem. The agent's state lived in a Python process and a context window, and both are ephemeral. The fix is the same one we use for payments and order fulfillment: durable execution.
+The model was fine. The process holding its state was not. The agent's state lived in a Python process and a context window, and both are ephemeral. The fix is the same one used for payments and order fulfillment: durable execution.
 
 ## Why a while loop is the wrong abstraction
 
@@ -30,7 +30,7 @@ It is elegant, and it hides five production problems:
 4. **No budget enforcement.** A loop can spend without bound until someone notices.
 5. **No audit trail.** You cannot reconstruct why the agent did what it did.
 
-You can bolt each of these on with Redis, a database, a queue, and a state machine. At that point you have built a workflow engine, badly. Temporal gives you the primitives directly.
+You can bolt each of these on with Redis, a database, a queue, and a state machine. At that point you have a workflow engine with a lot of missing pieces. Temporal gives you the primitives directly.
 
 ## The split: deterministic workflow, non-deterministic activities
 
@@ -128,7 +128,7 @@ class ResearchAgentWorkflow:
         return {"spent_cents": self.spent_cents, "max_cents": self.max_cents}
 ```
 
-The exact framework does not matter. The properties do:
+The framework matters less than these properties:
 
 - The loop is bounded by a step limit and a budget.
 - The model call is an activity whose output is recorded.
@@ -158,7 +158,7 @@ async def run_tool(name: str, args: dict, tenant_id: str, idempotency_key: str):
     return result
 ```
 
-For read-only tools, idempotency is trivial. For writes, it is the whole game. If a tool cannot be made idempotent, it should require human approval every time, or be wrapped in a compensating action.
+For read-only tools, idempotency is trivial. For writes, it decides whether a retry is safe. If a tool cannot be made idempotent, it should require human approval every time, or be wrapped in a compensating action.
 
 ## Memory: workflow state is not long-term memory
 
@@ -168,7 +168,7 @@ There are three different things people call "agent memory":
 2. **Conversation context** — the tokens you send to the model. You own this, and you must bound it.
 3. **Long-term knowledge** — user preferences, past runs, documents. A database or vector store owns this.
 
-Do not confuse them. Temporal history is not a prompt. It is an audit log and a replay mechanism. Sending the entire event history to the model is a recipe for token bills and confused agents. Instead, store a compact transcript in an activity-owned database, and pass a summarized view into the model.
+They serve different purposes. Temporal history is an audit log and a replay mechanism, not a prompt. Sending the entire event history to the model is a recipe for token bills and confused agents. Instead, store a compact transcript in an activity-owned database, and pass a summarized view into the model.
 
 A good pattern: the workflow keeps a `history` list of structured steps, but the model call activity receives only the last N steps plus a rolling summary. The summary is produced by a separate activity and cached by a content hash.
 
@@ -187,9 +187,9 @@ PROMPTS = {
 
 Record the prompt version in the activity input or in a workflow memo. When a run is replayed or audited, you can see exactly which prompt produced each step. When you change the prompt, start new workflows on the new version; do not mutate the old one underneath running executions.
 
-## What agents actually need from a runtime
+## What agents need from a runtime
 
-The industry talks about agent frameworks as if the hard part is the planning loop. In production, the hard part is everything around it:
+Agent frameworks spend a lot of attention on the planning loop. In production, the problems are around it:
 
 - **Durability**: a crash at step 37 resumes at step 37.
 - **Observability**: every model call, tool call, token count, and cost is recorded.
@@ -198,16 +198,14 @@ The industry talks about agent frameworks as if the hard part is the planning lo
 - **Auditability**: who approved what, when, and with which prompt and model.
 - **Testability**: replay a recorded run, or simulate a three-day wait in milliseconds.
 
-These are workflow-engine concerns, not prompt-engineering concerns. That is why the durable-agent pattern is spreading: it lets the model be creative inside a boundary that the business can reason about.
+These are runtime concerns. That is why I keep the loop in a workflow engine and the model calls in activities.
 
 ## When not to use a workflow engine
 
 If your agent is a single model call with one tool, a normal request handler is fine. If every run is independent, short, and stateless, a queue and a worker are simpler. If you do not need replay, approvals, or long waits, do not pay for the machinery.
 
-Use durable execution when the agent's work has *sequence*, *side effects*, and *time*. That is most agents that touch production.
+I reach for it when the work has sequence, side effects, and time, which covers most agents that touch production.
 
-## The takeaway
+## What I would keep
 
-An agent is a distributed system with a language model in the loop. Treat it like one. Put the control flow in a deterministic workflow, put the model and tools in idempotent activities, record every decision, and make the human gates explicit.
-
-The model can be swapped. The runtime is what makes it a product.
+An agent is a distributed system with a language model in the loop. I keep the control flow in a deterministic workflow, put the model and tools in idempotent activities, record every decision, and make the human gates explicit. The model can be swapped; the runtime is what keeps a failed run from starting over.

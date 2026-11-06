@@ -2,7 +2,7 @@ import { BlogPost } from "@/components/BlogCard";
 
 export const post: BlogPost = {
   id: "local-first-crdt",
-  title: "Local-First Software: CRDTs, Sync Engines, and the End of the Loading Spinner",
+  title: "Local-First Software: CRDTs and Sync Engines",
   description:
     "Put the source of truth on the device, sync as an optimization, and merge concurrent edits with CRDTs. The architecture, the hard parts, and when not to use it.",
   date: "2026-09-10",

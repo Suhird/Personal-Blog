@@ -1,22 +1,22 @@
 ![WebAssembly component model](/images/blog/wasm-component-model.svg)
 
-*The component model gives WebAssembly what containers got from HTTP: a typed contract between parts.*
+*Components connect through typed WIT interfaces.*
 
-## Containers solved packaging. They did not solve composition.
+## Containers made packaging easier. They did not make composition easy.
 
-Docker made it possible to ship an application with its dependencies and run it anywhere. That was a genuine revolution. It did not, however, make it easy to compose untrusted code inside an application.
+Docker made it possible to ship an application with its dependencies and run it anywhere. That changed how software ships. It did not make it easy to compose untrusted code inside an application.
 
 If you want a plugin system, a multi-tenant function runtime, or a data pipeline that runs customer-supplied transformations, containers are a heavy hammer. A container is hundreds of megabytes, takes hundreds of milliseconds to start, and shares a kernel. You can sandbox it, but the isolation boundary is a Linux namespace, not a language-level capability model.
 
 WebAssembly (WASM) started as a browser technology. It is now a portable, sandboxed bytecode format with a growing server-side story. The **component model** is the part that makes it interesting for architecture: typed interfaces, composition, and capability-based security.
 
-## WASM in one paragraph
+## What WASM is
 
 WebAssembly is a stack-based virtual machine. You compile C, C++, Rust, Go, Zig, or many other languages to a `.wasm` module. The module runs in a sandbox with linear memory and no ambient access to the host. It cannot open a file, open a socket, or read the clock unless the host explicitly gives it a function to do so.
 
-That last sentence is the security model. WASM has no syscalls. Everything is an imported function. The host decides what to expose.
+That is the security model: WASM has no syscalls. Everything is an imported function, and the host decides what to expose.
 
-## WASI: the portable system interface
+## WASI
 
 A module that cannot do anything is not useful. WASI (WebAssembly System Interface) standardizes the host functions a module needs:
 
@@ -29,11 +29,11 @@ A module that cannot do anything is not useful. WASI (WebAssembly System Interfa
 
 WASI is capability-based. A component declares the interfaces it imports. The host grants only those capabilities, often scoped to a specific directory or socket. There is no "ambient authority" where a module can read `/etc/passwd` just because it is running.
 
-This is closer to the object-capability model than to POSIX. It is also why WASM is attractive for plugins and multi-tenant runtimes.
+It is closer to an object-capability model than to POSIX, which is why it fits plugins and multi-tenant runtimes.
 
-## The component model: typed interfaces
+## The component model
 
-A raw WASM module exports functions with numeric signatures. That is fine for a compiler, painful for composition. The component model adds:
+A raw WASM module exports functions with numeric signatures. That works for a compiler and gets awkward when you connect two modules. The component model adds:
 
 - **WIT** (WebAssembly Interface Types): a language-neutral interface definition
 - **typed imports and exports**: strings, records, lists, variants, results
@@ -99,7 +99,7 @@ wasm-tools component wit greeter.component.wasm
 
 The result is a small, portable artifact with a typed contract. A host in Python, Go, or JavaScript can call `greet` without knowing it was written in Rust.
 
-## Why composition matters
+## What composition buys you
 
 The component model lets you build an application from parts that do not share a language, runtime, or release cycle:
 
@@ -110,9 +110,9 @@ The component model lets you build an application from parts that do not share a
 
 Each part declares its imports and exports. The host links them. The boundaries are typed, so a change in one component's interface is a compile-time or link-time error, not a runtime surprise.
 
-This is the plugin system that containers never gave us: small artifacts, fast startup, explicit capabilities, and a stable ABI.
+That is the plugin system I wanted from containers: small artifacts, fast startup, explicit capabilities, and a stable ABI.
 
-## Where WASM components fit
+## Where I would use them
 
 Good fits:
 
@@ -132,9 +132,9 @@ Poor fits (today):
 
 The ecosystem is improving quickly, but it is not a drop-in replacement for Linux containers for every workload.
 
-## Security: capabilities, not vibes
+## Security
 
-WASM's sandbox is strong, but it is not magic. The security properties depend on the host:
+The sandbox is strong, but the host still decides what it can reach:
 
 - **Grant the minimum capabilities.** A plugin that formats text does not need network access.
 - **Scope filesystem access** to a directory, not the whole disk.
@@ -145,7 +145,7 @@ WASM's sandbox is strong, but it is not magic. The security properties depend on
 
 The capability model is a significant improvement over "run this container and hope the namespace holds," but it moves the responsibility to the host configuration. A permissive host can undo the sandbox.
 
-## The developer experience
+## Tooling
 
 The tooling is young but usable:
 
@@ -157,10 +157,6 @@ The tooling is young but usable:
 
 The debugging story is improving: `wasmtime` supports DWARF debugging, and `wasm-tools` can print the component structure. It is not yet as smooth as `docker logs` and `kubectl exec`, but it is no longer a research project.
 
-## The takeaway
+## Where I land
 
-WebAssembly components are not "containers but smaller." They are a different composition model: typed interfaces, explicit capabilities, and a sandbox that does not depend on the host kernel's namespace implementation.
-
-If you are building a plugin system, a multi-tenant runtime, or an edge platform, the component model is worth a serious look. If you are running a standard CRUD service, containers are still the pragmatic choice.
-
-The promise is not "write once, run everywhere." It is "compose once, link anywhere, with capabilities you can audit." That is a better foundation for the next decade of extensible software.
+WebAssembly components are a different composition model: typed interfaces, explicit capabilities, and a sandbox that does not depend on Linux namespaces. For a plugin system, a multi-tenant runtime, or an edge platform, that is worth testing. For a normal CRUD service, containers are still simpler. The useful promise is typed composition with capabilities you can audit, not write-once-run-everywhere.
