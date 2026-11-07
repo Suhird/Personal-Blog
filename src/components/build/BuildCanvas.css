@@ -1,0 +1,522 @@
+/* ------------------------------------------------------------------ */
+/* BuildCanvas — cursors that construct real page content               */
+/* ------------------------------------------------------------------ */
+
+.bc-wrap {
+  margin: 0.25rem 0 2.5rem;
+}
+
+.bc-bare {
+  margin: 0;
+}
+
+.bc-stage {
+  position: relative;
+  padding: 14px;
+}
+
+/* entry-level canvas: no chrome at all, the frame is the only decoration */
+.bc-bare .bc-stage {
+  padding: 0;
+}
+
+/* canvas variant: a design surface with a grid, border and status bar */
+.bc-canvas .bc-stage {
+  padding: 52px 22px 24px;
+  border: 1px solid hsl(var(--terminal-comment) / 0.3);
+  border-radius: 8px;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 100% at 6% 0%, hsl(var(--terminal-purple) / 0.09), transparent 55%),
+    radial-gradient(90% 90% at 100% 100%, hsl(var(--terminal-cyan) / 0.06), transparent 60%),
+    hsl(var(--terminal-background));
+  isolation: isolate;
+}
+
+.bc-panel .bc-stage,
+.bc-panel-body {
+  padding: 44px 22px 26px;
+  border: 1px solid hsl(var(--terminal-comment) / 0.28);
+  border-radius: 8px;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 100% at 8% 0%, hsl(var(--terminal-purple) / 0.07), transparent 55%),
+    radial-gradient(90% 90% at 100% 100%, hsl(var(--terminal-cyan) / 0.05), transparent 60%),
+    hsl(var(--terminal-background));
+  isolation: isolate;
+}
+
+.bc-panel .bc-grid {
+  opacity: 0.26;
+}
+
+/* a plain frame around a group of canvases (the experience timeline) */
+.bc-panel--plain .bc-panel-body {
+  padding: 30px 18px 26px;
+}
+
+.bc-grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(hsl(var(--terminal-comment) / 0.45) 1px, transparent 1.2px);
+  background-size: 22px 22px;
+  background-position: -1px -1px;
+  opacity: 0.4;
+  -webkit-mask-image: radial-gradient(125% 125% at 45% 30%, #000 25%, transparent 85%);
+  mask-image: radial-gradient(125% 125% at 45% 30%, #000 25%, transparent 85%);
+  pointer-events: none;
+}
+
+.bc-topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 14px;
+  border-bottom: 1px dashed hsl(var(--terminal-comment) / 0.2);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: hsl(var(--terminal-comment));
+  z-index: 12;
+  pointer-events: none;
+}
+
+.bc-cmd {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bc-prompt {
+  color: hsl(var(--terminal-green));
+  margin-right: 2px;
+}
+
+.bc-status {
+  flex: none;
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  color: hsl(var(--terminal-yellow) / 0.85);
+  transition: color 0.3s ease;
+}
+
+.bc-status[data-state="done"] {
+  color: hsl(var(--terminal-green));
+}
+
+.bc-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* ------------------------------- frames --------------------------- */
+
+.bc-frame {
+  position: absolute;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.bc-edge {
+  position: absolute;
+  background: hsl(var(--bc-c));
+  opacity: 0;
+  box-shadow: 0 0 10px hsl(var(--bc-c) / 0.35);
+}
+
+.bc-edge[data-edge="top"] {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.bc-edge[data-edge="right"] {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 1.5px;
+  transform: scaleY(0);
+  transform-origin: center top;
+}
+
+.bc-edge[data-edge="bottom"] {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1.5px;
+  transform: scaleX(0);
+  transform-origin: right center;
+}
+
+.bc-edge[data-edge="left"] {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 1.5px;
+  transform: scaleY(0);
+  transform-origin: center bottom;
+}
+
+.bc-frame-label {
+  position: absolute;
+  left: 0;
+  top: -16px;
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  color: hsl(var(--bc-c));
+  opacity: 0;
+  white-space: nowrap;
+  text-shadow: 0 0 12px hsl(var(--bc-c) / 0.35);
+}
+
+.bc-handle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border: 1px solid hsl(var(--bc-c));
+  border-radius: 1px;
+  background: hsl(var(--terminal-background));
+  opacity: 0;
+  transform: scale(0.35);
+  transition:
+    opacity 0.28s ease,
+    transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.bc-handle[data-handle="tl"] {
+  left: 0;
+  top: 0;
+}
+
+.bc-handle[data-handle="tr"] {
+  left: 100%;
+  top: 0;
+}
+
+.bc-handle[data-handle="br"] {
+  left: 100%;
+  top: 100%;
+}
+
+.bc-handle[data-handle="bl"] {
+  left: 0;
+  top: 100%;
+}
+
+.is-built .bc-handle,
+.bc-frame.is-drawn .bc-handle {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* --------------------------- content reveals ---------------------- */
+
+/* Before the engine boots (or without JS) everything is simply visible. */
+.bc-stage.is-live [data-reveal] {
+  opacity: 0;
+  transform: translateY(5px);
+}
+
+.is-built [data-reveal],
+.bc-stage.is-live .is-built [data-reveal],
+.bc-stage:not(.is-live) [data-reveal] {
+  opacity: 1;
+  transform: none;
+}
+
+.bc-stage.is-live .is-built [data-reveal] {
+  transition:
+    opacity 0.45s ease,
+    transform 0.45s ease;
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+
+.bc-stage.is-live [data-media] {
+  clip-path: inset(0 0 100% 0);
+  opacity: 0.25;
+  filter: saturate(0.6);
+}
+
+.bc-stage.is-live .is-built [data-media],
+.bc-stage.is-live [data-media].is-built,
+.bc-stage:not(.is-live) [data-media] {
+  clip-path: inset(0 0 0 0);
+  opacity: 1;
+  filter: none;
+}
+
+.bc-stage.is-live .is-built [data-media],
+.bc-stage.is-live [data-media].is-built {
+  transition:
+    clip-path 0.85s cubic-bezier(0.33, 1, 0.68, 1),
+    opacity 0.6s ease,
+    filter 0.6s ease;
+}
+
+/* ------------------------------ cursors --------------------------- */
+
+.bc-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  will-change: transform;
+  display: flex;
+  align-items: flex-start;
+}
+
+.bc-arrow,
+.bc-ibeam {
+  overflow: visible;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+}
+
+.bc-arrow {
+  width: 17px;
+  height: 17px;
+  fill: hsl(var(--bc-c));
+  stroke: hsl(var(--terminal-background));
+  stroke-width: 1.1;
+}
+
+.bc-ibeam {
+  display: none;
+  width: 13px;
+  height: 19px;
+  margin: -2px 0 0 -7px;
+  fill: none;
+  stroke: hsl(var(--bc-c));
+  stroke-width: 1.6;
+}
+
+.bc-cursor[data-shape="ibeam"] .bc-arrow {
+  display: none;
+}
+
+.bc-cursor[data-shape="ibeam"] .bc-ibeam {
+  display: block;
+}
+
+.bc-pill {
+  position: absolute;
+  left: 13px;
+  top: 14px;
+  padding: 1px 6px 2px;
+  border-radius: 999px;
+  background: hsl(var(--bc-c));
+  color: hsl(var(--terminal-background));
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1.35;
+  white-space: nowrap;
+  box-shadow: 0 2px 10px hsl(var(--terminal-background) / 0.55);
+}
+
+.bc-cursor[data-shape="ibeam"] .bc-pill {
+  top: 18px;
+  left: 2px;
+  opacity: 0.85;
+}
+
+.bc-cursor[data-flip="1"] .bc-pill {
+  left: auto;
+  right: 15px;
+}
+
+.bc-caret {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 9;
+  width: 1.5px;
+  border-radius: 1px;
+  background: hsl(var(--bc-c));
+  opacity: 0;
+  pointer-events: none;
+}
+
+.bc-caret[data-on="1"] {
+  opacity: 1;
+}
+
+/* ------------------------------ ripples --------------------------- */
+
+.bc-ripples {
+  position: absolute;
+  inset: 0;
+  z-index: 11;
+  pointer-events: none;
+}
+
+.bc-ripple {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border-radius: 50%;
+  border: 1px solid hsl(var(--terminal-yellow) / 0.9);
+  background: hsl(var(--terminal-yellow) / 0.12);
+  animation: bc-ripple 0.85s ease-out forwards;
+}
+
+@keyframes bc-ripple {
+  from {
+    transform: scale(0.2);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+/* ------------------------------- meta ----------------------------- */
+
+.bc-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+  font-size: 11px;
+  color: hsl(var(--terminal-comment));
+}
+
+.bc-meta--end {
+  justify-content: flex-end;
+}
+
+/* while typing, links are placeholder text — do not let them be clicked */
+.bc-stage.is-live [data-type] a {
+  pointer-events: none;
+}
+
+.bc-stage.is-live .is-built [data-type] a {
+  pointer-events: auto;
+}
+
+.bc-meta-note {
+  letter-spacing: 0.02em;
+}
+
+.bc-btn {
+  font: inherit;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  background: transparent;
+  border: 1px dashed hsl(var(--terminal-comment) / 0.45);
+  color: hsl(var(--terminal-comment));
+  padding: 3px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.bc-btn:hover {
+  color: hsl(var(--terminal-cyan));
+  border-color: hsl(var(--terminal-cyan) / 0.6);
+  background: hsl(var(--terminal-cyan) / 0.06);
+}
+
+.bc-btn:focus-visible {
+  outline: 1px solid hsl(var(--terminal-cyan));
+  outline-offset: 2px;
+}
+
+/* ------------------------------- tones ---------------------------- */
+
+.bc-frame[data-tone="cyan"],
+.bc-cursor[data-tone="cyan"],
+.bc-caret[data-tone="cyan"] {
+  --bc-c: var(--terminal-cyan);
+}
+
+.bc-frame[data-tone="purple"],
+.bc-cursor[data-tone="purple"],
+.bc-caret[data-tone="purple"] {
+  --bc-c: var(--terminal-purple);
+}
+
+.bc-frame[data-tone="green"],
+.bc-cursor[data-tone="green"],
+.bc-caret[data-tone="green"] {
+  --bc-c: var(--terminal-green);
+}
+
+.bc-frame[data-tone="yellow"],
+.bc-cursor[data-tone="yellow"],
+.bc-caret[data-tone="yellow"] {
+  --bc-c: var(--terminal-yellow);
+}
+
+/* ------------------------------- compact -------------------------- */
+
+@media (max-width: 639px) {
+  .bc-canvas .bc-stage {
+    padding: 46px 12px 18px;
+  }
+
+  .bc-panel .bc-stage,
+  .bc-panel-body {
+    padding: 36px 10px 18px;
+  }
+
+  .bc-panel--plain .bc-panel-body {
+    padding: 24px 8px 20px;
+  }
+
+  .bc-topbar {
+    font-size: 10px;
+    padding: 0 10px;
+  }
+
+  .bc-frame-label {
+    font-size: 8.5px;
+    top: -13px;
+  }
+
+  .bc-pill {
+    font-size: 8.5px;
+    left: 12px;
+    top: 13px;
+  }
+
+  .bc-arrow {
+    width: 15px;
+    height: 15px;
+  }
+
+  .bc-meta {
+    font-size: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bc-handle,
+  .bc-cursor,
+  .bc-btn,
+  .is-built [data-reveal],
+  .bc-stage.is-live .is-built [data-media] {
+    transition: none;
+  }
+
+  .bc-ripple {
+    animation-duration: 0.01ms;
+  }
+}

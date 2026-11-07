@@ -3,7 +3,15 @@ import Layout from "@/components/Layout";
 import myImage from "../images/Cartoonified-FaceShot.png";
 import { FaDownload } from "react-icons/fa";
 import Timeline from "@/components/Timeline";
-import BuildScene from "@/components/about/BuildScene";
+import BuildCanvas, { BuildPanel } from "@/components/build/BuildCanvas";
+import {
+  HERO_FRAMES,
+  HERO_SCRIPTS,
+  SKILLS_FRAMES,
+  SKILLS_SCRIPTS,
+  CONNECT_FRAMES,
+  CONNECT_SCRIPTS,
+} from "@/components/build/aboutScenes";
 
 const About = () => {
   return (
@@ -21,8 +29,6 @@ const About = () => {
       <div className="blog-container py-16">
         <h1 className="text-4xl font-bold tracking-tight mb-8">About Me</h1>
 
-        <BuildScene />
-
         <a
           href="/Personal-Blog/Resume.pdf"
           download
@@ -32,17 +38,20 @@ const About = () => {
           Download My Resume
         </a>
         <div className="prose prose-lg max-w-none">
+          <BuildCanvas frames={HERO_FRAMES} scripts={HERO_SCRIPTS}>
           <div className="flex flex-col md:flex-row gap-8 mb-10">
             <div className="md:w-1/3">
               <img
                 src={myImage}
-                alt="image host"
+                alt="Suhird Singh"
+                data-build="portrait"
+                data-media
                 className="rounded-lg w-full object-cover aspect-rectangle"
               />
             </div>
-            <div className="md:w-2/3">
-              <h2>Hi, I'm Suhird Singh</h2>
-              <p className="text-muted-foreground">
+            <div className="md:w-2/3" data-build="bio">
+              <h2 data-type="heading">Hi, I'm Suhird Singh</h2>
+              <p className="text-muted-foreground" data-type="p1">
                 I'm a senior software engineer and technical writer passionate
                 about backend technologies, open source, and teaching through
                 writing. I currently work at Mastercard, where I build scalable
@@ -52,91 +61,83 @@ const About = () => {
                   scrum.org
                 </a>
               </p>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground" data-type="p2">
                 This blog is my digital space where I share what I learn about
                 software development, code optimization, and other technical
-                topics.My goal is to explain complex concepts in a simple and approachable way
+                topics. My goal is to explain complex concepts in a simple and approachable way.
                 Sometimes I also write about stuff which is "Beyond Code".
               </p>
             </div>
           </div>
-
-          <h2>My Journey</h2>
-          <p>
-            I started coding when I was 15, building Solar System simulations in C++.
-            Physics was always my second love — writing orbital equations and watching
-            planets orbit on screen was the moment I got hooked on programming. That
-            curiosity stuck with me through high school and led me to Computer Science.
-          </p>
-          <p>
-            During my Master's at the University of Windsor, I dove deep into the math
-            side of computing — probability theory, statistical modeling, and neural
-            network architectures. That foundation in reasoning about uncertainty and
-            pattern recognition still shapes how I approach systems design today.
-          </p>
-          <p>
-            Outside of work, I'm the Founder of{" "}
-            <a
-              href="https://nordhird.com"
-              target="_blank"
-              rel="noreferrer"
-              className="text-terminal-cyan hover:underline"
-            >
-              NordHird
-            </a>
-            , a startup company building Sovereign softwares for Sovereign Canada. If I still have some time left, I spend rest of it playing video games,reading web novels and swimming.
-          </p>
+          </BuildCanvas>
 
           <h2>Professional Experience</h2>
-          <Timeline />
+          <BuildPanel>
+            <Timeline />
+          </BuildPanel>
 
           <h2>Skills & Technologies</h2>
-          <div>
-            <h3 className="text-xl font-semibold">Languages</h3>
-            <p>Python, Rust, Golang, Java, Typescript</p>
+          <BuildCanvas variant="panel" frames={SKILLS_FRAMES} scripts={SKILLS_SCRIPTS}>
+            <div data-build="skills">
+              <h3 className="text-xl font-semibold" data-type="skills-h1">
+                Languages
+              </h3>
+              <p data-type="skills-v1">Python, Rust, Golang, Java, Typescript</p>
 
-            <h3 className="text-xl font-semibold">Frameworks & Libraries</h3>
-            <p>Flask, Django, Angular</p>
+              <h3 className="text-xl font-semibold" data-type="skills-h2">
+                AI & LLM
+              </h3>
+              <p data-type="skills-v2">
+                Retrieval-Augmented Generation (hybrid retrieval, reranking), inference
+                optimization (quantization, KV cache, vLLM), prompt-injection defence,
+                LLM evals, embeddings & vector search, agents & tool calling
+              </p>
 
-            <h3 className="text-xl font-semibold">Tools & Platforms</h3>
-            <p>Kafka, Docker, Kubernetes, AWS, GCP, Git, GitHub Actions</p>
+              <h3 className="text-xl font-semibold" data-type="skills-h3">
+                Frameworks & Libraries
+              </h3>
+              <p data-type="skills-v3">Flask, Django, Angular</p>
 
-            <h3 className="text-xl font-semibold">Databases</h3>
-            <p>PostgreSQL, Redis</p>
-          </div>
+              <h3 className="text-xl font-semibold" data-type="skills-h4">
+                Tools & Platforms
+              </h3>
+              <p data-type="skills-v4">Kafka, Docker, Kubernetes, AWS, GCP, Git, GitHub Actions</p>
+
+              <h3 className="text-xl font-semibold" data-type="skills-h5">
+                Databases
+              </h3>
+              <p data-type="skills-v5">PostgreSQL, Redis</p>
+            </div>
+          </BuildCanvas>
 
           <h2>Let's Connect</h2>
-          <p>
-            I'm always interested in new opportunities, collaborations, or just
-            connecting with like-minded people. Feel free to reach out via email
-            or social media!
-          </p>
-          <div className="flex gap-4">
-            {/* <a
-              href="https://twitter.com/yourusername"
-              target="_blank"
-              rel="noreferrer"
-              className="blog-link"
-            >
-              Twitter
-            </a> */}
-            <a
-              href="https://github.com/suhird"
-              target="_blank"
-              rel="noreferrer"
-              className="blog-link"
-            >
-              GitHub
-            </a>
-            <a
-              href="https://linkedin.com/in/suhird-singh/"
-              target="_blank"
-              rel="noreferrer"
-              className="blog-link"
-            >
-              LinkedIn
-            </a>
-          </div>
+          <BuildCanvas variant="panel" frames={CONNECT_FRAMES} scripts={CONNECT_SCRIPTS}>
+            <div data-build="connect">
+              <p data-type="connect-p">
+                I'm always interested in new opportunities, collaborations, or just
+                connecting with like-minded people. Feel free to reach out via email
+                or social media!
+              </p>
+              <div className="flex gap-4" data-reveal>
+                <a
+                  href="https://github.com/suhird"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="blog-link"
+                >
+                  GitHub
+                </a>
+                <a
+                  href="https://linkedin.com/in/suhird-singh/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="blog-link"
+                >
+                  LinkedIn
+                </a>
+              </div>
+            </div>
+          </BuildCanvas>
         </div>
       </div>
     </Layout>

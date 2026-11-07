@@ -7,6 +7,16 @@ export interface Experience {
 
 export const experience: Experience[] = [
   {
+    title: "Founder",
+    company: "NordHird Technologies",
+    period: "Jan 2026 - Present",
+    description: [
+      "Building sovereign platforms, software and systems in Canada for Canadian government and Canadian businesses.",
+      "Leading product and engineering for Semata, an intelligence platform with customer-controlled deployment.",
+      "Responsible for architecture, sovereign hosting and customer-controlled model hosting.",
+    ],
+  },
+  {
     title: "Senior Software Engineer",
     company: "Recorded Future| A Mastercard company",
     period: "Sep 2025 - Present",
