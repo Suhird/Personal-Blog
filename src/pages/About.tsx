@@ -3,6 +3,7 @@ import Layout from "@/components/Layout";
 import myImage from "../images/Cartoonified-FaceShot.png";
 import { FaDownload } from "react-icons/fa";
 import Timeline from "@/components/Timeline";
+import BuildScene from "@/components/about/BuildScene";
 
 const About = () => {
   return (
@@ -19,6 +20,9 @@ const About = () => {
       </Helmet>
       <div className="blog-container py-16">
         <h1 className="text-4xl font-bold tracking-tight mb-8">About Me</h1>
+
+        <BuildScene />
+
         <a
           href="/Personal-Blog/Resume.pdf"
           download
