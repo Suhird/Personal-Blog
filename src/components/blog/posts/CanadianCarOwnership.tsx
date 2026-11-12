@@ -15,27 +15,51 @@ import {
   ReferenceLine,
   ComposedChart,
 } from "recharts";
+import { useThemeMode } from "@/components/theme-mode-provider";
+import { readerChartVars } from "@/lib/postChartTheme";
 
+// CSS variables with the original palette as fallbacks: terminal mode leaves
+// the variables undefined (pixel-identical output), reader mode sets them on
+// the post root via readerChartVars.
 const COLORS = {
-  red: "#e63946",
-  orange: "#f4a261",
-  green: "#2ecc71",
-  blue: "#3498db",
-  gold: "#f0c060",
-  purple: "#8b5cf6",
-  darkRed: "#c0392b",
-  muted: "#8892a0",
+  red: "var(--pc-red, #e63946)",
+  orange: "var(--pc-orange, #f4a261)",
+  green: "var(--pc-green, #2ecc71)",
+  blue: "var(--pc-blue, #3498db)",
+  gold: "var(--pc-gold, #f0c060)",
+  purple: "var(--pc-purple, #8b5cf6)",
+  darkRed: "var(--pc-dark-red, #c0392b)",
+  muted: "var(--pc-muted, #8892a0)",
 };
 
-const ChartTooltip = ({ active, payload, label }: any) => {
+type TooltipEntry = {
+  name?: string;
+  value?: number | string;
+  color?: string;
+};
+
+type ChartTooltipProps = {
+  active?: boolean;
+  payload?: TooltipEntry[];
+  label?: string;
+};
+
+const ChartTooltip = ({ active, payload, label }: ChartTooltipProps) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-[#1a1f2b] border border-[#3e4a5e] rounded-lg px-4 py-3 text-sm shadow-xl">
-        <p className="text-[#e8ecf2] font-semibold mb-1">{label}</p>
-        {payload.map((entry: any, index: number) => (
-          <p key={index} className="text-[#c8ccd4]" style={{ color: entry.color }}>
+      <div
+        className="border rounded-lg px-4 py-3 text-sm shadow-xl"
+        style={{
+          background: "var(--pc-tooltip-bg, #1a1f2b)",
+          borderColor: "var(--pc-tooltip-border, #3e4a5e)",
+          color: "var(--pc-tooltip-text, #e8ecf2)",
+        }}
+      >
+        <div className="font-semibold mb-1">{label}</div>
+        {payload.map((entry, index: number) => (
+          <div key={index} style={{ color: entry.color }}>
             {entry.name}: {entry.value?.toLocaleString?.() ?? entry.value}
-          </p>
+          </div>
         ))}
       </div>
     );
@@ -53,7 +77,7 @@ const SectionCard = ({
   className?: string;
 }) => (
   <div
-    className={`bg-muted/50 border border-border rounded-xl p-6 md:p-8 mb-7 shadow-lg transition-all hover:border-[#3e4a5e] ${className}`}
+    className={`bg-muted/50 border border-border rounded-xl p-6 md:p-8 mb-7 shadow-lg transition-all hover:border-[color:var(--pc-hover,#3e4a5e)] ${className}`}
   >
     {title}
     {children}
@@ -97,10 +121,10 @@ const InfoCard = ({
     default: "text-foreground",
     red: "text-terminal-red",
     green: "text-terminal-green",
-    gold: "text-[#f0c060]",
+    gold: "text-[color:var(--pc-gold,#f0c060)]",
   };
   return (
-    <div className="bg-card border border-border rounded-xl p-5 transition-all hover:border-[#4a5568] hover:shadow-md hover:-translate-y-0.5">
+    <div className="bg-card border border-border rounded-xl p-5 transition-all hover:border-[color:var(--pc-hover,#4a5568)] hover:shadow-md hover:-translate-y-0.5">
       <div className="text-xs font-bold uppercase tracking-wider text-terminal-comment mb-2">
         {title}
       </div>
@@ -126,17 +150,19 @@ const QuoteBlock = ({
   </div>
 );
 
+type TagColor = "red" | "green" | "orange";
+
 const Tag = ({
   children,
   color = "red",
 }: {
   children: React.ReactNode;
-  color?: "red" | "green" | "orange";
+  color?: TagColor;
 }) => {
   const styles = {
     red: "bg-terminal-red/20 text-terminal-red",
     green: "bg-terminal-green/20 text-terminal-green",
-    orange: "bg-[#f4a261]/20 text-[#f4a261]",
+    orange: "bg-[#f4a261]/20 text-[color:var(--pc-orange,#f4a261)]",
   };
   return (
     <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${styles[color]}`}>
@@ -222,11 +248,19 @@ const forecastData = [
 /* ─────────────── Main Component ─────────────── */
 
 const CanadianCarOwnership = () => {
+  const { isReader } = useThemeMode();
   return (
-    <div className="space-y-2">
+    <div className="space-y-2" style={isReader ? readerChartVars : undefined}>
       {/* Hero */}
-      <div className="relative overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-[#0d1117] via-[#131820] to-[#1a1025] p-8 md:p-12 text-center mb-8">
-        <div className="absolute top-[-120px] left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(230,57,70,0.12)_0%,transparent_70%)] pointer-events-none" />
+      <div
+        className={`relative overflow-hidden rounded-2xl border border-border p-8 md:p-12 text-center mb-8 ${
+          isReader ? "" : "bg-gradient-to-br from-[#0d1117] via-[#131820] to-[#1a1025]"
+        }`}
+        style={isReader ? { background: "var(--reader-paper-raised)", borderColor: "var(--reader-rule)" } : undefined}
+      >
+        {isReader ? null : (
+          <div className="absolute top-[-120px] left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(230,57,70,0.12)_0%,transparent_70%)] pointer-events-none" />
+        )}
         <div className="relative z-10">
           <div className="inline-block bg-terminal-red/15 text-terminal-red font-bold text-xs uppercase tracking-widest px-5 py-2 rounded-full border border-terminal-red/30 mb-5">
             ⚠️ Financial Warning • 2026 Analysis
@@ -311,11 +345,11 @@ const CanadianCarOwnership = () => {
           <h3 className="text-sm font-semibold text-foreground mb-2 text-center">Income Level vs. Maximum Affordable Vehicle Price</h3>
           <ResponsiveContainer width="100%" height={320}>
             <ComposedChart data={affordabilityData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1e2532" />
-              <XAxis dataKey="name" tick={{ fill: "#c8ccd4", fontSize: 12 }} axisLine={{ stroke: "#2a3040" }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--pc-grid, #1e2532)" />
+              <XAxis dataKey="name" tick={{ fill: "var(--pc-tick, #c8ccd4)", fontSize: 12 }} axisLine={{ stroke: "var(--pc-axis, #2a3040)" }} />
               <YAxis
-                tick={{ fill: "#8892a0", fontSize: 12 }}
-                axisLine={{ stroke: "#2a3040" }}
+                tick={{ fill: "var(--pc-tick-muted, #8892a0)", fontSize: 12 }}
+                axisLine={{ stroke: "var(--pc-axis, #2a3040)" }}
                 tickFormatter={(v) => `$${v.toLocaleString()}`}
                 domain={[0, 75000]}
               />
@@ -348,23 +382,23 @@ const CanadianCarOwnership = () => {
           <h3 className="text-sm font-semibold text-foreground mb-2 text-center">Canadian Full-Time Worker Income Distribution</h3>
           <ResponsiveContainer width="100%" height={320}>
             <BarChart data={incomeData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1e2532" />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--pc-grid, #1e2532)" />
               <XAxis
                 dataKey="bucket"
-                tick={{ fill: "#c8ccd4", fontSize: 11 }}
-                axisLine={{ stroke: "#2a3040" }}
+                tick={{ fill: "var(--pc-tick, #c8ccd4)", fontSize: 11 }}
+                axisLine={{ stroke: "var(--pc-axis, #2a3040)" }}
                 angle={-45}
                 textAnchor="end"
                 height={60}
               />
               <YAxis
-                tick={{ fill: "#8892a0", fontSize: 12 }}
-                axisLine={{ stroke: "#2a3040" }}
+                tick={{ fill: "var(--pc-tick-muted, #8892a0)", fontSize: 12 }}
+                axisLine={{ stroke: "var(--pc-axis, #2a3040)" }}
                 tickFormatter={(v) => `${v}%`}
                 domain={[0, 25]}
               />
               <Tooltip content={<ChartTooltip />} />
-              <Bar dataKey="pct" name="% of Full-Time Workers" fill="#5dade2" />
+              <Bar dataKey="pct" name="% of Full-Time Workers" fill="var(--pc-blue, #5dade2)" />
               <ReferenceLine x="$43k-$50k" stroke={COLORS.gold} strokeDasharray="6 4" strokeWidth={2} label={{ value: "Median: $43,100", fill: COLORS.gold, fontSize: 12, position: "top" }} />
             </BarChart>
           </ResponsiveContainer>
@@ -440,14 +474,21 @@ const CanadianCarOwnership = () => {
             <ResponsiveContainer width="100%" height={280}>
               <PieChart>
                 <Tooltip
-                  content={({ active, payload }: any) => {
+                  content={({ active, payload }: { active?: boolean; payload?: Array<{ name?: string; value?: number | string; payload: { color?: string } }> }) => {
                     if (active && payload && payload.length) {
                       const p = payload[0];
                       return (
-                        <div className="bg-[#1a1f2b] border border-[#3e4a5e] rounded-lg px-3 py-2 text-sm shadow-xl">
-                          <p style={{ color: p.payload.color }} className="font-semibold">
+                        <div
+                          className="border rounded-lg px-3 py-2 text-sm shadow-xl"
+                          style={{
+                            background: "var(--pc-tooltip-bg, #1a1f2b)",
+                            borderColor: "var(--pc-tooltip-border, #3e4a5e)",
+                            color: "var(--pc-tooltip-text, #e8ecf2)",
+                          }}
+                        >
+                          <div style={{ color: p.payload.color }} className="font-semibold">
                             {p.name}: ${p.value}/mo
-                          </p>
+                          </div>
                         </div>
                       );
                     }
@@ -455,7 +496,7 @@ const CanadianCarOwnership = () => {
                   }}
                 />
                 <Legend />
-                <Pie data={costPieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={90} stroke="#131820" strokeWidth={2}>
+                <Pie data={costPieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={90} stroke="var(--pc-pie-stroke, #131820)" strokeWidth={2}>
                   {costPieData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
@@ -468,9 +509,9 @@ const CanadianCarOwnership = () => {
             <h3 className="text-sm font-semibold text-foreground mb-2 text-center">Monthly Ownership Costs — Cash vs. Hidden</h3>
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={costBarData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e2532" />
-                <XAxis dataKey="name" tick={{ fill: "#c8ccd4", fontSize: 12 }} axisLine={{ stroke: "#2a3040" }} />
-                <YAxis tick={{ fill: "#8892a0", fontSize: 12 }} axisLine={{ stroke: "#2a3040" }} tickFormatter={(v) => `$${v}`} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--pc-grid, #1e2532)" />
+                <XAxis dataKey="name" tick={{ fill: "var(--pc-tick, #c8ccd4)", fontSize: 12 }} axisLine={{ stroke: "var(--pc-axis, #2a3040)" }} />
+                <YAxis tick={{ fill: "var(--pc-tick-muted, #8892a0)", fontSize: 12 }} axisLine={{ stroke: "var(--pc-axis, #2a3040)" }} tickFormatter={(v) => `$${v}`} />
                 <Tooltip content={<ChartTooltip />} />
                 <Bar dataKey="cost" name="Monthly Cost (CAD)" fill={COLORS.red} radius={[6, 6, 0, 0]} />
               </BarChart>
@@ -479,7 +520,7 @@ const CanadianCarOwnership = () => {
         </div>
 
         <QuoteBlock>
-          <strong className="text-[#f4a261] not-italic">🔑 Key Insight:</strong> Depreciation is the <em>silent killer</em> — it doesn't appear on your monthly budget but is the single largest cost. On a $63,000 vehicle, <strong>$28,000–$41,000 evaporates in 5 years</strong>.
+          <strong className="text-[color:var(--pc-orange,#f4a261)] not-italic">🔑 Key Insight:</strong> Depreciation is the <em>silent killer</em> — it doesn't appear on your monthly budget but is the single largest cost. On a $63,000 vehicle, <strong>$28,000–$41,000 evaporates in 5 years</strong>.
         </QuoteBlock>
       </SectionCard>
 
@@ -498,13 +539,13 @@ const CanadianCarOwnership = () => {
           <h3 className="text-sm font-semibold text-foreground mb-2 text-center">The Negative Equity Trap: Depreciation vs. Loan Balance ($45,000 Truck)</h3>
           <ResponsiveContainer width="100%" height={320}>
             <LineChart data={negativeEquityData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1e2532" />
-              <XAxis dataKey="year" tick={{ fill: "#c8ccd4", fontSize: 12 }} axisLine={{ stroke: "#2a3040" }} />
-              <YAxis tick={{ fill: "#8892a0", fontSize: 12 }} axisLine={{ stroke: "#2a3040" }} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} domain={[0, 50000]} />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--pc-grid, #1e2532)" />
+              <XAxis dataKey="year" tick={{ fill: "var(--pc-tick, #c8ccd4)", fontSize: 12 }} axisLine={{ stroke: "var(--pc-axis, #2a3040)" }} />
+              <YAxis tick={{ fill: "var(--pc-tick-muted, #8892a0)", fontSize: 12 }} axisLine={{ stroke: "var(--pc-axis, #2a3040)" }} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} domain={[0, 50000]} />
               <Tooltip content={<ChartTooltip />} />
               <Legend />
-              <Line type="monotone" dataKey="value" name="Vehicle Value" stroke={COLORS.green} strokeWidth={3} fill="rgba(46,204,113,0.1)" dot={{ fill: COLORS.green, stroke: "#131820", strokeWidth: 2, r: 4 }} activeDot={{ r: 6 }} />
-              <Line type="monotone" dataKey="loan" name="Loan Balance (84-mo @ 6.5%)" stroke={COLORS.red} strokeWidth={3} fill="rgba(230,57,70,0.08)" dot={{ fill: COLORS.red, stroke: "#131820", strokeWidth: 2, r: 4 }} activeDot={{ r: 6 }} />
+              <Line type="monotone" dataKey="value" name="Vehicle Value" stroke={COLORS.green} strokeWidth={3} fill="var(--pc-green-fill, rgba(46,204,113,0.1))" dot={{ fill: COLORS.green, stroke: "var(--pc-pie-stroke, #131820)", strokeWidth: 2, r: 4 }} activeDot={{ r: 6 }} />
+              <Line type="monotone" dataKey="loan" name="Loan Balance (84-mo @ 6.5%)" stroke={COLORS.red} strokeWidth={3} fill="var(--pc-red-fill, rgba(230,57,70,0.08))" dot={{ fill: COLORS.red, stroke: "var(--pc-pie-stroke, #131820)", strokeWidth: 2, r: 4 }} activeDot={{ r: 6 }} />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -537,7 +578,7 @@ const CanadianCarOwnership = () => {
                   <td className="px-4 py-3">{row.loan}</td>
                   <td className={`px-4 py-3 font-bold ${row.equity.startsWith("-") ? "text-terminal-red" : "text-terminal-green"}`}>{row.equity}</td>
                   <td className="px-4 py-3">
-                    <Tag color={row.tag as any}>{row.status}</Tag>
+                    <Tag color={row.tag as TagColor}>{row.status}</Tag>
                   </td>
                 </tr>
               ))}
@@ -546,7 +587,7 @@ const CanadianCarOwnership = () => {
         </div>
 
         <QuoteBlock>
-          <strong className="text-[#f4a261] not-italic">⚠️ The Trap:</strong> Most Canadians trade in at Year 3–4, rolling <strong>negative equity into the next loan</strong>. This is how people end up financing <strong>115%+ of a vehicle's value</strong> — the debt treadmill never stops.
+          <strong className="text-[color:var(--pc-orange,#f4a261)] not-italic">⚠️ The Trap:</strong> Most Canadians trade in at Year 3–4, rolling <strong>negative equity into the next loan</strong>. This is how people end up financing <strong>115%+ of a vehicle's value</strong> — the debt treadmill never stops.
         </QuoteBlock>
       </SectionCard>
 
@@ -562,7 +603,7 @@ const CanadianCarOwnership = () => {
         }
       >
         <div className="bg-[#f0c060]/10 border border-[#f0c060]/30 rounded-xl p-6 text-center mb-6">
-          <div className="text-4xl md:text-5xl font-extrabold text-[#f0c060] tracking-tight">$735,000</div>
+          <div className="text-4xl md:text-5xl font-extrabold text-[color:var(--pc-gold,#f0c060)] tracking-tight">$735,000</div>
           <p className="text-foreground mt-2">
             What $600/month becomes after 30 years at 7% real return
             <br />
@@ -575,13 +616,13 @@ const CanadianCarOwnership = () => {
             <h3 className="text-sm font-semibold text-foreground mb-2 text-center">Investing $600/Month Instead of a Car Payment</h3>
             <ResponsiveContainer width="100%" height={280}>
               <LineChart data={opportunityData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e2532" />
-                <XAxis dataKey="year" tick={{ fill: "#c8ccd4", fontSize: 12 }} axisLine={{ stroke: "#2a3040" }} />
-                <YAxis tick={{ fill: "#8892a0", fontSize: 12 }} axisLine={{ stroke: "#2a3040" }} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--pc-grid, #1e2532)" />
+                <XAxis dataKey="year" tick={{ fill: "var(--pc-tick, #c8ccd4)", fontSize: 12 }} axisLine={{ stroke: "var(--pc-axis, #2a3040)" }} />
+                <YAxis tick={{ fill: "var(--pc-tick-muted, #8892a0)", fontSize: 12 }} axisLine={{ stroke: "var(--pc-axis, #2a3040)" }} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} />
                 <Tooltip content={<ChartTooltip />} />
                 <Legend />
-                <Line type="monotone" dataKey="invested" name="Investment Value (7% real return)" stroke={COLORS.green} strokeWidth={3} fill="rgba(46,204,113,0.12)" dot={{ fill: COLORS.green, stroke: "#131820", strokeWidth: 2, r: 4 }} activeDot={{ r: 6 }} />
-                <Line type="monotone" dataKey="contributed" name="Total Contributions ($600/mo)" stroke={COLORS.orange} strokeWidth={2} strokeDasharray="8 5" dot={{ fill: COLORS.orange, stroke: "#131820", strokeWidth: 2, r: 3 }} />
+                <Line type="monotone" dataKey="invested" name="Investment Value (7% real return)" stroke={COLORS.green} strokeWidth={3} fill="var(--pc-green-fill, rgba(46,204,113,0.12))" dot={{ fill: COLORS.green, stroke: "var(--pc-pie-stroke, #131820)", strokeWidth: 2, r: 4 }} activeDot={{ r: 6 }} />
+                <Line type="monotone" dataKey="contributed" name="Total Contributions ($600/mo)" stroke={COLORS.orange} strokeWidth={2} strokeDasharray="8 5" dot={{ fill: COLORS.orange, stroke: "var(--pc-pie-stroke, #131820)", strokeWidth: 2, r: 3 }} />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -590,9 +631,9 @@ const CanadianCarOwnership = () => {
             <h3 className="text-sm font-semibold text-foreground mb-2 text-center">Net Worth Impact: Financer vs. Investor</h3>
             <ResponsiveContainer width="100%" height={280}>
               <BarChart data={comparisonData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e2532" />
-                <XAxis dataKey="horizon" tick={{ fill: "#c8ccd4", fontSize: 12 }} axisLine={{ stroke: "#2a3040" }} />
-                <YAxis tick={{ fill: "#8892a0", fontSize: 12 }} axisLine={{ stroke: "#2a3040" }} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--pc-grid, #1e2532)" />
+                <XAxis dataKey="horizon" tick={{ fill: "var(--pc-tick, #c8ccd4)", fontSize: 12 }} axisLine={{ stroke: "var(--pc-axis, #2a3040)" }} />
+                <YAxis tick={{ fill: "var(--pc-tick-muted, #8892a0)", fontSize: 12 }} axisLine={{ stroke: "var(--pc-axis, #2a3040)" }} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} />
                 <Tooltip content={<ChartTooltip />} />
                 <Legend />
                 <Bar dataKey="financer" name="Car Financer (Net Auto Equity)" fill={COLORS.red} radius={[6, 6, 0, 0]} />
@@ -636,7 +677,7 @@ const CanadianCarOwnership = () => {
         </div>
 
         <QuoteBlock borderColor="border-terminal-green">
-          <strong className="text-[#f4a261] not-italic">💡 The Wealth Gap:</strong> It's not between rich and poor — it's between the person who treats a car as a <strong>tool</strong> and the person who treats it as a <strong>trophy</strong>. The wealthy drive used cars and own index funds. That's how they became wealthy.
+          <strong className="text-[color:var(--pc-orange,#f4a261)] not-italic">💡 The Wealth Gap:</strong> It's not between rich and poor — it's between the person who treats a car as a <strong>tool</strong> and the person who treats it as a <strong>trophy</strong>. The wealthy drive used cars and own index funds. That's how they became wealthy.
         </QuoteBlock>
       </SectionCard>
 
@@ -655,12 +696,12 @@ const CanadianCarOwnership = () => {
           <h3 className="text-sm font-semibold text-foreground mb-2 text-center">Forecast: Vehicle Prices vs. Wages vs. Affordability (2020–2030)</h3>
           <ResponsiveContainer width="100%" height={320}>
             <LineChart data={forecastData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1e2532" />
-              <XAxis dataKey="year" tick={{ fill: "#c8ccd4", fontSize: 12 }} axisLine={{ stroke: "#2a3040" }} />
-              <YAxis tick={{ fill: "#8892a0", fontSize: 12 }} axisLine={{ stroke: "#2a3040" }} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--pc-grid, #1e2532)" />
+              <XAxis dataKey="year" tick={{ fill: "var(--pc-tick, #c8ccd4)", fontSize: 12 }} axisLine={{ stroke: "var(--pc-axis, #2a3040)" }} />
+              <YAxis tick={{ fill: "var(--pc-tick-muted, #8892a0)", fontSize: 12 }} axisLine={{ stroke: "var(--pc-axis, #2a3040)" }} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} />
               <Tooltip content={<ChartTooltip />} />
               <Legend />
-              <Line type="monotone" dataKey="price" name="Avg New Vehicle Price (CAD)" stroke={COLORS.red} strokeWidth={3} fill="rgba(230,57,70,0.08)" dot={{ fill: COLORS.red, r: 4 }} activeDot={{ r: 6 }} />
+              <Line type="monotone" dataKey="price" name="Avg New Vehicle Price (CAD)" stroke={COLORS.red} strokeWidth={3} fill="var(--pc-red-fill, rgba(230,57,70,0.08))" dot={{ fill: COLORS.red, r: 4 }} activeDot={{ r: 6 }} />
               <Line type="monotone" dataKey="income" name="Median Full-Time Income" stroke={COLORS.orange} strokeWidth={3} strokeDasharray="8 5" dot={{ fill: COLORS.orange, r: 4 }} />
               <Line type="monotone" dataKey="affordable" name="Max Affordable Vehicle (20/4/10 Rule, Median Earner)" stroke={COLORS.purple} strokeWidth={2} strokeDasharray="3 3" dot={{ fill: COLORS.purple, r: 3 }} />
             </LineChart>
@@ -709,7 +750,7 @@ const CanadianCarOwnership = () => {
         </div>
 
         <QuoteBlock borderColor="border-terminal-green">
-          <strong className="text-[#f4a261] not-italic">🏁 The Bottom Line:</strong> Drive a used Honda Civic, invest the difference, and in 30 years — when your friends are still making car payments at age 65 — you'll be retired with <strong>three-quarters of a million dollars</strong> and the quietest, most beautiful sound in the world: <em>the sound of a paid-off car.</em>
+          <strong className="text-[color:var(--pc-orange,#f4a261)] not-italic">🏁 The Bottom Line:</strong> Drive a used Honda Civic, invest the difference, and in 30 years — when your friends are still making car payments at age 65 — you'll be retired with <strong>three-quarters of a million dollars</strong> and the quietest, most beautiful sound in the world: <em>the sound of a paid-off car.</em>
         </QuoteBlock>
       </SectionCard>
 
@@ -725,7 +766,7 @@ const CanadianCarOwnership = () => {
         }
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div className="bg-card border border-border rounded-xl p-5 transition-all hover:border-[#f4a261] hover:shadow-md hover:-translate-y-0.5 flex flex-col gap-3">
+          <div className="bg-card border border-border rounded-xl p-5 transition-all hover:border-[color:var(--pc-orange,#f4a261)] hover:shadow-md hover:-translate-y-0.5 flex flex-col gap-3">
             <span className="inline-flex items-center gap-1 bg-terminal-blue/15 text-terminal-blue text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full w-fit">📊 Data Source</span>
             <h4 className="text-lg font-bold text-foreground leading-snug">Statistics Canada — Income and Wage Data</h4>
             <p className="text-sm text-terminal-comment">Government of Canada, Late 2025</p>
@@ -737,9 +778,9 @@ const CanadianCarOwnership = () => {
             </a>
           </div>
 
-          <div className="bg-card border border-border rounded-xl p-5 transition-all hover:border-[#f4a261] hover:shadow-md hover:-translate-y-0.5 flex flex-col gap-3">
+          <div className="bg-card border border-border rounded-xl p-5 transition-all hover:border-[color:var(--pc-orange,#f4a261)] hover:shadow-md hover:-translate-y-0.5 flex flex-col gap-3">
             <span className="inline-flex items-center gap-1 bg-terminal-blue/15 text-terminal-blue text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full w-fit">🎥 YouTube Video</span>
-            <a href="https://www.youtube.com/watch?v=yhXL-XIlnpA" target="_blank" rel="noopener noreferrer" className="relative block rounded-lg overflow-hidden border border-border hover:border-[#f4a261]">
+            <a href="https://www.youtube.com/watch?v=yhXL-XIlnpA" target="_blank" rel="noopener noreferrer" className="relative block rounded-lg overflow-hidden border border-border hover:border-[color:var(--pc-orange,#f4a261)]">
               <img
                 src="https://i.ytimg.com/vi/yhXL-XIlnpA/hqdefault.jpg"
                 alt="How Much Car Can You Actually Afford in Canada?"

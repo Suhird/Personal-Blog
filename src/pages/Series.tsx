@@ -4,6 +4,9 @@ import { Helmet } from "react-helmet-async";
 import Layout from "@/components/Layout";
 import { blogPosts } from "@/data/blogPosts";
 import { getPostPath } from "@/utils/postPaths";
+import { formatPostDate } from "@/lib/postDisplay";
+import { useThemeMode } from "@/components/theme-mode-provider";
+import ReaderPageHeader from "@/components/reader/ReaderPageHeader";
 import { Calendar, X } from "lucide-react";
 
 interface SeriesGroup {
@@ -13,6 +16,7 @@ interface SeriesGroup {
 }
 
 const Series = () => {
+  const { isReader } = useThemeMode();
   const [searchParams, setSearchParams] = useSearchParams();
   const yearFilter = searchParams.get("year");
   const monthFilter = searchParams.get("month");
@@ -32,9 +36,18 @@ const Series = () => {
 
     return {
       years: Array.from(yearSet).sort((a, b) => Number(b) - Number(a)),
-      months: ["January", "February", "March", "April", "May", "June", 
+      months: ["January", "February", "March", "April", "May", "June",
                "July", "August", "September", "October", "November", "December"]
     };
+  }, []);
+
+  // Every tag that appears somewhere in the series archive
+  const seriesTags = useMemo(() => {
+    const tagSet = new Set<string>();
+    blogPosts.filter(p => p.series).forEach(post => {
+      post.tags.forEach(tag => tagSet.add(tag));
+    });
+    return Array.from(tagSet).sort((a, b) => a.localeCompare(b));
   }, []);
 
   // Get series groups filtered by year/month/tag
@@ -75,7 +88,7 @@ const Series = () => {
     });
 
     const groupsArray = Object.values(groupsMap);
-    
+
     groupsArray.forEach(group => {
       group.posts.sort((a, b) => (a.series?.order || 0) - (b.series?.order || 0));
     });
@@ -100,7 +113,11 @@ const Series = () => {
   };
 
   const clearAllFilters = () => {
-    setSearchParams(new URLSearchParams());
+    // Keep the optional ?skin= share override while dropping filter params.
+    const nextParams = new URLSearchParams();
+    const skin = searchParams.get("skin");
+    if (skin) nextParams.set("skin", skin);
+    setSearchParams(nextParams);
   };
 
   const hasActiveFilters = yearFilter || monthFilter || tagFilter;
@@ -108,6 +125,9 @@ const Series = () => {
   const toggleSeries = (seriesId: string) => {
     setIsExpanded(prev => ({ ...prev, [seriesId]: !prev[seriesId] }));
   };
+
+  const activeFilterCount = [yearFilter, monthFilter, tagFilter].filter(Boolean).length;
+  const readerPostCount = seriesGroups.reduce((total, group) => total + group.posts.length, 0);
 
   return (
     <Layout>
@@ -120,212 +140,337 @@ const Series = () => {
         <meta property="og:url" content="https://suhird.me/series/" />
         <link rel="canonical" href="https://suhird.me/series/" />
       </Helmet>
-      <div className="py-8">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold tracking-tight mb-2 text-[var(--heading-color)]">
-            Series
-          </h1>
-          <p className="text-terminal-comment text-sm">
-            {seriesGroups.length} {seriesGroups.length === 1 ? "series" : "series"}
-          </p>
-        </div>
+      {isReader ? (
+        <div className="reader-container reader-page">
+          <ReaderPageHeader
+            eyebrow="Series"
+            title="Series"
+            lede="Longer arcs, read in order."
+            meta={`${seriesGroups.length} series · ${readerPostCount} ${readerPostCount === 1 ? "post" : "posts"}`}
+          />
 
-        <div className="flex flex-col lg:flex-row gap-6">
-          {/* Sidebar - Archive Filter */}
-          <aside className="lg:w-48 shrink-0">
-            <div className="bg-terminal-background border border-terminal-comment/30 rounded-lg p-4">
-              <div className="flex items-center gap-2 mb-4 pb-2 border-b border-terminal-comment/20">
-                <Calendar size={14} className="text-terminal-cyan" />
-                <span className="text-sm font-mono text-terminal-foreground">Archive</span>
+          <details
+            className="reader-filters"
+            open={hasActiveFilters ? true : undefined}
+          >
+            <summary>
+              Filters{activeFilterCount > 0 ? ` · ${activeFilterCount} active` : ""}
+            </summary>
+            <div className="reader-filters__body">
+              <div className="reader-filter-group">
+                <span className="reader-filter-label">Year</span>
+                {years.map(year => (
+                  <button
+                    key={year}
+                    type="button"
+                    className={`reader-filter-chip${yearFilter === year ? " is-active" : ""}`}
+                    aria-pressed={yearFilter === year}
+                    onClick={() => updateFilter("year", yearFilter === year ? null : year)}
+                  >
+                    {year}
+                  </button>
+                ))}
               </div>
 
-              {/* Years */}
-              <div className="mb-4">
-                <h3 className="text-xs font-mono text-terminal-comment uppercase tracking-wider mb-2">Years</h3>
-                <div className="space-y-1">
-                  {years.map(year => (
-                    <button
-                      key={year}
-                      onClick={() => updateFilter("year", yearFilter === year ? null : year)}
-                      className={`block w-full text-left px-2 py-1 text-sm font-mono rounded transition-colors ${
-                        yearFilter === year
-                          ? "bg-terminal-cyan/20 text-terminal-cyan"
-                          : "text-terminal-foreground hover:bg-terminal-comment/10"
-                      }`}
-                    >
-                      {year}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Months */}
               {yearFilter && (
-                <div>
-                  <h3 className="text-xs font-mono text-terminal-comment uppercase tracking-wider mb-2">Months</h3>
-                  <div className="space-y-1">
-                    {months.map(month => {
-                      const hasPostsInMonth = blogPosts.filter(p => p.series).some(post => {
-                        const date = new Date(post.date);
-                        return date.getFullYear().toString() === yearFilter && 
-                               date.toLocaleString("default", { month: "long" }) === month;
-                      });
+                <div className="reader-filter-group">
+                  <span className="reader-filter-label">Month</span>
+                  {months.map(month => {
+                    const hasPostsInMonth = blogPosts.filter(p => p.series).some(post => {
+                      const date = new Date(post.date);
+                      return date.getFullYear().toString() === yearFilter &&
+                             date.toLocaleString("default", { month: "long" }) === month;
+                    });
 
-                      if (!hasPostsInMonth) return null;
+                    if (!hasPostsInMonth) return null;
 
-                      return (
-                        <button
-                          key={month}
-                          onClick={() => updateFilter("month", monthFilter === month ? null : month)}
-                          className={`block w-full text-left px-2 py-1 text-sm font-mono rounded transition-colors ${
-                            monthFilter === month
-                              ? "bg-terminal-cyan/20 text-terminal-cyan"
-                              : "text-terminal-foreground hover:bg-terminal-comment/10"
-                          }`}
-                        >
-                          {month}
-                        </button>
-                      );
-                    })}
-                  </div>
+                    return (
+                      <button
+                        key={month}
+                        type="button"
+                        className={`reader-filter-chip${monthFilter === month ? " is-active" : ""}`}
+                        aria-pressed={monthFilter === month}
+                        onClick={() => updateFilter("month", monthFilter === month ? null : month)}
+                      >
+                        {month}
+                      </button>
+                    );
+                  })}
                 </div>
               )}
 
-              {/* Clear Filters */}
+              <div className="reader-filter-group">
+                <span className="reader-filter-label">Tag</span>
+                {seriesTags.map(tag => (
+                  <button
+                    key={tag}
+                    type="button"
+                    className={`reader-filter-chip${tagFilter === tag ? " is-active" : ""}`}
+                    aria-pressed={tagFilter === tag}
+                    onClick={() => updateFilter("tag", tagFilter === tag ? null : tag)}
+                  >
+                    #{tag}
+                  </button>
+                ))}
+              </div>
+
               {hasActiveFilters && (
                 <button
+                  type="button"
+                  className="reader-filter-clear"
                   onClick={clearAllFilters}
-                  className="mt-4 w-full flex items-center justify-center gap-2 px-3 py-2 text-xs font-mono text-terminal-red border border-terminal-red/30 rounded hover:bg-terminal-red/10 transition-colors"
                 >
-                  <X size={12} />
-                  Clear Filters
+                  Clear all filters
                 </button>
               )}
             </div>
-          </aside>
+          </details>
 
-          {/* Main Content */}
-          <div className="flex-1">
-            {/* Active Filters Display */}
-            {hasActiveFilters && (
-              <div className="mb-6 flex flex-wrap items-center gap-2">
+          {seriesGroups.length > 0 ? (
+            <div className="reader-series-list">
+              {seriesGroups.map(series => (
+                <details className="reader-series" key={series.id} open>
+                  <summary>
+                    <span className="reader-series__title">{series.title}</span>
+                    <span className="reader-series__count whitespace-nowrap">
+                      {series.posts.length}{" "}
+                      {series.posts.length === 1 ? "post" : "posts"}
+                    </span>
+                  </summary>
+                  <ul className="reader-series__posts">
+                    {series.posts.map(post => (
+                      <li key={post.id}>
+                        <Link to={getPostPath(post)}>{post.title}</Link>
+                        <span className="reader-series__meta">
+                          {formatPostDate(post.date)} · {post.readTime} read
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              ))}
+            </div>
+          ) : (
+            <div>
+              <p className="reader-item__desc">No series match those filters.</p>
+              <button
+                type="button"
+                className="reader-filter-clear"
+                onClick={clearAllFilters}
+              >
+                Clear filters
+              </button>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="py-8">
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold tracking-tight mb-2 text-[var(--heading-color)]">
+              Series
+            </h1>
+            <p className="text-terminal-comment text-sm">
+              {seriesGroups.length} {seriesGroups.length === 1 ? "series" : "series"}
+            </p>
+          </div>
+
+          <div className="flex flex-col lg:flex-row gap-6">
+            {/* Sidebar - Archive Filter */}
+            <aside className="lg:w-48 shrink-0">
+              <div className="bg-terminal-background border border-terminal-comment/30 rounded-lg p-4">
+                <div className="flex items-center gap-2 mb-4 pb-2 border-b border-terminal-comment/20">
+                  <Calendar size={14} className="text-terminal-cyan" />
+                  <span className="text-sm font-mono text-terminal-foreground">Archive</span>
+                </div>
+
+                {/* Years */}
+                <div className="mb-4">
+                  <h3 className="text-xs font-mono text-terminal-comment uppercase tracking-wider mb-2">Years</h3>
+                  <div className="space-y-1">
+                    {years.map(year => (
+                      <button
+                        key={year}
+                        onClick={() => updateFilter("year", yearFilter === year ? null : year)}
+                        className={`block w-full text-left px-2 py-1 text-sm font-mono rounded transition-colors ${
+                          yearFilter === year
+                            ? "bg-terminal-cyan/20 text-terminal-cyan"
+                            : "text-terminal-foreground hover:bg-terminal-comment/10"
+                        }`}
+                      >
+                        {year}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Months */}
                 {yearFilter && (
-                  <span className="px-3 py-1 text-xs font-mono bg-terminal-cyan/10 border border-terminal-cyan/30 text-terminal-cyan rounded">
-                    Year: {yearFilter}
-                    <button 
-                      onClick={() => updateFilter("year", null)}
-                      className="ml-2 hover:text-terminal-red"
-                    >
-                      <X size={12} />
-                    </button>
-                  </span>
+                  <div>
+                    <h3 className="text-xs font-mono text-terminal-comment uppercase tracking-wider mb-2">Months</h3>
+                    <div className="space-y-1">
+                      {months.map(month => {
+                        const hasPostsInMonth = blogPosts.filter(p => p.series).some(post => {
+                          const date = new Date(post.date);
+                          return date.getFullYear().toString() === yearFilter &&
+                                 date.toLocaleString("default", { month: "long" }) === month;
+                        });
+
+                        if (!hasPostsInMonth) return null;
+
+                        return (
+                          <button
+                            key={month}
+                            onClick={() => updateFilter("month", monthFilter === month ? null : month)}
+                            className={`block w-full text-left px-2 py-1 text-sm font-mono rounded transition-colors ${
+                              monthFilter === month
+                                ? "bg-terminal-cyan/20 text-terminal-cyan"
+                                : "text-terminal-foreground hover:bg-terminal-comment/10"
+                            }`}
+                          >
+                            {month}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
                 )}
-                {monthFilter && (
-                  <span className="px-3 py-1 text-xs font-mono bg-terminal-cyan/10 border border-terminal-cyan/30 text-terminal-cyan rounded">
-                    Month: {monthFilter}
-                    <button 
-                      onClick={() => updateFilter("month", null)}
-                      className="ml-2 hover:text-terminal-red"
-                    >
-                      <X size={12} />
-                    </button>
-                  </span>
-                )}
-                {tagFilter && (
-                  <span className="px-3 py-1 text-xs font-mono bg-terminal-purple/10 border border-terminal-purple/30 text-terminal-purple rounded">
-                    Tag: {tagFilter}
-                    <button 
-                      onClick={() => updateFilter("tag", null)}
-                      className="ml-2 hover:text-terminal-red"
-                    >
-                      <X size={12} />
-                    </button>
-                  </span>
+
+                {/* Clear Filters */}
+                {hasActiveFilters && (
+                  <button
+                    onClick={clearAllFilters}
+                    className="mt-4 w-full flex items-center justify-center gap-2 px-3 py-2 text-xs font-mono text-terminal-red border border-terminal-red/30 rounded hover:bg-terminal-red/10 transition-colors"
+                  >
+                    <X size={12} />
+                    Clear Filters
+                  </button>
                 )}
               </div>
-            )}
+            </aside>
 
-            <div className="space-y-4">
-              {seriesGroups.length > 0 ? (
-                seriesGroups.map((series) => (
-                  <div 
-                    key={series.id} 
-                    className="border border-terminal-purple/30 rounded-lg p-4 bg-terminal-purple/5"
-                  >
-                    <div className="flex items-center justify-between mb-4">
-                      <h2 className="text-lg font-bold text-terminal-purple flex items-center gap-2">
-                        <span className="text-xl">📚</span> {series.title} Series
-                        <span className="text-sm font-normal text-terminal-comment ml-2">
-                          ({series.posts.length} posts)
-                        </span>
-                      </h2>
+            {/* Main Content */}
+            <div className="flex-1">
+              {/* Active Filters Display */}
+              {hasActiveFilters && (
+                <div className="mb-6 flex flex-wrap items-center gap-2">
+                  {yearFilter && (
+                    <span className="px-3 py-1 text-xs font-mono bg-terminal-cyan/10 border border-terminal-cyan/30 text-terminal-cyan rounded">
+                      Year: {yearFilter}
                       <button
-                        onClick={() => toggleSeries(series.id)}
-                        className="text-terminal-comment hover:text-terminal-cyan text-sm"
+                        onClick={() => updateFilter("year", null)}
+                        className="ml-2 hover:text-terminal-red"
                       >
-                        {isExpanded[series.id] ? "[-] Collapse" : "[+] Expand"}
+                        <X size={12} />
                       </button>
-                    </div>
-                    
-                    {isExpanded[series.id] === true && (
-                      <div className="space-y-4 pl-4 border-l-2 border-terminal-purple/20">
-                        {series.posts.map((post, idx) => (
-                          <div key={post.id} className="relative">
-                            <div className="absolute -left-[21px] top-3 w-3 h-3 rounded-full bg-terminal-purple border-4 border-terminal-background"></div>
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="text-xs text-terminal-comment font-mono">
-                                {idx + 1}.
-                              </span>
-                              <h3 className="post-title">
-                                <Link to={getPostPath(post)} className="hover:underline">
-                                  {post.title}
-                                </Link>
-                              </h3>
-                            </div>
-                            <div className="flex items-center gap-4 ml-5">
-                              <span className="text-sm text-terminal-comment">
-                                {post.date}
-                              </span>
-                              <span className="text-terminal-comment/50">•</span>
-                              <span className="text-sm text-terminal-comment">
-                                {post.readTime} read
-                              </span>
-                            </div>
-                            <p className="text-terminal-comment/70 text-sm mt-1 ml-5 mb-2">
-                              {post.description}
-                            </p>
-                            <div className="flex flex-wrap gap-2 ml-5">
-                              {post.tags.map((tag) => (
-                                <button
-                                  key={tag}
-                                  onClick={() => updateFilter("tag", tag)}
-                                  className="tag hover:opacity-80"
-                                >
-                                  #{tag}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-10 text-terminal-comment">
-                  <p>No series found</p>
-                  <button 
-                    onClick={clearAllFilters}
-                    className="text-terminal-cyan hover:underline mt-2 inline-block"
-                  >
-                    Clear filters
-                  </button>
+                    </span>
+                  )}
+                  {monthFilter && (
+                    <span className="px-3 py-1 text-xs font-mono bg-terminal-cyan/10 border border-terminal-cyan/30 text-terminal-cyan rounded">
+                      Month: {monthFilter}
+                      <button
+                        onClick={() => updateFilter("month", null)}
+                        className="ml-2 hover:text-terminal-red"
+                      >
+                        <X size={12} />
+                      </button>
+                    </span>
+                  )}
+                  {tagFilter && (
+                    <span className="px-3 py-1 text-xs font-mono bg-terminal-purple/10 border border-terminal-purple/30 text-terminal-purple rounded">
+                      Tag: {tagFilter}
+                      <button
+                        onClick={() => updateFilter("tag", null)}
+                        className="ml-2 hover:text-terminal-red"
+                      >
+                        <X size={12} />
+                      </button>
+                    </span>
+                  )}
                 </div>
               )}
+
+              <div className="space-y-4">
+                {seriesGroups.length > 0 ? (
+                  seriesGroups.map((series) => (
+                    <div
+                      key={series.id}
+                      className="border border-terminal-purple/30 rounded-lg p-4 bg-terminal-purple/5"
+                    >
+                      <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-lg font-bold text-terminal-purple flex items-center gap-2">
+                          <span className="text-xl">📚</span> {series.title} Series
+                          <span className="text-sm font-normal text-terminal-comment ml-2">
+                            ({series.posts.length} posts)
+                          </span>
+                        </h2>
+                        <button
+                          onClick={() => toggleSeries(series.id)}
+                          className="text-terminal-comment hover:text-terminal-cyan text-sm"
+                        >
+                          {isExpanded[series.id] ? "[-] Collapse" : "[+] Expand"}
+                        </button>
+                      </div>
+
+                      {isExpanded[series.id] === true && (
+                        <div className="space-y-4 pl-4 border-l-2 border-terminal-purple/20">
+                          {series.posts.map((post, idx) => (
+                            <div key={post.id} className="relative">
+                              <div className="absolute -left-[21px] top-3 w-3 h-3 rounded-full bg-terminal-purple border-4 border-terminal-background"></div>
+                              <div className="flex items-center gap-2 mb-1">
+                                <span className="text-xs text-terminal-comment font-mono">
+                                  {idx + 1}.
+                                </span>
+                                <h3 className="post-title">
+                                  <Link to={getPostPath(post)} className="hover:underline">
+                                    {post.title}
+                                  </Link>
+                                </h3>
+                              </div>
+                              <div className="flex items-center gap-4 ml-5">
+                                <span className="text-sm text-terminal-comment">
+                                  {post.date}
+                                </span>
+                                <span className="text-terminal-comment/50">•</span>
+                                <span className="text-sm text-terminal-comment">
+                                  {post.readTime} read
+                                </span>
+                              </div>
+                              <p className="text-terminal-comment/70 text-sm mt-1 ml-5 mb-2">
+                                {post.description}
+                              </p>
+                              <div className="flex flex-wrap gap-2 ml-5">
+                                {post.tags.map((tag) => (
+                                  <button
+                                    key={tag}
+                                    onClick={() => updateFilter("tag", tag)}
+                                    className="tag hover:opacity-80"
+                                  >
+                                    #{tag}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-10 text-terminal-comment">
+                    <p>No series found</p>
+                    <button
+                      onClick={clearAllFilters}
+                      className="text-terminal-cyan hover:underline mt-2 inline-block"
+                    >
+                      Clear filters
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </Layout>
   );
 };

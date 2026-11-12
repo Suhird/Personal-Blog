@@ -16,23 +16,32 @@ import {
 } from "recharts";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRef } from "react";
+import { useThemeMode } from "@/components/theme-mode-provider";
+import { readerChartVars } from "@/lib/postChartTheme";
 
 /* ─────────────────────────── Theme ─────────────────────────── */
 
+// Each value is a CSS variable with the original Catppuccin colour as the
+// fallback. Terminal mode never defines the variables, so it renders exactly
+// as before; reader mode sets them on the post root (see readerChartVars).
 const C = {
-  red: "#f38ba8",
-  peach: "#fab387",
-  yellow: "#f9e2af",
-  green: "#a6e3a1",
-  cyan: "#89dceb",
-  blue: "#89b4fa",
-  purple: "#cba6f7",
-  muted: "#6c7086",
-  grid: "#313244",
-  axis: "#45475a",
+  red: "var(--pc-red, #f38ba8)",
+  peach: "var(--pc-peach, #fab387)",
+  yellow: "var(--pc-yellow, #f9e2af)",
+  green: "var(--pc-green, #a6e3a1)",
+  cyan: "var(--pc-cyan, #89dceb)",
+  blue: "var(--pc-blue, #89b4fa)",
+  purple: "var(--pc-purple, #cba6f7)",
+  muted: "var(--pc-muted, #6c7086)",
+  grid: "var(--pc-grid, #313244)",
+  axis: "var(--pc-axis, #45475a)",
 };
 
-const tick = { fill: "#a6adc8", fontSize: 11, fontFamily: "Hack, 'DejaVu Sans Mono', monospace" };
+const tickColor = "var(--pc-tick, #a6adc8)";
+const cursorFill = "var(--pc-cursor, rgba(203,166,247,0.06))";
+const pieStroke = "var(--pc-pie-stroke, #11111b)";
+
+const tick = { fill: tickColor, fontSize: 11, fontFamily: "'JetBrains Mono', 'DejaVu Sans Mono', monospace" };
 const axisLine = { stroke: C.axis };
 
 /* ─────────────────────────── Data ─────────────────────────── */
@@ -102,11 +111,17 @@ type TipProps = {
   payload?: TipEntry[];
 };
 
+const tipShell = {
+  background: "var(--pc-tooltip-bg, #1e1e2e)",
+  borderColor: "var(--pc-tooltip-border, #45475a)",
+  color: "var(--pc-tooltip-text, #cdd6f4)",
+};
+
 const ChartTip = ({ active, payload, label }: TipProps) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-lg border border-[#45475a] bg-[#1e1e2e] px-3 py-2 text-xs shadow-xl">
-      {label ? <div className="mb-1 font-bold text-[#cdd6f4]">{label}</div> : null}
+    <div className="rounded-lg border px-3 py-2 text-xs shadow-xl" style={tipShell}>
+      {label ? <div className="mb-1 font-bold">{label}</div> : null}
       {payload.map((entry, i) => (
         <div key={i} className="flex items-center gap-2" style={{ color: entry.color || entry.payload?.color }}>
           <span>{entry.name}:</span>
@@ -123,7 +138,7 @@ const PieTip = ({ active, payload }: TipProps) => {
   if (!active || !payload?.length) return null;
   const p = payload[0];
   return (
-    <div className="rounded-lg border border-[#45475a] bg-[#1e1e2e] px-3 py-2 text-xs shadow-xl">
+    <div className="rounded-lg border px-3 py-2 text-xs shadow-xl" style={tipShell}>
       <span style={{ color: p.payload?.color }} className="font-bold">
         {p.name}: ${Number(p.value ?? 0).toFixed(1)}B
       </span>
@@ -237,6 +252,7 @@ const Td = ({ children, className = "", right = false }: { children: React.React
 /* ─────────────────────────── Post ─────────────────────────── */
 
 const CanadaBudget2026 = () => {
+  const { isReader } = useThemeMode();
   const tabsBarRef = useRef<HTMLDivElement>(null);
   const tabsRootRef = useRef<HTMLDivElement>(null);
 
@@ -245,15 +261,22 @@ const CanadaBudget2026 = () => {
     if (!el) return;
     const target = Math.max(0, el.getBoundingClientRect().top + window.scrollY - 8);
     if (Math.abs(window.scrollY - target) > 4) {
-      window.scrollTo({ top: target, behavior: "smooth" });
+      window.scrollTo({ top: target, behavior: isReader ? "auto" : "smooth" });
     }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" style={isReader ? readerChartVars : undefined}>
       {/* Hero */}
-      <div className="relative mb-2 overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-[#11111b] via-[#181825] to-[#1e1e2e] p-6 md:p-8">
-        <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(203,166,247,0.14)_0%,transparent_70%)]" />
+      <div
+        className={`relative mb-2 overflow-hidden rounded-2xl border border-border p-6 md:p-8 ${
+          isReader ? "" : "bg-gradient-to-br from-[#11111b] via-[#181825] to-[#1e1e2e]"
+        }`}
+        style={isReader ? { background: "var(--reader-paper-raised)", borderColor: "var(--reader-rule)" } : undefined}
+      >
+        {isReader ? null : (
+          <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(203,166,247,0.14)_0%,transparent_70%)]" />
+        )}
         <div className="relative">
           <div className="mb-4 flex flex-wrap items-center gap-2">
             <Chip tone="cyan">🍁 Federal Budget 2026</Chip>
@@ -355,7 +378,7 @@ const CanadaBudget2026 = () => {
                     domain={[0, 70]}
                     ticks={[0, 10, 20, 30, 40, 50, 60, 70]}
                   />
-                  <Tooltip content={<ChartTip />} cursor={{ fill: "rgba(203,166,247,0.06)" }} />
+                  <Tooltip content={<ChartTip />} cursor={{ fill: cursorFill }} />
                   <Bar dataKey="deficit" name="Deficit ($B)" radius={[4, 4, 0, 0]} maxBarSize={40}>
                     {deficitData.map((d, i) => (
                       <Cell key={i} fill={d.deficit > 55 ? C.red : d.deficit > 45 ? C.peach : C.green} />
@@ -453,8 +476,8 @@ const CanadaBudget2026 = () => {
                     domain={[38, 42]}
                     ticks={[38, 39, 40, 41, 42]}
                   />
-                  <Tooltip content={<ChartTip />} cursor={{ fill: "rgba(203,166,247,0.06)" }} />
-                  <Legend wrapperStyle={{ fontSize: 11, color: "#a6adc8" }} />
+                  <Tooltip content={<ChartTip />} cursor={{ fill: cursorFill }} />
+                  <Legend wrapperStyle={{ fontSize: 11, color: tickColor }} />
                   <Bar yAxisId="left" dataKey="deficit" name="Deficit ($B)" radius={[4, 4, 0, 0]} maxBarSize={36}>
                     {deficitData.map((d, i) => (
                       <Cell key={i} fill={d.deficit > 55 ? C.red : d.deficit > 45 ? C.peach : C.green} />
@@ -570,11 +593,11 @@ const CanadaBudget2026 = () => {
                     type="category"
                     dataKey="short"
                     width={104}
-                    tick={{ fill: "#a6adc8", fontSize: 10, fontFamily: "Hack, 'DejaVu Sans Mono', monospace" }}
+                    tick={{ fill: tickColor, fontSize: 10, fontFamily: "'JetBrains Mono', 'DejaVu Sans Mono', monospace" }}
                     axisLine={false}
                     tickLine={false}
                   />
-                  <Tooltip content={<ChartTip />} cursor={{ fill: "rgba(203,166,247,0.06)" }} />
+                  <Tooltip content={<ChartTip />} cursor={{ fill: cursorFill }} />
                   <Bar dataKey="amount" name="Five-year cost ($B)" radius={[0, 4, 4, 0]} maxBarSize={22}>
                     {measureData.map((d, i) => (
                       <Cell key={i} fill={d.color} />
@@ -689,8 +712,8 @@ const CanadaBudget2026 = () => {
                     <Tooltip content={<PieTip />} />
                     <Legend
                       verticalAlign="bottom"
-                      wrapperStyle={{ fontSize: 10, color: "#a6adc8" }}
-                      formatter={(value) => <span style={{ color: "#a6adc8" }}>{value}</span>}
+                      wrapperStyle={{ fontSize: 10, color: tickColor }}
+                      formatter={(value) => <span style={{ color: tickColor }}>{value}</span>}
                     />
                     <Pie
                       data={revenueData}
@@ -699,7 +722,7 @@ const CanadaBudget2026 = () => {
                       innerRadius={52}
                       outerRadius={88}
                       paddingAngle={2}
-                      stroke="#11111b"
+                      stroke={pieStroke}
                       strokeWidth={2}
                     >
                       {revenueData.map((entry, i) => (
@@ -797,11 +820,11 @@ const CanadaBudget2026 = () => {
                     type="category"
                     dataKey="label"
                     width={130}
-                    tick={{ fill: "#a6adc8", fontSize: 10, fontFamily: "Hack, 'DejaVu Sans Mono', monospace" }}
+                    tick={{ fill: tickColor, fontSize: 10, fontFamily: "'JetBrains Mono', 'DejaVu Sans Mono', monospace" }}
                     axisLine={false}
                     tickLine={false}
                   />
-                  <Tooltip content={<ChartTip />} cursor={{ fill: "rgba(203,166,247,0.06)" }} />
+                  <Tooltip content={<ChartTip />} cursor={{ fill: cursorFill }} />
                   <Bar dataKey="value" name="Five-year total ($B)" radius={[0, 4, 4, 0]} maxBarSize={34}>
                     {cashData.map((d, i) => (
                       <Cell key={i} fill={d.color} />

@@ -7,7 +7,28 @@
     <meta name="keywords" content="blog, gRPC, GraphQL, Python, Go, Rust, microservices, cloud architecture, API design, finance, life" />
     <meta name="author" content="Suhird Singh" />
     <meta name="robots" content="index, follow" />
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" content="#0b0b13" />
+
+    <!-- Apply the saved reading mode before first paint (no flash of the wrong skin) -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem("site-mode");
+          var mode = stored === "reader" || stored === "terminal" ? stored : "terminal";
+          // Optional shareable override: ?skin=reader or ?skin=terminal
+          var requested = new URLSearchParams(window.location.search).get("skin");
+          if (requested === "reader" || requested === "terminal") mode = requested;
+          document.documentElement.dataset.mode = mode;
+          document.documentElement.style.colorScheme = mode === "reader" ? "light" : "dark";
+          var themeColor = document.querySelector('meta[name="theme-color"]');
+          if (themeColor) {
+            themeColor.setAttribute("content", mode === "reader" ? "#f8f2e6" : "#0b0b13");
+          }
+        } catch (error) {
+          document.documentElement.dataset.mode = "terminal";
+        }
+      })();
+    </script>
 
     <!-- Open Graph Tags -->
     <meta property="og:type" content="website" />
@@ -37,10 +58,10 @@
     <!-- Sitemap -->
     <link rel="sitemap" type="application/xml" href="https://suhird.me/sitemap.xml" />
 
-    <!-- Hack Font -->
+    <!-- Typefaces: JetBrains Mono (terminal + code), Newsreader (reading), Inter (reader UI) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Hack:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
 
     <title>Suhird Singh | Blog — gRPC, GraphQL, Microservices &amp; Beyond Code</title>
   </head>

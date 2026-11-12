@@ -3,6 +3,8 @@ import { Link, useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import Layout from "@/components/Layout";
 import BlogCard from "@/components/BlogCard";
+import ReaderPostList from "@/components/reader/ReaderPostList";
+import { useThemeMode } from "@/components/theme-mode-provider";
 import { blogPosts } from "@/data/blogPosts";
 import { X, Calendar } from "lucide-react";
 
@@ -14,6 +16,7 @@ interface BlogListingProps {
 }
 
 const BlogListing = ({ category, pageTitle, pageDescription, canonicalPath }: BlogListingProps) => {
+  const { isReader } = useThemeMode();
   const [searchParams, setSearchParams] = useSearchParams();
   const tagFilter = searchParams.get("tag");
   const yearFilter = searchParams.get("year");
@@ -97,6 +100,14 @@ const BlogListing = ({ category, pageTitle, pageDescription, canonicalPath }: Bl
         <meta property="og:url" content={canonicalUrl} />
         <link rel="canonical" href={canonicalUrl} />
       </Helmet>
+      {isReader ? (
+        <ReaderPostList
+          category={category}
+          pageTitle={pageTitle}
+          pageDescription={pageDescription}
+          canonicalPath={canonicalPath}
+        />
+      ) : (
       <div className="py-8">
         <div className="mb-6">
           <h1 className="text-2xl font-bold tracking-tight mb-2 text-[var(--heading-color)]">
@@ -246,6 +257,7 @@ const BlogListing = ({ category, pageTitle, pageDescription, canonicalPath }: Bl
           </div>
         </div>
       </div>
+      )}
     </Layout>
   );
 };

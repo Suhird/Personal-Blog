@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useThemeMode } from "@/components/theme-mode-provider";
 import "./BuildCanvas.css";
 
 /**
@@ -366,6 +367,7 @@ const BuildCanvas = ({
   const controlsRef = useRef<{ skip: () => void; replay: () => void } | null>(null);
   const [phase, setPhase] = useState<"idle" | "playing" | "done">("idle");
   const cfg = useRef({ frames, scripts });
+  const { isReader } = useThemeMode();
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -378,6 +380,7 @@ const BuildCanvas = ({
     let started = false;
     let fired = new Set<number>();
     let range = document.createRange();
+    let cancelled = false;
 
     const setStatus = (t: number, m: Model) => {
       const status = statusRef.current;
@@ -494,10 +497,23 @@ const BuildCanvas = ({
       setStatus(t, m);
     };
 
-    const finish = (m: Model) => {
+    const finish = (m: Model, restoreAll = false) => {
       timeRef.current = m.total;
       fired = new Set(m.events.map((_, i) => i));
       render(m.total);
+      if (restoreAll) {
+        // Reader mode shows the finished page: make sure even targets that no
+        // script touches end up built, fully typed, and sized naturally.
+        m.frames.forEach((f) => {
+          f.el.classList.add("is-drawn");
+          f.target.classList.add("is-built");
+        });
+        m.types.forEach((tt) => {
+          applyTyped(tt, tt.total);
+          tt.el.style.minHeight = "";
+        });
+        m.rippleLayer.replaceChildren();
+      }
       setPhase("done");
     };
 
@@ -527,12 +543,16 @@ const BuildCanvas = ({
       raf = requestAnimationFrame(tick);
     };
 
-    const measure = (reset: boolean) => {
+    const measure = (reset: boolean, live = true) => {
       if (!stage.clientWidth) return null;
       range = document.createRange();
       const m = buildModel(stage, cfg.current.frames, cfg.current.scripts);
       modelRef.current = m;
-      stage.classList.add("is-live");
+      if (live) {
+        stage.classList.add("is-live");
+      } else {
+        stage.classList.remove("is-live");
+      }
       if (reset) {
         timeRef.current = 0;
         fired = new Set();
@@ -545,7 +565,35 @@ const BuildCanvas = ({
       return m;
     };
 
+    // Reader mode: build the model once, show the finished result immediately,
+    // and never start the rAF loop or an IntersectionObserver. Because
+    // `isReader` is an effect dependency, toggling skins re-runs this effect —
+    // a mid-flight terminal build is cancelled by the cleanup above and snaps
+    // to its completed state here.
+    if (isReader) {
+      const m = measure(true, false);
+      if (m) finish(m, true);
+
+      controlsRef.current = {
+        skip: () => {
+          const current = modelRef.current;
+          if (current) finish(current, true);
+        },
+        replay: () => {
+          const next = measure(true, false);
+          if (next) finish(next, true);
+        },
+      };
+
+      return () => {
+        cancelled = true;
+        cancelAnimationFrame(raf);
+        stage.classList.remove("is-live");
+      };
+    }
+
     const boot = () => {
+      if (cancelled) return;
       const m = measure(true);
       if (!m) return;
       if (reduced) {
@@ -620,6 +668,7 @@ const BuildCanvas = ({
     window.addEventListener("scroll", onScroll, { passive: true });
 
     return () => {
+      cancelled = true;
       cancelAnimationFrame(raf);
       observers.forEach((o) => o.disconnect());
       window.removeEventListener("resize", onResize);
@@ -627,7 +676,7 @@ const BuildCanvas = ({
       window.clearTimeout(resizeTimer);
       window.clearTimeout(scrollTimer);
     };
-  }, []);
+  }, [isReader]);
 
   const isCanvas = variant === "canvas";
   const isPanel = variant === "panel";

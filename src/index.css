@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    /* Default: Catppuccin Mocha - Darker Version */
+    /* Catppuccin Mocha — the terminal skin */
     /* Shadcn HSL values (Channels only) */
     --background: 240 20% 6%;
     --foreground: 226 64% 88%;
@@ -54,151 +54,6 @@
     --tag-4-bg: rgba(137, 220, 235, 0.2);
     --tag-4-color: #89dceb;
   }
-
-  /* Dracula */
-  [data-theme='dracula'] {
-    --background: 231 15% 18%;
-    --foreground: 60 30% 96%;
-    --card: 231 15% 18%;
-    --card-foreground: 60 30% 96%;
-    --popover: 231 15% 18%;
-    --popover-foreground: 60 30% 96%;
-    --primary: 326 100% 74%;
-    --primary-foreground: 60 30% 96%;
-    --secondary: 265 89% 78%;
-    --secondary-foreground: 60 30% 96%;
-    --muted: 231 15% 18%;
-    --muted-foreground: 225 27% 51%;
-    --accent: 231 15% 18%;
-    --accent-foreground: 60 30% 96%;
-    --destructive: 0 100% 67%;
-    --destructive-foreground: 60 30% 96%;
-    --border: 225 27% 51%;
-    --input: 225 27% 51%;
-    --ring: 326 100% 74%;
-
-    --terminal-background: var(--background);
-    --terminal-foreground: var(--foreground);
-    --terminal-accent: var(--primary);
-    --terminal-green: 135 94% 65%;
-    --terminal-cyan: 191 97% 77%;
-    --terminal-yellow: 62 93% 76%;
-    --terminal-purple: var(--secondary);
-    --terminal-red: var(--destructive);
-    --terminal-comment: var(--muted-foreground);
-
-    /* Heading Colors - Dracula Pink */
-    --heading-color: #ff79c6;
-
-    /* Inline Code Background - Dracula */
-    --code-bg: rgba(255, 121, 198, 0.25);
-
-    /* Tag Colors - Dracula */
-    --tag-1-bg: rgba(255, 121, 198, 0.2);
-    --tag-1-color: #ff79c6;
-    --tag-2-bg: rgba(189, 147, 249, 0.2);
-    --tag-2-color: #bd93f9;
-    --tag-3-bg: rgba(80, 250, 123, 0.2);
-    --tag-3-color: #50fa7b;
-    --tag-4-bg: rgba(139, 233, 253, 0.2);
-    --tag-4-color: #8be9fd;
-  }
-
-  /* Rosé Pine */
-  [data-theme='rose-pine'] {
-    --background: 249 22% 12%;
-    --foreground: 245 50% 91%;
-    --card: 249 22% 12%;
-    --card-foreground: 245 50% 91%;
-    --popover: 249 22% 12%;
-    --popover-foreground: 245 50% 91%;
-    --primary: 338 71% 68%;
-    --primary-foreground: 249 22% 12%;
-    --secondary: 267 57% 78%;
-    --secondary-foreground: 249 22% 12%;
-    --muted: 248 15% 21%;
-    --muted-foreground: 247 13% 47%;
-    --accent: 248 15% 21%;
-    --accent-foreground: 245 50% 91%;
-    --destructive: 338 71% 68%;
-    --destructive-foreground: 245 50% 91%;
-    --border: 247 13% 47%;
-    --input: 247 13% 47%;
-    --ring: 338 71% 68%;
-
-    --terminal-background: var(--background);
-    --terminal-foreground: var(--foreground);
-    --terminal-accent: var(--primary);
-    --terminal-green: 197 49% 38%;
-    --terminal-cyan: 189 43% 73%;
-    --terminal-yellow: 35 88% 71%;
-    --terminal-purple: var(--secondary);
-    --terminal-red: var(--destructive);
-    --terminal-comment: var(--muted-foreground);
-
-    /* Heading Colors - Rosé Pine Love (Rose) */
-    --heading-color: #eb6f92;
-
-    /* Inline Code Background - Rosé Pine */
-    --code-bg: rgba(235, 111, 146, 0.25);
-
-    /* Tag Colors - Rosé Pine */
-    --tag-1-bg: rgba(235, 111, 146, 0.2);
-    --tag-1-color: #eb6f92;
-    --tag-2-bg: rgba(196, 167, 231, 0.2);
-    --tag-2-color: #c4a7e7;
-    --tag-3-bg: rgba(246, 193, 119, 0.2);
-    --tag-3-color: #f6c177;
-    --tag-4-bg: rgba(156, 207, 216, 0.2);
-    --tag-4-color: #9ccfd8;
-  }
-
-  /* Tonal - Green tinted dark theme */
-  [data-theme='matcha'] {
-    --background: 0 0% 7%;
-    --foreground: 0 0% 100%;
-    --card: 0 0% 7%;
-    --card-foreground: 0 0% 100%;
-    --popover: 0 0% 7%;
-    --popover-foreground: 0 0% 100%;
-    --primary: 132 47% 69%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 120 17% 27%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 120 17% 27%;
-    --muted-foreground: 120 10% 55%;
-    --accent: 120 17% 27%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 63% 50%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 120 17% 27%;
-    --input: 120 17% 27%;
-    --ring: 132 47% 69%;
-    --radius: 0.5rem;
-
-    --terminal-background: 0 0% 7%;
-    --terminal-foreground: 0 0% 100%;
-    --terminal-accent: 132 47% 69%;
-    --terminal-green: 159 63% 43%;
-    --terminal-cyan: 176 77% 58%;
-    --terminal-yellow: 38 75% 64%;
-    --terminal-purple: 132 47% 69%;
-    --terminal-red: 0 63% 50%;
-    --terminal-comment: 120 10% 55%;
-
-    --heading-color: #95d2a1;
-
-    --code-bg: rgba(149, 210, 161, 0.15);
-
-    --tag-1-bg: rgba(149, 210, 161, 0.2);
-    --tag-1-color: #95d2a1;
-    --tag-2-bg: rgba(173, 220, 181, 0.2);
-    --tag-2-color: #addcb5;
-    --tag-3-bg: rgba(197, 230, 202, 0.2);
-    --tag-3-color: #c5e6ca;
-    --tag-4-bg: rgba(208, 235, 213, 0.2);
-    --tag-4-color: #d0ebd5;
-  }
 }
 
 * {
@@ -210,9 +65,9 @@ html {
   overflow-x: clip;
 }
 
-/* Sheerluck.dev Typography */
+/* Terminal typography */
 body {
-  font-family: Hack, "DejaVu Sans Mono", Monaco, Consolas, "Ubuntu Mono", monospace;
+  font-family: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-size: 1rem;
   line-height: 1.54;
   background-color: var(--background);
@@ -249,7 +104,7 @@ p {
 }
 
 code {
-  font-family: Hack, "DejaVu Sans Mono", Monaco, Consolas, "Ubuntu Mono", monospace;
+  font-family: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-feature-settings: normal;
   background: var(--code-bg);
   color: var(--heading-color);
@@ -260,7 +115,7 @@ code {
 }
 
 pre {
-  font-family: Hack, "DejaVu Sans Mono", Monaco, Consolas, "Ubuntu Mono", monospace;
+  font-family: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   padding: 20px;
   font-size: 0.95rem;
   overflow: auto;
@@ -520,7 +375,7 @@ article {
 }
 
 .post-content code {
-  font-family: Hack, "DejaVu Sans Mono", Monaco, Consolas, "Ubuntu Mono", monospace;
+  font-family: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-size: 0.95em;
 }
 
@@ -601,5 +456,82 @@ article {
 @media (max-width: 899px) {
   .post {
     max-width: 660px;
+  }
+}
+/* ------------------------------------------------------------------ */
+/* Site skin toggle — terminal defaults; Reader overrides in reader.css */
+/* ------------------------------------------------------------------ */
+
+.mode-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 36px;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  font-family: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.72rem;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.mode-toggle--terminal {
+  border-color: hsl(var(--terminal-cyan) / 0.45);
+  color: hsl(var(--terminal-cyan));
+}
+
+.mode-toggle--terminal:hover {
+  border-color: hsl(var(--terminal-cyan));
+  background: hsl(var(--terminal-cyan) / 0.1);
+}
+
+.mode-toggle:focus-visible {
+  outline: 2px solid hsl(var(--terminal-cyan));
+  outline-offset: 2px;
+}
+
+@media (max-width: 639px) {
+  .mode-toggle--terminal .mode-toggle__label {
+    display: none;
+  }
+
+  .mode-toggle--terminal {
+    min-height: 40px;
+    min-width: 40px;
+    justify-content: center;
+    padding: 0.5rem;
+  }
+}
+
+/* On phones the terminal toggle sits neatly top-right, not after the nav. */
+@media (max-width: 639px) {
+  .terminal-masthead {
+    position: relative;
+  }
+
+  .terminal-masthead nav > div:last-child {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    border-left: 0;
+  }
+}
+
+@media (max-width: 639px) {
+  .terminal-masthead nav {
+    gap: 0.8rem;
+  }
+}
+
+@media (max-width: 639px) {
+  /* The wordmark already links home; drop the duplicate "Home" item. */
+  .terminal-masthead nav a[href="/"] {
+    display: none;
   }
 }

@@ -6,8 +6,12 @@ import StatsGrid from "@/components/dashboard/StatsGrid";
 import TechStackPanel from "@/components/dashboard/TechStackPanel";
 
 import TerminalLogs from "@/components/dashboard/TerminalLogs";
+import ReaderHome from "@/components/reader/ReaderHome";
+import { useThemeMode } from "@/components/theme-mode-provider";
 
 const Index = () => {
+  const { isReader } = useThemeMode();
+
   return (
     <Layout>
       <Helmet>
@@ -20,6 +24,9 @@ const Index = () => {
         <meta property="og:url" content="https://suhird.me/" />
         <link rel="canonical" href="https://suhird.me/" />
       </Helmet>
+      {isReader ? (
+        <ReaderHome />
+      ) : (
       <div className="py-6 animate-in fade-in duration-500">
         <DashboardHeader />
         <StatsGrid />
@@ -58,6 +65,7 @@ const Index = () => {
           </div>
         </div>
       </div>
+      )}
     </Layout>
   );
 };

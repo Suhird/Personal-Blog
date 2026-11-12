@@ -1,4 +1,6 @@
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
+import typography from "@tailwindcss/typography";
 
 export default {
   darkMode: ["class"],
@@ -76,22 +78,28 @@ export default {
       },
       fontFamily: {
         mono: [
-          "Hack",
-          '"Fira Code"',
-          '"Source Code Pro"',
-          "Menlo",
-          "Monaco",
+          '"JetBrains Mono"',
+          '"SFMono-Regular"',
           "Consolas",
-          "Ubuntu Mono",
+          '"Liberation Mono"',
+          "Menlo",
           "monospace",
         ],
         sans: [
-          "Hack",
-          "DejaVu Sans Mono",
-          "Monaco",
-          "Consolas",
-          "Ubuntu Mono",
-          "monospace",
+          '"Inter"',
+          "system-ui",
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "Segoe UI",
+          "sans-serif",
+        ],
+        serif: [
+          '"Newsreader"',
+          '"Iowan Old Style"',
+          "Charter",
+          "Georgia",
+          "Cambria",
+          "serif",
         ],
       },
       borderRadius: {
@@ -130,29 +138,29 @@ export default {
         DEFAULT: {
           css: {
             maxWidth: "100%",
-            color: "#f8f8f2",
+            color: "#cdd6f4",
             lineHeight: "1.4",
             fontSize: "0.95rem",
             a: {
-              color: "#8be9fd",
+              color: "#89dceb",
               "&:hover": {
-                color: "#50fa7b",
+                color: "#a6e3a1",
               },
             },
             h1: {
-              color: "#ff79c6",
+              color: "#f5c2e7",
               lineHeight: "1.2",
               marginTop: "1.5em",
               marginBottom: "0.75em",
             },
             h2: {
-              color: "#bd93f9",
+              color: "#cba6f7",
               lineHeight: "1.2",
               marginTop: "1.5em",
               marginBottom: "0.75em",
             },
             h3: {
-              color: "#50fa7b",
+              color: "#a6e3a1",
               lineHeight: "1.2",
               marginTop: "1.5em",
               marginBottom: "0.75em",
@@ -162,17 +170,17 @@ export default {
               marginBottom: "0.75em",
             },
             code: {
-              color: "#f1fa8c",
-              backgroundColor: "#44475a",
+              color: "#f9e2af",
+              backgroundColor: "#313244",
               padding: "0.25rem",
               borderRadius: "0.25rem",
             },
             blockquote: {
-              color: "#6272a4",
-              borderLeftColor: "#6272a4",
+              color: "#6c7086",
+              borderLeftColor: "#6c7086",
             },
             hr: {
-              borderColor: "#6272a4",
+              borderColor: "#6c7086",
             },
             li: {
               marginTop: "0.25em",
@@ -204,5 +212,5 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+  plugins: [tailwindcssAnimate, typography],
 } satisfies Config;

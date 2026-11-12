@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { BlogPost } from "@/components/BlogCard";
 import { ChevronLeft, ChevronRight, List } from "lucide-react";
 import { getPostPath } from "@/utils/postPaths";
+import { useThemeMode } from "@/components/theme-mode-provider";
 
 interface SeriesNavigationProps {
   currentPost: BlogPost;
@@ -10,6 +11,8 @@ interface SeriesNavigationProps {
 }
 
 const SeriesNavigation = ({ currentPost, allPosts, className = "" }: SeriesNavigationProps) => {
+  const { isReader } = useThemeMode();
+
   if (!currentPost.series) return null;
 
   const seriesId = currentPost.series.id;
@@ -22,6 +25,30 @@ const SeriesNavigation = ({ currentPost, allPosts, className = "" }: SeriesNavig
   const currentIndex = seriesPosts.findIndex((post) => post.id === currentPost.id);
   const prevPost = seriesPosts[currentIndex - 1];
   const nextPost = seriesPosts[currentIndex + 1];
+
+  if (isReader) {
+    return (
+      <div className="reader-series-nav">
+        {prevPost ? (
+          <Link to={getPostPath(prevPost)}>
+            <span className="reader-series-nav__label">Previous</span>
+            {prevPost.title}
+          </Link>
+        ) : (
+          <div aria-hidden="true" />
+        )}
+
+        {nextPost ? (
+          <Link to={getPostPath(nextPost)} className="reader-series-nav__next">
+            <span className="reader-series-nav__label">Next</span>
+            {nextPost.title}
+          </Link>
+        ) : (
+          <div aria-hidden="true" />
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className={`flex justify-between items-center ${className}`}>

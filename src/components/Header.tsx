@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { ThemeToggle } from "./ThemeToggle";
+import ModeToggle from "./ModeToggle";
 import { Github, Linkedin, ChevronDown } from "lucide-react";
 
 interface NavItem {
@@ -27,7 +27,7 @@ const navItems: NavItem[] = [
 ];
 
 const Header = () => {
-  const pathname = window.location.pathname;
+  const { pathname } = useLocation();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   const isActive = (href: string) => {
@@ -43,7 +43,7 @@ const Header = () => {
   };
 
   return (
-    <header className="py-6 border-b border-terminal-comment/30">
+    <header className="terminal-masthead py-6 border-b border-terminal-comment/30">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <Link to="/" className="flex items-center gap-2">
@@ -136,7 +136,7 @@ const Header = () => {
             );
           })}
           <div className="flex items-center ml-2 border-l border-terminal-comment/30 pl-4 sm:pl-6">
-            <ThemeToggle />
+            <ModeToggle />
           </div>
         </nav>
       </div>

@@ -4,6 +4,7 @@ import myImage from "../images/Cartoonified-FaceShot.png";
 import { FaDownload } from "react-icons/fa";
 import Timeline from "@/components/Timeline";
 import BuildCanvas, { BuildPanel } from "@/components/build/BuildCanvas";
+import { useThemeMode } from "@/components/theme-mode-provider";
 import {
   HERO_FRAMES,
   HERO_SCRIPTS,
@@ -14,6 +15,8 @@ import {
 } from "@/components/build/aboutScenes";
 
 const About = () => {
+  const { isReader } = useThemeMode();
+
   return (
     <Layout>
       <Helmet>
@@ -26,18 +29,37 @@ const About = () => {
         <meta property="og:url" content="https://suhird.me/about/" />
         <link rel="canonical" href="https://suhird.me/about/" />
       </Helmet>
-      <div className="blog-container py-16">
-        <h1 className="text-4xl font-bold tracking-tight mb-8">About Me</h1>
+      <div className={isReader ? "reader-container reader-page" : "blog-container py-16"}>
+        {isReader ? <p className="reader-eyebrow">About</p> : null}
+        <h1
+          className={
+            isReader
+              ? "reader-title"
+              : "text-4xl font-bold tracking-tight mb-8"
+          }
+        >
+          About Me
+        </h1>
 
         <a
           href="/Personal-Blog/Resume.pdf"
           download
-          className="flex items-center text-terminal-cyan hover:underline"
+          className={
+            isReader
+              ? "reader-about__download"
+              : "flex items-center text-terminal-cyan hover:underline"
+          }
         >
-          <FaDownload className="mr-2" />
+          <FaDownload className={isReader ? undefined : "mr-2"} />
           Download My Resume
         </a>
-        <div className="prose prose-lg max-w-none">
+        <div
+          className={
+            isReader
+              ? "prose max-w-none reader-prose"
+              : "prose prose-lg max-w-none"
+          }
+        >
           <BuildCanvas frames={HERO_FRAMES} scripts={HERO_SCRIPTS}>
           <div className="flex flex-col md:flex-row gap-8 mb-10">
             <div className="md:w-1/3">
@@ -46,7 +68,11 @@ const About = () => {
                 alt="Suhird Singh"
                 data-build="portrait"
                 data-media
-                className="rounded-lg w-full object-cover aspect-rectangle"
+                className={
+                  isReader
+                    ? "reader-about__portrait w-full object-cover aspect-rectangle"
+                    : "rounded-lg w-full object-cover aspect-rectangle"
+                }
               />
             </div>
             <div className="md:w-2/3" data-build="bio">

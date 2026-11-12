@@ -2,12 +2,15 @@ import { ReactNode } from "react";
 import { useLocation } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
+import ReaderHeader from "./layout/ReaderHeader";
+import ReaderFooter from "./layout/ReaderFooter";
+import { useThemeMode } from "./theme-mode-provider";
 
 interface LayoutProps {
   children: ReactNode;
 }
 
-const Layout = ({ children }: LayoutProps) => {
+const TerminalShell = ({ children }: LayoutProps) => {
   const location = useLocation();
 
   // Map pathname to display name
@@ -48,6 +51,29 @@ const Layout = ({ children }: LayoutProps) => {
       </div>
     </div>
   );
+};
+
+const ReaderShell = ({ children }: LayoutProps) => (
+  <div className="reader-shell">
+    <a href="#reader-main" className="reader-skip">
+      Skip to content
+    </a>
+    <ReaderHeader />
+    <main id="reader-main" className="reader-main">
+      {children}
+    </main>
+    <ReaderFooter />
+  </div>
+);
+
+const Layout = ({ children }: LayoutProps) => {
+  const { isReader } = useThemeMode();
+
+  if (isReader) {
+    return <ReaderShell>{children}</ReaderShell>;
+  }
+
+  return <TerminalShell>{children}</TerminalShell>;
 };
 
 export default Layout;

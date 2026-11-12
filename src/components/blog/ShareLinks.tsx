@@ -1,11 +1,80 @@
+import { useThemeMode } from "@/components/theme-mode-provider";
+
 interface ShareLinksProps {
   title: string;
   url: string;
 }
 
 const ShareLinks = ({ title, url }: ShareLinksProps) => {
+  const { isReader } = useThemeMode();
   const encodedUrl = encodeURIComponent(url);
   const encodedTitle = encodeURIComponent(title);
+
+  if (isReader) {
+    return (
+      <div className="reader-share">
+        <h3>Share this essay</h3>
+        <div className="reader-share__links">
+          <a
+            href={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Share on X (Twitter)"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+            </svg>
+            <span>X</span>
+          </a>
+          <a
+            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Share on LinkedIn"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+              <rect width="4" height="12" x="2" y="9"></rect>
+              <circle cx="4" cy="4" r="2"></circle>
+            </svg>
+            <span>LinkedIn</span>
+          </a>
+          <a
+            href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Share on Facebook"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+            </svg>
+            <span>Facebook</span>
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-12 pt-8 border-t border-border">

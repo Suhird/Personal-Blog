@@ -3,143 +3,14 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { useThemeMode } from "@/components/theme-mode-provider";
+import { catppuccinMocha, paperCodeTheme } from "@/lib/syntaxThemes";
 
 interface CodeBlockProps {
   language: string;
   children: string;
   filename?: string;
 }
-
-const catppuccinMocha = {
-  'pre[class*="language-"]': {
-    color: "#CDD6F4",
-    background: "#1E1E2E",
-    fontFamily: "Hack, DejaVu Sans Mono, Monaco, Consolas, Ubuntu Mono, monospace",
-    fontSize: "0.95rem",
-    textAlign: "left" as const,
-    whiteSpace: "pre" as const,
-    wordSpacing: "normal" as const,
-    wordBreak: "normal" as const,
-    wordWrap: "normal" as const,
-    lineHeight: "1.5",
-    tabSize: 4,
-    hyphens: "none" as const,
-    margin: 0,
-    padding: "20px",
-    overflow: "auto",
-  },
-  'code[class*="language-"]': {
-    color: "#CDD6F4",
-    background: "#1E1E2E",
-    fontFamily: "Hack, DejaVu Sans Mono, Monaco, Consolas, Ubuntu Mono, monospace",
-    fontSize: "0.95rem",
-    textAlign: "left" as const,
-    whiteSpace: "pre" as const,
-    wordSpacing: "normal" as const,
-    wordBreak: "normal" as const,
-    wordWrap: "normal" as const,
-    lineHeight: "1.5",
-    tabSize: 4,
-    hyphens: "none" as const,
-  },
-  comment: {
-    color: "#6C7086",
-    fontStyle: "italic" as const,
-  },
-  prolog: {
-    color: "#6C7086",
-  },
-  doctype: {
-    color: "#6C7086",
-  },
-  cdata: {
-    color: "#6C7086",
-  },
-  punctuation: {
-    color: "#9399B2",
-  },
-  property: {
-    color: "#89B4FA",
-  },
-  tag: {
-    color: "#89B4FA",
-  },
-  boolean: {
-    color: "#FAB387",
-  },
-  number: {
-    color: "#FAB387",
-  },
-  constant: {
-    color: "#FAB387",
-  },
-  symbol: {
-    color: "#FAB387",
-  },
-  deleted: {
-    color: "#F38BA8",
-  },
-  selector: {
-    color: "#A6E3A1",
-  },
-  "attr-name": {
-    color: "#A6E3A1",
-  },
-  string: {
-    color: "#A6E3A1",
-  },
-  char: {
-    color: "#A6E3A1",
-  },
-  builtin: {
-    color: "#89B4FA",
-  },
-  inserted: {
-    color: "#A6E3A1",
-  },
-  operator: {
-    color: "#94E2D5",
-  },
-  entity: {
-    color: "#F9E2AF",
-    cursor: "help" as const,
-  },
-  url: {
-    color: "#89DCEB",
-  },
-  variable: {
-    color: "#CDD6F4",
-  },
-  atrule: {
-    color: "#CBA6F7",
-  },
-  "attr-value": {
-    color: "#A6E3A1",
-  },
-  function: {
-    color: "#89B4FA",
-  },
-  "class-name": {
-    color: "#F9E2AF",
-  },
-  keyword: {
-    color: "#CBA6F7",
-    fontStyle: "italic" as const,
-  },
-  regex: {
-    color: "#F9E2AF",
-  },
-  important: {
-    color: "#CBA6F7",
-    fontWeight: "bold" as const,
-  },
-  bold: {
-    fontWeight: "bold" as const,
-  },
-  italic: {
-    fontStyle: "italic" as const,
-  },
-};
 
 const languageMap: Record<string, string> = {
   js: "JavaScript",
@@ -184,6 +55,7 @@ const toDisplayLanguage = (lang: string): string => {
 const CodeBlock = ({ language, children, filename }: CodeBlockProps) => {
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
+  const { isReader } = useThemeMode();
 
   const copyToClipboard = () => {
     navigator.clipboard
@@ -209,6 +81,59 @@ const CodeBlock = ({ language, children, filename }: CodeBlockProps) => {
   };
 
   const content = String(children).replace(/\n$/, "");
+
+  if (isReader) {
+    return (
+      <div className="reader-code">
+        <div className="reader-code__header">
+          <div className="reader-code__meta">
+            {filename && <span>{filename}</span>}
+            {language && <span>{toDisplayLanguage(language)}</span>}
+          </div>
+          <button
+            type="button"
+            onClick={copyToClipboard}
+            className="reader-code__copy"
+            aria-label="Copy code to clipboard"
+          >
+            {copied ? "Copied" : "Copy"}
+          </button>
+        </div>
+        <SyntaxHighlighter
+          style={paperCodeTheme}
+          language={language}
+          PreTag="div"
+          showLineNumbers={false}
+          wrapLines={false}
+          wrapLongLines={false}
+          customStyle={{
+            background: "transparent",
+            margin: 0,
+            padding: "16px 18px",
+            fontSize: "0.84rem",
+            lineHeight: 1.6,
+            overflowX: "auto",
+          }}
+          codeTagProps={{
+            style: {
+              padding: 0,
+              background: "transparent",
+              border: 0,
+              fontFamily:
+                "var(--reader-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
+              fontSize: "inherit",
+              whiteSpace: "pre",
+              wordBreak: "keep-all",
+              overflowWrap: "normal",
+              display: "inline",
+            },
+          }}
+        >
+          {content}
+        </SyntaxHighlighter>
+      </div>
+    );
+  }
 
   return (
     <div className="mb-6 relative group border border-[var(--terminal-comment)]">
@@ -271,7 +196,7 @@ const CodeBlock = ({ language, children, filename }: CodeBlockProps) => {
           }}
           codeTagProps={{
             style: {
-              fontFamily: "Hack, DejaVu Sans Mono, Monaco, Consolas, Ubuntu Mono, monospace",
+              fontFamily: "'JetBrains Mono', 'SFMono-Regular', Consolas, Menlo, monospace",
               whiteSpace: "pre",
               wordBreak: "keep-all",
               overflowWrap: "normal",

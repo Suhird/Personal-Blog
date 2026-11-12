@@ -28,3 +28,11 @@ lerna-debug.log*
 # Cloudflare Pages / Wrangler
 .wrangler
 .dev.vars
+
+# Local visual-check / browser tooling
+.tmp/
+.home/
+.npm-cache/
+
+# Local Bun cache used for lockfile verification
+.bun/

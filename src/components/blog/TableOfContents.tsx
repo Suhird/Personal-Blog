@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/collapsible";
 import { TableOfContents as TOCIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useThemeMode } from "@/components/theme-mode-provider";
 
 interface TableOfContentsProps {
   content: string;
@@ -18,6 +19,7 @@ interface TocItem {
 }
 
 export const TableOfContents = ({ content }: TableOfContentsProps) => {
+  const { isReader } = useThemeMode();
   const [headings, setHeadings] = useState<TocItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [activeId, setActiveId] = useState<string>("");
@@ -80,6 +82,43 @@ export const TableOfContents = ({ content }: TableOfContentsProps) => {
 
   if (headings.length === 0) {
     return null;
+  }
+
+  if (isReader) {
+    return (
+      <details className="reader-toc">
+        <summary>
+          <span>Contents</span>
+          <span>{headings.length}</span>
+        </summary>
+        <nav aria-label="Table of contents">
+          <ul className="reader-toc__list">
+            {headings.map((heading) => (
+              <li
+                key={heading.id}
+                style={{
+                  paddingLeft: `${(heading.level - 1) * 12}px`,
+                }}
+              >
+                <a
+                  href={`#${heading.id}`}
+                  className={activeId === heading.id ? "is-active" : undefined}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById(heading.id)?.scrollIntoView({
+                      behavior: "auto",
+                      block: "start",
+                    });
+                  }}
+                >
+                  {heading.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </details>
+    );
   }
 
   return (

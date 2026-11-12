@@ -30,7 +30,15 @@ const SystemMonitor = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const CustomTooltip = ({ active, payload }: any) => {
+  type TooltipPayload = { value?: number | string };
+
+  const CustomTooltip = ({
+    active,
+    payload,
+  }: {
+    active?: boolean;
+    payload?: TooltipPayload[];
+  }) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-terminal-background border border-terminal-comment px-2 py-1 text-xs font-mono">
@@ -52,13 +60,13 @@ const SystemMonitor = () => {
           <AreaChart data={cpuData}>
             <defs>
               <linearGradient id="colorCpu" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#50fa7b" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="#50fa7b" stopOpacity={0}/>
+                <stop offset="5%" stopColor="#a6e3a1" stopOpacity={0.3}/>
+                <stop offset="95%" stopColor="#a6e3a1" stopOpacity={0}/>
               </linearGradient>
             </defs>
              <YAxis hide domain={[0, 100]} />
-            <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#6272a4', strokeWidth: 1 }} />
-            <Area type="monotone" dataKey="value" stroke="#50fa7b" fillOpacity={1} fill="url(#colorCpu)" strokeWidth={2} isAnimationActive={false} />
+            <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#6c7086', strokeWidth: 1 }} />
+            <Area type="monotone" dataKey="value" stroke="#a6e3a1" fillOpacity={1} fill="url(#colorCpu)" strokeWidth={2} isAnimationActive={false} />
           </AreaChart>
         </ResponsiveContainer>
       </div>
@@ -72,13 +80,13 @@ const SystemMonitor = () => {
           <AreaChart data={memData}>
             <defs>
               <linearGradient id="colorMem" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#8be9fd" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="#8be9fd" stopOpacity={0}/>
+                <stop offset="5%" stopColor="#89dceb" stopOpacity={0.3}/>
+                <stop offset="95%" stopColor="#89dceb" stopOpacity={0}/>
               </linearGradient>
             </defs>
             <YAxis hide domain={[0, 100]} />
-            <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#6272a4', strokeWidth: 1 }} />
-            <Area type="monotone" dataKey="value" stroke="#8be9fd" fillOpacity={1} fill="url(#colorMem)" strokeWidth={2} isAnimationActive={false} />
+            <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#6c7086', strokeWidth: 1 }} />
+            <Area type="monotone" dataKey="value" stroke="#89dceb" fillOpacity={1} fill="url(#colorMem)" strokeWidth={2} isAnimationActive={false} />
           </AreaChart>
         </ResponsiveContainer>
       </div>

@@ -13,7 +13,9 @@ import TableOfContents from "@/components/blog/TableOfContents";
 import SeriesNavigation from "@/components/blog/SeriesNavigation";
 import CanadianCarOwnership from "@/components/blog/posts/CanadianCarOwnership";
 import CanadaBudget2026 from "@/components/blog/posts/CanadaBudget2026";
+import { huggingFaceDiagrams } from "@/components/blog/posts/HuggingFaceDiagrams";
 import { getPostCanonical, getPostSocialImage } from "@/utils/postPaths";
+import { useThemeMode } from "@/components/theme-mode-provider";
 import { ArrowUp } from "lucide-react";
 
 const customPostComponents: Record<string, ComponentType> = {
@@ -23,6 +25,7 @@ const customPostComponents: Record<string, ComponentType> = {
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
+  const { isReader } = useThemeMode();
   const post = blogPosts.find((post) => post.slug === slug);
   const [markdownContent, setMarkdownContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
@@ -31,13 +34,19 @@ const BlogPost = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
 
+    // The Reader skin has no floating control; skip the scroll listener entirely.
+    if (isReader) {
+      setShowTopButton(false);
+      return;
+    }
+
     const handleScroll = () => {
       setShowTopButton(window.scrollY > 400);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isReader]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -74,7 +83,7 @@ const BlogPost = () => {
           <title>Post Not Found - Suhird's Blog</title>
           <meta name="robots" content="noindex, follow" />
         </Helmet>
-        <div className="blog-container py-16">
+        <div className={isReader ? "reader-container" : "blog-container py-16"}>
           <PostNotFound />
         </div>
       </Layout>
@@ -109,6 +118,12 @@ Pelientesque auctor nisi id magna consequat sagittis.
   const canonicalUrl = getPostCanonical(post);
   const socialImage = getPostSocialImage(post);
   const CustomPost = customPostComponents[post.slug];
+  const postDiagrams =
+    post.slug === "hugging-face-agent-intrusion"
+      ? huggingFaceDiagrams
+      : undefined;
+  const backTo = post.category === "life" ? "/beyond-code/" : "/tech-blog/";
+  const readerBackLabel = post.category === "life" ? "← Life" : "← All writing";
 
   // Create JSON-LD schema for blog post
   const jsonLdSchema = {
@@ -137,7 +152,7 @@ Pelientesque auctor nisi id magna consequat sagittis.
         <meta name="keywords" content={post.tags.join(", ")} />
         <meta name="author" content="Suhird Singh" />
         <meta name="robots" content="index, follow" />
-        
+
         {/* Open Graph Tags */}
         <meta property="og:type" content="article" />
         <meta property="og:title" content={post.title} />
@@ -149,65 +164,102 @@ Pelientesque auctor nisi id magna consequat sagittis.
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:alt" content={post.title} />
-        
+
         {/* Twitter Card Tags */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={post.title} />
         <meta name="twitter:description" content={post.description} />
         <meta name="twitter:image" content={socialImage} />
         <meta name="twitter:image:alt" content={post.title} />
-        
+
         {/* Canonical URL */}
         <link rel="canonical" href={canonicalUrl} />
-        
+
         {/* JSON-LD Schema */}
         <script type="application/ld+json">
           {JSON.stringify(jsonLdSchema)}
         </script>
       </Helmet>
-      <article className="blog-container py-16">
-        <Link
-          to={post.category === "life" ? "/beyond-code/" : "/tech-blog/"}
-          className="blog-link mb-8 inline-block"
-        >
-          {post.category === "life" ? "← Back to BeyondCode" : "← Back to TechBlog"}
-        </Link>
+      {isReader ? (
+        <article id="top" className="reader-post reader-container">
+          <Link to={backTo} className="reader-post__back">
+            {readerBackLabel}
+          </Link>
 
-        <PostHeader post={post} getTagClass={getTagClass} />
+          <PostHeader post={post} getTagClass={getTagClass} />
 
-        {!isLoading && contentToRender && (
-          <TableOfContents content={contentToRender} />
-        )}
-
-        <div className="post-content">
-          {isLoading ? (
-            <div className="text-center">
-              <p className="terminal-prompt">Loading content...</p>
-            </div>
-          ) : CustomPost ? (
-            <CustomPost />
-          ) : (
-            <MarkdownRenderer content={contentToRender} />
+          {!isLoading && contentToRender && (
+            <TableOfContents content={contentToRender} />
           )}
-        </div>
 
-        <SeriesNavigation 
-          currentPost={post} 
-          allPosts={blogPosts} 
-          className="mt-8 pt-8 border-t border-terminal-comment/30"
-        />
-        <ShareLinks title={post.title} url={canonicalUrl} />
+          <div className="reader-prose">
+            {isLoading ? (
+              <p>Loading content...</p>
+            ) : CustomPost ? (
+              <CustomPost />
+            ) : (
+              <MarkdownRenderer
+                content={contentToRender}
+                diagrams={postDiagrams}
+              />
+            )}
+          </div>
 
-        {showTopButton && (
-          <button
-            onClick={scrollToTop}
-            className="fixed bottom-8 right-8 p-3 rounded-full bg-terminal-cyan/20 border border-terminal-cyan/50 text-terminal-cyan hover:bg-terminal-cyan/30 transition-all shadow-[0_0_12px_rgba(6,182,212,0.3)]"
-            aria-label="Go to top"
+          <SeriesNavigation currentPost={post} allPosts={blogPosts} />
+          <ShareLinks title={post.title} url={canonicalUrl} />
+
+          <a href="#top" className="reader-post__back">
+            Back to top ↑
+          </a>
+        </article>
+      ) : (
+        <article className="blog-container py-16">
+          <Link
+            to={post.category === "life" ? "/beyond-code/" : "/tech-blog/"}
+            className="blog-link mb-8 inline-block"
           >
-            <ArrowUp size={20} />
-          </button>
-        )}
-      </article>
+            {post.category === "life" ? "← Back to BeyondCode" : "← Back to TechBlog"}
+          </Link>
+
+          <PostHeader post={post} getTagClass={getTagClass} />
+
+          {!isLoading && contentToRender && (
+            <TableOfContents content={contentToRender} />
+          )}
+
+          <div className="post-content">
+            {isLoading ? (
+              <div className="text-center">
+                <p className="terminal-prompt">Loading content...</p>
+              </div>
+            ) : CustomPost ? (
+              <CustomPost />
+            ) : (
+              <MarkdownRenderer
+                content={contentToRender}
+                diagrams={postDiagrams}
+              />
+            )}
+          </div>
+
+          <SeriesNavigation
+            currentPost={post}
+            allPosts={blogPosts}
+            className="mt-8 pt-8 border-t border-terminal-comment/30"
+          />
+          <ShareLinks title={post.title} url={canonicalUrl} />
+
+          {showTopButton && (
+            <button
+              onClick={scrollToTop}
+              className="fixed bottom-8 right-8 p-3 rounded-full bg-terminal-cyan/20 border border-terminal-cyan/50 text-terminal-cyan hover:bg-terminal-cyan/30 transition-all shadow-[0_0_12px_rgba(6,182,212,0.3)]"
+              aria-label="Go to top"
+            >
+              <ArrowUp size={20} />
+            </button>
+          )}
+        </article>
+      )}
     </Layout>
   );
 };

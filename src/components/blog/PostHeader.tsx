@@ -1,4 +1,6 @@
 import { BlogPost } from "@/components/BlogCard";
+import { useThemeMode } from "@/components/theme-mode-provider";
+import { formatPostDate } from "@/lib/postDisplay";
 
 interface PostHeaderProps {
   post: BlogPost;
@@ -6,6 +8,27 @@ interface PostHeaderProps {
 }
 
 const PostHeader = ({ post, getTagClass }: PostHeaderProps) => {
+  const { isReader } = useThemeMode();
+
+  if (isReader) {
+    return (
+      <header className="reader-post-header">
+        <h1 className="reader-post-title">{post.title}</h1>
+        <p className="reader-post-lede">{post.description}</p>
+        <div className="reader-post-meta">
+          <time dateTime={post.date}>{formatPostDate(post.date)}</time>
+          <span aria-hidden="true">·</span>
+          <span>{post.readTime} read</span>
+        </div>
+        <div className="reader-post-tags">
+          {post.tags.map((tag) => (
+            <span key={tag}>#{tag}</span>
+          ))}
+        </div>
+      </header>
+    );
+  }
+
   return (
     <header className="mb-10 post-header">
       <h1 className="post-title font-bold">

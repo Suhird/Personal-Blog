@@ -1,12 +1,19 @@
 import ReactMarkdown from "react-markdown";
+import { isValidElement, type ComponentProps, type ComponentType } from "react";
+import type { ExtraProps } from "react-markdown";
 import remarkGfm from "remark-gfm"; // Import the plugin
 import CodeBlock from "./CodeBlock";
+import { useThemeMode } from "@/components/theme-mode-provider";
 
 interface MarkdownRendererProps {
   content: string;
+  /** Optional custom renderers keyed by a fenced-code language. */
+  diagrams?: Record<string, ComponentType>;
 }
 
-const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
+const MarkdownRenderer = ({ content, diagrams }: MarkdownRendererProps) => {
+  const { isReader } = useThemeMode();
+
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]} // Add the plugin here
@@ -54,8 +61,28 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
             </h3>
           );
         },
+        // A custom diagram is a block-level component, not a code block.
+        // ReactMarkdown wraps a fenced block in <pre>; unwrap it so the
+        // diagram is not rendered with preformatted whitespace.
+        pre: ({ node: _node, children, ...props }) => {
+          const first = Array.isArray(children) ? children[0] : children;
+          if (
+            isValidElement(first) &&
+            (first.props as { "data-diagram-block"?: string })[
+              "data-diagram-block"
+            ] === "true"
+          ) {
+            return <>{children}</>;
+          }
+          return <pre {...props}>{children}</pre>;
+        },
         // Code block handling
-        code({ node, className, children, ...props }: any) {
+        code({
+          node,
+          className,
+          children,
+          ...props
+        }: ComponentProps<"code"> & ExtraProps & { inline?: boolean }) {
           // Handle className like "language-typescript:filename.ts" or "language-typescript"
           let language = "";
           let filename;
@@ -90,10 +117,21 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
             language = "ini";
           }
 
+          const Diagram = language ? diagrams?.[language] : undefined;
+          if (!props.inline && Diagram) {
+            return (
+              <div data-diagram-block="true">
+                <Diagram />
+              </div>
+            );
+          }
+
           return !props.inline && language ? (
             <CodeBlock language={language} filename={filename}>
               {String(children).replace(/\n$/, "")}
             </CodeBlock>
+          ) : isReader ? (
+            <code {...props}>{children}</code>
           ) : (
             <code
               className="font-mono text-[0.95em]"
@@ -106,9 +144,31 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
         img: ({ node, src, alt, ...props }) => {
           const isDiagram = typeof src === "string" && src.endsWith(".svg");
 
+          if (isReader) {
+            return (
+              <span
+                className={
+                  isDiagram
+                    ? "reader-image reader-image--diagram"
+                    : "reader-image"
+                }
+              >
+                <a href={src} target="_blank" rel="noreferrer" title="Open full image">
+                  <img
+                    {...props}
+                    src={src}
+                    alt={alt}
+                    loading="lazy"
+                    className={isDiagram ? "blog-diagram" : undefined}
+                  />
+                </a>
+              </span>
+            );
+          }
+
           if (isDiagram) {
             return (
-              <div className="my-4 overflow-x-auto rounded-lg border border-terminal-comment/30">
+              <span className="my-4 block overflow-x-auto rounded-lg border border-terminal-comment/30">
                 <a href={src} target="_blank" rel="noreferrer">
                   <img
                     {...props}
@@ -118,7 +178,7 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
                     className="blog-diagram"
                   />
                 </a>
-              </div>
+              </span>
             );
           }
 
@@ -133,60 +193,86 @@ const MarkdownRenderer = ({ content }: MarkdownRendererProps) => {
             </a>
           );
         },
-        a: ({ node, href, children, ...props }) => (
-          <a
-            href={href}
-            className="hover:underline"
-            {...props}
-          >
-            {children}
-          </a>
-        ),
-        p: ({ node, children, ...props }) => (
-          <p className="mb-5" {...props}>
-            {children}
-          </p>
-        ),
-        ul: ({ node, children, ...props }) => (
-          <ul className="list-none mb-5" {...props}>
-            {children}
-          </ul>
-        ),
-        ol: ({ node, children, ...props }) => (
-          <ol className="mb-5 list-decimal list-inside" {...props}>
-            {children}
-          </ol>
-        ),
-        li: ({ node, children, ...props }) => (
-          <li className="mb-2" {...props}>
-            {children}
-          </li>
-        ),
-        blockquote: ({ node, children, ...props }) => (
-          <blockquote className="blog-blockquote" {...props}>
-            {children}
-          </blockquote>
-        ),
+        a: ({ node, href, children, ...props }) =>
+          isReader ? (
+            <a href={href} {...props}>
+              {children}
+            </a>
+          ) : (
+            <a
+              href={href}
+              className="hover:underline"
+              {...props}
+            >
+              {children}
+            </a>
+          ),
+        p: ({ node, children, ...props }) =>
+          isReader ? (
+            <p {...props}>{children}</p>
+          ) : (
+            <p className="mb-5" {...props}>
+              {children}
+            </p>
+          ),
+        ul: ({ node, children, ...props }) =>
+          isReader ? (
+            <ul {...props}>{children}</ul>
+          ) : (
+            <ul className="list-none mb-5" {...props}>
+              {children}
+            </ul>
+          ),
+        ol: ({ node, children, ...props }) =>
+          isReader ? (
+            <ol {...props}>{children}</ol>
+          ) : (
+            <ol className="mb-5 list-decimal list-inside" {...props}>
+              {children}
+            </ol>
+          ),
+        li: ({ node, children, ...props }) =>
+          isReader ? (
+            <li {...props}>{children}</li>
+          ) : (
+            <li className="mb-2" {...props}>
+              {children}
+            </li>
+          ),
+        blockquote: ({ node, children, ...props }) =>
+          isReader ? (
+            <blockquote {...props}>{children}</blockquote>
+          ) : (
+            <blockquote className="blog-blockquote" {...props}>
+              {children}
+            </blockquote>
+          ),
         table: ({ node, children, ...props }) => (
-          <div className="overflow-x-auto mb-5">
+          <div className={isReader ? "overflow-x-auto" : "overflow-x-auto mb-5"}>
             <table {...props}>
               {children}
             </table>
           </div>
         ),
-        th: ({ node, children, ...props }) => (
-          <th className="text-[var(--accent)]" {...props}>
-            {children}
-          </th>
-        ),
+        th: ({ node, children, ...props }) =>
+          isReader ? (
+            <th {...props}>{children}</th>
+          ) : (
+            <th className="text-[var(--accent)]" {...props}>
+              {children}
+            </th>
+          ),
         td: ({ node, children, ...props }) => (
           <td {...props}>
             {children}
           </td>
         ),
-        hr: ({ node, ...props }) => (
-          <hr className="my-8 border-[var(--border-color)]" {...props} />
-        ),
+        hr: ({ node, ...props }) =>
+          isReader ? (
+            <hr {...props} />
+          ) : (
+            <hr className="my-8 border-[var(--border-color)]" {...props} />
+          ),
       }}
     >
       {content}
